@@ -1,0 +1,42 @@
+project: mw-dotnet
+default_profile: dev
+links:
+  DEP Documentation: https://docs.dep.soprasteria.com
+workspaces:
+  - profile: dev
+    platform:
+      name: windows
+      pkg_manager: scoop
+    requires:
+      - 7zip
+      - azure-cli
+      - azurestorageexplorer
+      - CascadiaCode-NF
+      - dotnet-sdk
+      - dotnet3-sdk
+      - dotnet5-sdk
+      - dotnet6-sdk
+      - fiddler
+      - FiraCode
+      - gh
+      - git
+      - go
+      - mockoon
+      - notepadplusplus-np
+      - nuget-package-explorer
+      - nvm
+      - oh-my-posh
+      - paint.net
+      - picpick
+      - postman
+      - ruby
+      - sql-server-management-studio-np
+      - temurin-lts-jdk
+      - terminal-icons
+      - terraform
+      - vlc
+      - windows-terminal-preview
+      - winmerge
+    postinstall:
+      - nvm install lts
+      - nvm use lts

@@ -1,0 +1,174 @@
+# https://confluence.constellation.soprasteria.com/pages/viewpage.action?spaceKey=TMACRPACA&title=La+vraie+installation+de+poste
+
+# Check if admin
+(New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+#Requires -RunAsAdministrator
+
+Set-ExecutionPolicy Unrestricted -Force
+
+# https://scoop.sh
+irm get.scoop.sh | iex
+scoop bucket add extras
+scoop bucket add versions
+scoop bucket add nerd-fonts
+scoop bucket add java
+
+scoop install main/git
+scoop install main/dotnet-sdk
+scoop install main/gh
+scoop install main/nvm
+scoop install main/oh-my-posh
+scoop install main/terraform
+scoop install versions/dotnet3-sdk
+scoop install versions/dotnet5-sdk
+scoop install versions/dotnet6-sdk
+scoop install extras/baretail
+scoop install extras/mockoon
+scoop install extras/nuget-package-explorer
+scoop install extras/paint.net
+scoop install extras/postman
+scoop install extras/vlc
+scoop install extras/wiztree
+scoop install nerd-fonts/Cascadia-Code
+scoop install nerd-fonts/FiraCode
+scoop install java/temurin-lts-jdk
+
+scoop install main/azure-cli
+scoop install main/go
+scoop install main/ruby
+scoop install versions/windows-terminal-preview
+scoop install extras/azurestorageexplorer
+scoop install extras/fiddler
+scoop install extras/picpick
+
+scoop install extras/winmerge
+scoop install nonportable/notepadplusplus-np
+scoop install nonportable/sql-server-management-studio-np
+
+
+# https://winget.run/
+# https://www.prajwaldesai.com/update-apps-on-windows-11-winget-upgrade/
+# https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2022#use-winget-to-install-or-modify-visual-studio
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Fork.Fork
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerShell
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerToys
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerBI
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.VisualStudioCode
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.VisualStudio.2022.Enterprise --override "--passive --config .vsconfig"
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.WindowsTerminal.Preview
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Google.Chrome
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.DevHome
+
+
+# https://community.chocolatey.org/packages
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install 7zip -y
+choco install bulkrenameutility -y
+choco install notepadplusplus -y
+choco install urlrewrite -y
+choco install webdeploy -y
+choco install winmerge -y
+
+choco install oracle-sql-developer -y
+choco install oracle-sql-developer -y --params "'/Username:guylescalier@hotmail.com /Password:9qJ3YBY3'"
+choco install oracle-sql-developer -y --params "'/Username:berserker13@gmail.com /Password:yf5J9#&nMpAz'"
+choco install sql-server-management-studio
+
+# Installer les features Windows
+# https://weblog.west-wind.com/posts/2017/may/25/automating-iis-feature-installation-with-powershell
+Set-ExecutionPolicy Bypass -Scope Process
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASPNET -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASPNET45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-BasicAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CertProvider -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-DefaultDocument -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-DirectoryBrowsing -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HealthAndDiagnostics -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HostableWebCore -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionDynamic -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpCompressionStatic -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpLogging -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ISAPIExtensions -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ISAPIFilter -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ManagementConsole -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ManagementScriptingTools -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-NetFxExtensibility -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-NetFxExtensibility45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-Performance -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-RequestFiltering -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-Security -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-StaticContent -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerManagementTools -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebSockets -All
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication -All
+Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
+Enable-WindowsOptionalFeature -Online -FeatureName NetFx4-AdvSrvs -All
+Enable-WindowsOptionalFeature -Online -FeatureName NetFx4Extended-ASPNET45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName WCF-HTTP-Activation -All
+Enable-WindowsOptionalFeature -Online -FeatureName WCF-HTTP-Activation45 -All
+Enable-WindowsOptionalFeature -Online -FeatureName WCF-NonHTTP-Activation -All
+Enable-WindowsOptionalFeature -Online -FeatureName WCF-Services45 -All
+
+# Disable Loopback Check on a Server - to get around no local Logins on Windows Server
+New-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableLoopbackCheck" -Value "1" -PropertyType dword
+# Disable Hide file extensions for known file types
+Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced HideFileExt "0"
+
+
+# Appliquer les settings VS
+# https://learn.microsoft.com/en-us/previous-versions/zbhkx167(v=vs.140)?redirectedfrom=MSDN
+# https://learn.microsoft.com/en-us/visualstudio/ide/reference/resetsettings-devenv-exe?view=vs-2022
+
+# Installer des extensions VS
+# https://gist.github.com/ScottHutchinson/b22339c3d3688da5c9b477281e258400
+sonar lint
+productivity power tools
+productivity power tools options page
+ef core power tools
+codemaid
+
+
+# Configurer PS prompt
+# https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal
+# https://ohmyposh.dev
+# https://www.nerdfonts.com
+# https://github.com/devblackops/Terminal-Icons
+
+
+# Merge hosts files
+(Get-FileHash "C:\Windows\System32\drivers\etc\hosts").Hash
+
+
+# Créer disque virtuel ?
+Test-Path "D:\"
+subst D: C:\
+
+
+# Importer les certificats
+(New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 'C:\Projets\maregionsud.crt').Thumbprint
+Get-ChildItem -path Cert:\LocalMachine\Root | Where-Object {$_.Thumbprint -eq "3D30B009E3FA41AEBF125824E58B1C8692E94E0B"}
+Get-ChildItem -path Cert:\LocalMachine\Root | Where-Object {$_.Thumbprint -eq (New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 'C:\Projets\_.cr-paca.fr.crt').Thumbprint}
+Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root -FilePath 'C:\...'
+# [files] | Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root
+
+
+# Exclusions antivirus
+(Get-MpPreference | Select-Object -ExpandProperty ExclusionPath).contains('C:\Projets')
+Add-MpPreference -ExclusionPath 'C:\Projets'
+Add-MpPreference -ExclusionPath 'C:\Users\%user%\.dotnet\tools'
+
+
+# Oracle
+# Chemin du TNS dans variable d'environnement
+
+
+# Node
+nvm install lts
+nvm use lts

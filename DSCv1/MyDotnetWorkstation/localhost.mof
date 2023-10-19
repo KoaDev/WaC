@@ -1,0 +1,57 @@
+/*
+@TargetNode='localhost'
+@GeneratedBy=glescalier
+@GenerationDate=10/17/2023 10:11:15
+@GenerationHost=AAP-5CG3334YB7
+*/
+
+instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
+{
+ResourceID = "[Registry]DisableLoopbackCheckSetting";
+ Key = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Lsa";
+ ValueData = {
+    "1"
+};
+ SourceInfo = "C:\\Projets\\WaC\\DSCv2\\WaC.ps1::5::9::Registry";
+ ModuleName = "PsDesiredStateConfiguration";
+ Ensure = "Present";
+ ValueName = "DisableLoopbackCheck";
+ ValueType = "Dword";
+
+ModuleVersion = "1.0";
+ ConfigurationName = "MyDotnetWorkstation";
+};
+instance of MSFT_RegistryResource as $MSFT_RegistryResource2ref
+{
+ResourceID = "[Registry]HideFileExtSetting";
+ Key = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
+ ValueData = {
+    "0"
+};
+ SourceInfo = "C:\\Projets\\WaC\\DSCv2\\WaC.ps1::13::9::Registry";
+ ModuleName = "PsDesiredStateConfiguration";
+ Ensure = "Present";
+ ValueName = "HideFileExt";
+ ValueType = "Dword";
+
+ModuleVersion = "1.0";
+ ConfigurationName = "MyDotnetWorkstation";
+};
+instance of OMI_ConfigurationDocument
+
+                    {
+ Version="2.0.0";
+
+                        MinimumCompatibleVersion = "1.0.0";
+
+                        CompatibleVersionAdditionalProperties= {"Omi_BaseResource:ConfigurationName"};
+
+                        Author="glescalier";
+
+                        GenerationDate="10/17/2023 10:11:15";
+
+                        GenerationHost="AAP-5CG3334YB7";
+
+                        Name="MyDotnetWorkstation";
+
+                    };
