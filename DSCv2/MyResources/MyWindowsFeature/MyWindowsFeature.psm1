@@ -1,3 +1,11 @@
+# . $PSScriptRoot\Common.psm1
+# using module .\Common.ps1
+# Import-Module -Name  (Join-Path -Path $PSScriptRoot -ChildPath 'Common.psm1')
+enum MyEnsure {
+    Absent
+    Present
+}
+
 [DscResource()]
 class MyWindowsFeature {
     [DscProperty(Key)]
@@ -9,32 +17,32 @@ class MyWindowsFeature {
     [DscProperty(NotConfigurable)]
     [string] $State = 'Unknown'
 
-    hidden [MyWindowsFeature] $CachedCurrentState
+    hidden [MyWindowsFeature] $CachedCurrent
 
     [MyWindowsFeature] Get() {
-        $currentState = [MyWindowsFeature]::new()
-        $currentState.Name = $this.Name
+        $current = [MyWindowsFeature]::new()
+        $current.Name = $this.Name
 
-        $feature = Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq $this.Name }
+        $feature = Get-WindowsOptionalFeature -Online -FeatureName $this.Name
 
         if ($feature) {
-            $currentState.Ensure = [MyEnsure]::Present
-            $currentState.State = $feature.State
+            $current.Ensure = [MyEnsure]::Present
+            $current.State = $feature.State
         }
         else {
-            $currentState.Ensure = [MyEnsure]::Absent
-            $currentState.State = 'NotPresent'
+            $current.Ensure = [MyEnsure]::Absent
+            $current.State = 'NotPresent'
         }
 
-        $this.CachedCurrentState = $currentState
+        $this.CachedCurrent = $current
 
-        return $currentState
+        return $current
     }
 
     [bool] Test() {
-        $currentState = $this.Get()
+        $current = $this.Get()
 
-        if ($this.Ensure -ne $currentState.Ensure) {
+        if ($this.Ensure -ne $current.Ensure) {
             return $false
         }
 
@@ -46,9 +54,9 @@ class MyWindowsFeature {
             return
         }
 
-        $currentState = $this.CachedCurrentState
+        $current = $this.CachedCurrent
 
-        if ($currentState.State -eq 'NotPresent') {
+        if ($current.State -eq 'NotPresent') {
             throw "Windows feature '$($this.Name)' is not present on this machine"
         }
 
@@ -59,9 +67,4 @@ class MyWindowsFeature {
             Disable-WindowsOptionalFeature -Online -FeatureName $this.Name -NoRestart
         }
     }
-}
-
-enum MyEnsure {
-    Absent
-    Present
 }

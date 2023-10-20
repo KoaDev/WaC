@@ -1,78 +1,15 @@
-# Import the necessary module
+#Requires -RunAsAdministrator
+
+. .\Get-DscResourcesFromYaml.ps1
+
+if (-not (Get-Module -ListAvailable -Name PSDesiredStateConfiguration)) {
+    Write-Error "The PSDesiredStateConfiguration module is not installed."
+    return $null
+}
+
 Import-Module PSDesiredStateConfiguration
 
-# Define default module name
 $defaultModuleName = 'PSDesiredStateConfiguration'
-
-# Define resources in a hashtable
-$resources = @(
-    # Registry Resources
-    @{
-        Name     = 'Registry';
-        Property = @{
-            Key       = 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced';
-            ValueName = 'HideFileExt';
-            ValueData = '0';
-            ValueType = 'DWord';
-        }
-    },
-    @{
-        Name     = 'Registry';
-        Property = @{
-            Key       = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa';
-            ValueName = 'DisableLoopbackCheck';
-            ValueData = '1';
-            ValueType = 'DWord';
-        }
-    }
-
-    # Windows Features
-) + (@(
-        'IIS-ApplicationDevelopment',
-        'IIS-ASPNET',
-        'IIS-ASPNET45',
-        'IIS-BasicAuthentication',
-        'IIS-CertProvider',
-        'IIS-CommonHttpFeatures',
-        'IIS-DefaultDocument',
-        'IIS-DirectoryBrowsing',
-        'IIS-HealthAndDiagnostics',
-        'IIS-HostableWebCore',
-        'IIS-HttpCompressionDynamic',
-        'IIS-HttpCompressionStatic',
-        'IIS-HttpErrors',
-        'IIS-HttpLogging',
-        'IIS-ISAPIExtensions',
-        'IIS-ISAPIFilter',
-        'IIS-ManagementConsole',
-        'IIS-ManagementScriptingTools',
-        'IIS-NetFxExtensibility',
-        'IIS-NetFxExtensibility45',
-        'IIS-Performance',
-        'IIS-RequestFiltering',
-        'IIS-Security',
-        'IIS-StaticContent',
-        'IIS-WebServer',
-        'IIS-WebServerManagementTools',
-        'IIS-WebServerRole',
-        'IIS-WebSockets',
-        'IIS-WindowsAuthentication',
-        'NetFx3',
-        'NetFx4-AdvSrvs',
-        'NetFx4Extended-ASPNET45',
-        'WCF-HTTP-Activation',
-        'WCF-HTTP-Activation45',
-        'WCF-NonHTTP-Activation',
-        'WCF-Services45'
-    ) | ForEach-Object {
-        @{
-            Name       = 'MyWindowsFeature'
-            ModuleName = 'MyResources'
-            Property   = @{
-                Name = $_
-            }
-        }
-    })
 
 function Set-DscResourceState {
     [CmdletBinding()]
@@ -101,15 +38,57 @@ function Get-DscResourceState {
 
     switch ($resource.Name) {
         'Registry' {
-            return "$($dscProperties.ValueName) current value: $($currentValue.ValueData)."
+            return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData)."
         }
         'MyWindowsFeature' {
-            return "Feature $($dscProperties.Name) is currently $($currentValue.Ensure)."
+            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
+        }
+        'MyScoopPackage' {
+            return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)."
         }
     }
 }
 
-function Get-DscResourceDifference {
+function Test-DscResourceState {
+    [CmdletBinding()]
+    param ([hashtable]$resource)
+
+    # Clone the hashtable to prevent modifying the original
+    $dscResource = $resource.Clone()
+    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
+    $dscProperties = $dscResource.Property
+    
+    $isCurrent = Invoke-DscResource @dscResource -Method Test
+
+    switch ($resource.Name) {
+        'Registry' {
+            if ($isCurrent.InDesiredState) {
+                return "$($resource.Name) $($dscProperties.ValueName) is in desired state."
+            }
+            else {
+                return "$($resource.Name) $($dscProperties.ValueName) is not in desired state."
+            }
+        }
+        'MyWindowsFeature' {
+            if ($isCurrent.InDesiredState) {
+                return "$($resource.Name) $($dscProperties.Name) is in desired state."
+            }
+            else {
+                return "$($resource.Name) $($dscProperties.Name) is not in desired state."
+            }
+        }
+        'MyScoopPackage' {
+            if ($isCurrent.InDesiredState) {
+                return "$($resource.Name) $($dscProperties.PackageName) is in desired state."
+            }
+            else {
+                return "$($resource.Name) $($dscProperties.PackageName) is not in desired state."
+            }
+        }
+    }
+}
+
+function Compare-DscResource {
     [CmdletBinding()]
     param ([hashtable]$resource)
 
@@ -123,40 +102,90 @@ function Get-DscResourceDifference {
     switch ($resource.Name) {
         'Registry' {
             if ($currentValue.ValueData -ne $dscProperties.ValueData) {
-                return "$($dscProperties.ValueName) current value: $($currentValue.ValueData) - Desired value: $($dscProperties.ValueData)."
+                return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData) - Desired value: $($dscProperties.ValueData)."
             }
             else {
-                return "$($dscProperties.ValueName) is in desired state."
+                return "$($resource.Name) $($dscProperties.ValueName) is in desired state."
             }
         }
         'MyWindowsFeature' {
-            if ($currentValue.Ensure -ne ($resource.Ensure ?? 'Present')) {
-                return "Feature $($dscProperties.Name) is currently $($currentValue.Ensure) but desired state is $($resource.Ensure)."
+            if ($currentValue.Ensure -ne ($dscProperties.Ensure ?? 'Present')) {
+                return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure ?? 'Present')."
             }
             else {
-                return "Feature $($dscProperties.Name) is in desired state."
+                return "$($resource.Name) $($dscProperties.Name) is in desired state."
+            }
+        }
+        'MyScoopPackage' {
+            if ($currentValue.Ensure -ne ($dscProperties.Ensure ?? 'Present')) {
+                return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure ?? 'Present')."
+            }
+            elseif ($currentValue.Version -ne $dscProperties.Version -and $currentValue.State -eq 'Stale') {
+                return "$($resource.Name) $($dscProperties.PackageName) current version: $($currentValue.Version) - Desired value: $($currentValue.LatestVersion)."
+            }
+            else {
+                return "$($resource.Name) $($dscProperties.PackageName) is in desired state."
             }
         }
     }
 }
 
-function Set-DscConfigurationState {
+function Set-DscConfiguration {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$YamlFilePath
+    )
+
+    $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
+
     foreach ($resource in $resources) {
         $result = Set-DscResourceState -resource $resource
         Write-Output $result
     }
 }
 
-function Get-DscConfigurationState {
+function Get-DscConfiguration {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$YamlFilePath
+    )
+
+    $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
+
     foreach ($resource in $resources) {
         $result = Get-DscResourceState -resource $resource
         Write-Output $result
     }
 }
 
-function Get-DscConfigurationDifference {
+function Test-DscConfiguration {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$YamlFilePath
+    )
+
+    $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
+
     foreach ($resource in $resources) {
-        $result = Get-DscResourceDifference -resource $resource
+        $result = Test-DscResourceState -resource $resource
+        Write-Output $result
+    }
+}
+
+function Compare-DscConfiguration {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$YamlFilePath
+    )
+
+    $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
+
+    foreach ($resource in $resources) {
+        $result = Compare-DscResource -resource $resource
         Write-Output $result
     }
 }

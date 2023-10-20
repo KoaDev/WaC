@@ -1,5 +1,8 @@
 Install-Module -Name PSDesiredStateConfiguration -Repository PSGallery
 Install-Module 'PSDscResources' -Repository PSGallery
+Install-Module -Name powershell-yaml
+
 
 $env:PSModulePath += ";C:\Projets\WaC\DSCv2\MyResources"
-Import-Module MyResources
+cd c:\Projets\WaC\DSCv2\
+. .\WaC.ps1
