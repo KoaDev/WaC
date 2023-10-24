@@ -53,40 +53,25 @@ function Test-DscResourceState {
     [CmdletBinding()]
     param ([hashtable]$resource)
 
-    # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
     $dscProperties = $dscResource.Property
     
     $isCurrent = Invoke-DscResource @dscResource -Method Test
 
-    switch ($resource.Name) {
-        'Registry' {
-            if ($isCurrent.InDesiredState) {
-                return "$($resource.Name) $($dscProperties.ValueName) is in desired state."
-            }
-            else {
-                return "$($resource.Name) $($dscProperties.ValueName) is not in desired state."
-            }
+    # Return the necessary fields as an array
+    return @(
+        $resource.Name
+        switch ($resource.Name) {
+            'Registry' { $dscProperties.ValueName }
+            'MyWindowsFeature' { $dscProperties.Name }
+            'MyScoopPackage' { $dscProperties.PackageName }
+            default { $null }
         }
-        'MyWindowsFeature' {
-            if ($isCurrent.InDesiredState) {
-                return "$($resource.Name) $($dscProperties.Name) is in desired state."
-            }
-            else {
-                return "$($resource.Name) $($dscProperties.Name) is not in desired state."
-            }
-        }
-        'MyScoopPackage' {
-            if ($isCurrent.InDesiredState) {
-                return "$($resource.Name) $($dscProperties.PackageName) is in desired state."
-            }
-            else {
-                return "$($resource.Name) $($dscProperties.PackageName) is not in desired state."
-            }
-        }
-    }
+        $isCurrent.InDesiredState
+    )
 }
+
 
 function Compare-DscResource {
     [CmdletBinding()]
@@ -169,11 +154,35 @@ function Test-DscConfiguration {
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
+    # Define column widths based on the longest expected strings.
+    $colWidths = @{
+        'Resource Type'       = 20
+        'Resource Name'       = 40
+        'Is in desired state' = 20
+    }
+
+    # Generate the header
+    $header = "+$('-' * $colWidths['Resource Type'])+$('-' * $colWidths['Resource Name'])+$('-' * $colWidths['Is in desired state'])+"
+    $titleRow = "|$('Resource Type'.PadRight($colWidths['Resource Type']))|$('Resource Name'.PadRight($colWidths['Resource Name']))|$('Is in desired state'.PadRight($colWidths['Is in desired state']))|"
+
+    # Output the header
+    Write-Output $header
+    Write-Output $titleRow
+    Write-Output $header
+
     foreach ($resource in $resources) {
         $result = Test-DscResourceState -resource $resource
-        Write-Output $result
+        $color = if ($result[2]) { 'green' } else { 'red' }
+
+        Write-Host "|$($result[0].PadRight($colWidths['Resource Type']))|$($result[1].PadRight($colWidths['Resource Name']))|" -NoNewline
+        Write-Host "$($result[2].ToString().PadRight($colWidths['Is in desired state']))" -ForegroundColor $color -NoNewline
+        Write-Host "|"
     }
+
+    # Output the footer
+    Write-Output $header
 }
+
 
 function Compare-DscConfiguration {
     [CmdletBinding()]
