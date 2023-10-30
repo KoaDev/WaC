@@ -1,8 +1,18 @@
 Install-Module -Name PSDesiredStateConfiguration -Repository PSGallery
 Install-Module 'PSDscResources' -Repository PSGallery
 Install-Module -Name powershell-yaml
+Install-Module cChoco
+Install-Module Microsoft.WinGet.DSC
 
 
 $env:PSModulePath += ";C:\Projets\WaC\DSCv2\MyResources"
 cd c:\Projets\WaC\DSCv2\
 . .\WaC.ps1
+
+
+https://www.powershellgallery.com/packages/Microsoft.WinGet.DSC
+https://www.powershellgallery.com/packages/Microsoft.Windows.Developer
+https://www.powershellgallery.com/packages/Microsoft.VisualStudio.DSC
+
+https://www.powershellgallery.com/packages/CertificateDsc
+https://www.powershellgallery.com/packages/Carbon

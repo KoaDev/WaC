@@ -9,10 +9,58 @@
       ValueData: "1"
       ValueType: DWord
 
-- Name: MyWindowsFeature
-  ModuleName: MyResources
+# - Name: MyWindowsOptionalFeatures
+#   ModuleName: MyResources
+#   Property:
+#     - FeatureNames:
+#         - WCF-HTTP-Activation
+#         - WCF-HTTP-Activation45
+#         - WCF-NonHTTP-Activation
+#         - WCF-Services45
+
+- Name: WindowsOptionalFeature
   Property:
     - Name: IIS-ApplicationDevelopment
+    - Name: IIS-ASPNET
+    - Name: IIS-ASPNET45
+    - Name: IIS-BasicAuthentication
+    - Name: IIS-CertProvider
+    - Name: IIS-CommonHttpFeatures
+    - Name: IIS-DefaultDocument
+    - Name: IIS-DirectoryBrowsing
+    - Name: IIS-HealthAndDiagnostics
+    - Name: IIS-HostableWebCore
+    - Name: IIS-HttpCompressionDynamic
+    - Name: IIS-HttpCompressionStatic
+    - Name: IIS-HttpErrors
+    - Name: IIS-HttpLogging
+    - Name: IIS-ISAPIExtensions
+    - Name: IIS-ISAPIFilter
+    - Name: IIS-ManagementConsole
+    - Name: IIS-ManagementScriptingTools
+    - Name: IIS-NetFxExtensibility
+    - Name: IIS-NetFxExtensibility45
+    - Name: IIS-Performance
+    - Name: IIS-RequestFiltering
+    - Name: IIS-Security
+    - Name: IIS-StaticContent
+    - Name: IIS-WebServer
+    - Name: IIS-WebServerManagementTools
+    - Name: IIS-WebServerRole
+    - Name: IIS-WebSockets
+    - Name: IIS-WindowsAuthentication
+    - Name: NetFx3
+    - Name: NetFx4-AdvSrvs
+    - Name: NetFx4Extended-ASPNET45
+    - Name: WCF-HTTP-Activation
+    - Name: WCF-HTTP-Activation45
+    - Name: WCF-NonHTTP-Activation
+    - Name: WCF-Services45
+
+# - Name: MyWindowsFeature
+#   ModuleName: MyResources
+#   Property:
+#     - Name: IIS-ApplicationDevelopment
 #     - Name: IIS-ASPNET
 #     - Name: IIS-ASPNET45
 #     - Name: IIS-BasicAuthentication
@@ -49,9 +97,48 @@
 #     - Name: WCF-NonHTTP-Activation
 #     - Name: WCF-Services45
 
+- Name: MyScoop
+  ModuleName: MyResources
+
 - Name: MyScoopPackage
   ModuleName: MyResources
   Property:
     - PackageName: dotnet-sdk
     - PackageName: gh
     - PackageName: oh-my-posh
+    - PackageName: git
+    - PackageName: nvm
+    - PackageName: terraform
+    - PackageName: dotnet3-sdk
+    - PackageName: dotnet5-sdk
+    - PackageName: dotnet6-sdk
+    - PackageName: baretail
+    - PackageName: mockoon
+    - PackageName: nuget-package-explorer
+    - PackageName: paint.net
+    - PackageName: postman
+    - PackageName: vlc
+    - PackageName: wiztree
+    - PackageName: CascadiaCode-NF-Mono
+    - PackageName: FiraCode-NF
+    - PackageName: temurin-lts-jdk
+
+- Name: MyChocolatey
+  ModuleName: MyResources
+
+- Name: MyChocolateyPackage
+  ModuleName: MyResources
+  Property:
+    - PackageName: 7zip
+    - PackageName: bulkrenameutility
+    - PackageName: notepadplusplus
+    - PackageName: urlrewrite
+    - PackageName: webdeploy
+    - PackageName: winmerge
+
+- Name: WinGetPackage
+  ModuleName: Microsoft.WinGet.DSC
+  Property:
+    - Id: Microsoft.PowerShell
+    - Id: Microsoft.PowerToys
+    - Id: zxch3n.PomodoroLogger

@@ -25,13 +25,13 @@ class MyWindowsFeature {
 
         $feature = Get-WindowsOptionalFeature -Online -FeatureName $this.Name
 
-        if ($feature) {
-            $current.Ensure = [MyEnsure]::Present
-            $current.State = $feature.State
-        }
-        else {
+        if (-not $feature) {
             $current.Ensure = [MyEnsure]::Absent
             $current.State = 'NotPresent'
+        }
+        else {
+            $current.Ensure = ($feature.State -eq 'Enabled') ? [MyEnsure]::Present : [MyEnsure]::Absent
+            $current.State = $feature.State
         }
 
         $this.CachedCurrent = $current
@@ -57,7 +57,7 @@ class MyWindowsFeature {
         $current = $this.CachedCurrent
 
         if ($current.State -eq 'NotPresent') {
-            throw "Windows feature '$($this.Name)' is not present on this machine"
+            throw "Windows optional feature '$($this.Name)' is not present on this machine"
         }
 
         if ($this.Ensure -eq [MyEnsure]::Present) {

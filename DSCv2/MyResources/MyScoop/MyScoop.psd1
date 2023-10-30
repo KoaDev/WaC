@@ -1,7 +1,7 @@
 @{
-    RootModule           = 'MyWindowsFeature.psm1'
+    RootModule           = 'MyScoop.psm1'
     ModuleVersion        = '0.0.1'
-    GUID                 = 'f8618f7b-413c-4464-a391-584c6129c651'
+    GUID                 = 'ab5eb2e2-b5da-4a5f-b418-ce5cec5fb9a0'
     Author               = 'Guy Lescalier'
     CompanyName          = 'Unknown'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'
@@ -9,5 +9,5 @@
     CmdletsToExport      = '*'
     VariablesToExport    = @()
     AliasesToExport      = @()
-    DscResourcesToExport = 'MyWindowsFeature'
+    DscResourcesToExport = 'MyScoop'
 }

@@ -129,11 +129,9 @@ class MyScoopPackage {
         $current = $this.CachedCurrent
 
         if ($this.Ensure -eq [MyEnsure]::Present) {
-            if ($this.Version -eq 'latest') {
-                $target = $this.PackageName
-            }
-            else {
-                $target = "$($this.PackageName)@$($this.Version)"
+            $target = $this.PackageName
+            if ($this.Version -ne 'latest') {
+                $target += "@$($this.Version)"
             }
 
             if ($current.Ensure -eq [MyEnsure]::Present -and $this.Version -eq 'latest') {
