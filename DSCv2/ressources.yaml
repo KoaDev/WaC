@@ -139,6 +139,9 @@
 - Name: WinGetPackage
   ModuleName: Microsoft.WinGet.DSC
   Property:
+    - Id: Fork.Fork
     - Id: Microsoft.PowerShell
     - Id: Microsoft.PowerToys
-    - Id: zxch3n.PomodoroLogger
+    - Id: Microsoft.PowerBI
+    - Id: Microsoft.VisualStudioCode
+    - Id: Google.Chrome
