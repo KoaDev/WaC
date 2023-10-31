@@ -151,3 +151,11 @@
   Property:
     - Path: C:\Projets\WaC\Certificats\_.cr-paca.fr.crt
     - Path: C:\Projets\WaC\Certificats\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+
+- Name: MyWindowsDefenderExclusion
+  ModuleName: MyResources
+  Property:
+    - Type: Path
+      Value: C:\Projets
+    - Type: Path
+      Value: C:\Users\%user%\.dotnet\tools

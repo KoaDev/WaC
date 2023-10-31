@@ -12,6 +12,7 @@
         'MyChocolateyPackage\MyChocolateyPackage.psd1'
         'MyScoop\MyScoop.psd1'
         'MyScoopPackage\MyScoopPackage.psd1'
+        'MyWindowsDefenderExclusion\MyWindowsDefenderExclusion.psd1'
         'MyWindowsFeature\MyWindowsFeature.psd1'
         'MyWindowsOptionalFeatures\MyWindowsOptionalFeatures.psd1'
     )
@@ -25,6 +26,7 @@
         'MyChocolateyPackage'
         'MyScoop'
         'MyScoopPackage'
+        'MyWindowsDefenderExclusion'
         'MyWindowsFeature'
         'MyWindowsOptionalFeatures'
     )

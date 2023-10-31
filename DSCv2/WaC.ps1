@@ -60,6 +60,9 @@ function Get-DscResourceState {
         { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' } {
             return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)."
         }
+        'MyWindowsDefenderExclusion' {
+            return "$($resource.Name) $($dscProperties.Type + ' - ' + $dscProperties.Value) is currently $($currentValue.Ensure)."
+        }
         'MyWindowsFeature' {
             return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
         }
@@ -96,6 +99,7 @@ function Test-DscResourceState {
             'MyChocolateyPackage' { $dscProperties.PackageName }
             'MyScoop' { 'Scoop' }
             'MyScoopPackage' { $dscProperties.PackageName }
+            'MyWindowsDefenderExclusion' { $dscProperties.Type + ' - ' + $dscProperties.Value }
             'MyWindowsFeature' { $dscProperties.Name }
             'MyWindowsOptionalFeatures' { $dscProperties.FeatureNames -join ',' }
             default { 'Not handled' }
