@@ -145,3 +145,9 @@
     - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
+
+- Name: MyCertificate
+  ModuleName: MyResources
+  Property:
+    - Path: C:\Projets\WaC\Certificats\_.cr-paca.fr.crt
+    - Path: C:\Projets\WaC\Certificats\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt

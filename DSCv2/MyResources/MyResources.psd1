@@ -7,6 +7,7 @@
     CompanyName          = 'Unknown'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'
     NestedModules        = @(
+        'MyCertificate\MyCertificate.psd1'
         'MyChocolatey\MyChocolatey.psd1'
         'MyChocolateyPackage\MyChocolateyPackage.psd1'
         'MyScoop\MyScoop.psd1'
@@ -19,6 +20,7 @@
     VariablesToExport    = @()
     AliasesToExport      = @()
     DscResourcesToExport = @(
+        'MyCertificate'
         'MyChocolatey'
         'MyChocolateyPackage'
         'MyScoop'

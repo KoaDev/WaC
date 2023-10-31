@@ -1,3 +1,5 @@
+# ..\configurations\Expand-Configuration.ps1 -InputFilePath "..\configurations\configuration.dsc.yaml" -OutputFilePath "..\configurations\expanded-configuration.dsc.yaml"
+
 param (
     [Parameter(Mandatory = $true)]
     [string]$InputFilePath,

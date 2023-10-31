@@ -1,6 +1,7 @@
 #Requires -RunAsAdministrator
 
 . .\Get-DscResourcesFromYaml.ps1
+. .\Get-ShortenedPath.ps1
 
 if (-not (Get-Module -ListAvailable -Name PSDesiredStateConfiguration)) {
     Write-Error "The PSDesiredStateConfiguration module is not installed."
@@ -15,19 +16,23 @@ function Set-DscResourceState {
     [CmdletBinding()]
     param ([hashtable]$resource)
 
+    Write-Verbose "Setting DSC Resource State for $($resource | ConvertTo-Json)"
+
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
     
     $dscResource.Property.Ensure = 'Present'
 
-    $result = Invoke-DscResource @dscResource -Method Set
+    $result = Invoke-DscResource @dscResource -Method Set -Verbose:($VerbosePreference -eq 'Continue')
     return $result
 }
 
 function Get-DscResourceState {
     [CmdletBinding()]
     param ([hashtable]$resource)
+
+    Write-Verbose "Getting DSC Resource State for $($resource | ConvertTo-Json)"
 
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
@@ -37,7 +42,7 @@ function Get-DscResourceState {
     }
     $dscProperties = $dscResource.Property
     
-    $currentValue = Invoke-DscResource @dscResource -Method Get
+    $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue')
 
     switch ($resource.Name) {
         'Registry' {
@@ -48,6 +53,9 @@ function Get-DscResourceState {
         }
         'WingetPackage' {
             return "$($resource.Name) $($dscProperties.Id) is currently $($currentValue.IsInstalled ? 'Present' : 'Absent') - current version: $($currentValue.InstalledVersion)."
+        }
+        'MyCertificate' {
+            return "$($resource.Name) $($dscProperties.Path) is currently $($currentValue.Ensure)."
         }
         { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' } {
             return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)."
@@ -65,6 +73,8 @@ function Test-DscResourceState {
     [CmdletBinding()]
     param ([hashtable]$resource)
 
+    Write-Verbose "Testing DSC Resource State for $($resource | ConvertTo-Json)"
+
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
     if (-not $dscResource.Property) {
@@ -72,7 +82,7 @@ function Test-DscResourceState {
     }
     $dscProperties = $dscResource.Property
     
-    $isCurrent = Invoke-DscResource @dscResource -Method Test
+    $isCurrent = Invoke-DscResource @dscResource -Method Test -Verbose:($VerbosePreference -eq 'Continue')
 
     # Return the necessary fields as an array
     return @(
@@ -81,18 +91,18 @@ function Test-DscResourceState {
             'Registry' { $dscProperties.ValueName }
             'WindowsOptionalFeature' { $dscProperties.Name }
             'WingetPackage' { $dscProperties.Id }
+            'MyCertificate' { Get-ShortenedPath -Path $dscProperties.Path -MaxLength 45 }
             'MyChocolatey' { 'Chocolatey' }
             'MyChocolateyPackage' { $dscProperties.PackageName }
             'MyScoop' { 'Scoop' }
             'MyScoopPackage' { $dscProperties.PackageName }
             'MyWindowsFeature' { $dscProperties.Name }
-            'MyWindowsOptionalFeatures' { $dscProperties.FeatureNames | Join-String -Separator ',' }
-            default { '' }
+            'MyWindowsOptionalFeatures' { $dscProperties.FeatureNames -join ',' }
+            default { 'Not handled' }
         }
         $isCurrent.InDesiredState
     )
 }
-
 
 function Compare-DscResource {
     [CmdletBinding()]
@@ -100,6 +110,8 @@ function Compare-DscResource {
         [hashtable]$resource,
         [switch]$DifferentOnly
     )
+
+    Write-Verbose "Comparing DSC Resource State for $($resource | ConvertTo-Json)"
 
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
@@ -109,7 +121,7 @@ function Compare-DscResource {
     }
     $dscProperties = $dscResource.Property
     
-    $currentValue = Invoke-DscResource @dscResource -Method Get
+    $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue')
 
     switch ($resource.Name) {
         'Registry' {
@@ -154,6 +166,8 @@ function Set-DscConfiguration {
         [string]$YamlFilePath
     )
 
+    Write-Verbose "Setting DSC Configuration"
+
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
     foreach ($resource in $resources) {
@@ -168,6 +182,8 @@ function Get-DscConfiguration {
         [Parameter(Mandatory = $true)]
         [string]$YamlFilePath
     )
+
+    Write-Verbose "Getting DSC Configuration"
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
@@ -184,12 +200,14 @@ function Test-DscConfiguration {
         [string]$YamlFilePath
     )
 
+    Write-Verbose "Testing DSC Configuration"
+
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
     # Define column widths based on the longest expected strings.
     $colWidths = @{
         'Resource Type'       = 30
-        'Resource Name'       = 40
+        'Resource Name'       = 50
         'Is in desired state' = 20
     }
 
@@ -227,6 +245,8 @@ function Compare-DscConfiguration {
         [string]$YamlFilePath,
         [switch]$DifferentOnly
     )
+
+    Write-Verbose "Comparing DSC Configuration"
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
