@@ -1,41 +1,57 @@
-enum MyEnsure {
+enum MyEnsure
+{
     Absent
     Present
 }
 
 [DscResource()]
-class MyScoop {
+class MyScoop
+{
     [DscProperty(Key)]
-    [string] $ResourceName = "ScoopInstallation"
+    [string] $ResourceName = 'ScoopInstallation'
 
     [DscProperty()]
     [MyEnsure] $Ensure = [MyEnsure]::Present
 
-    hidden [bool] IsInstalled() {
+    hidden [bool] IsInstalled()
+    {
         return $null -ne (Get-Command scoop -ErrorAction SilentlyContinue)
     }
 
-    [MyScoop] Get() {
+    [MyScoop] Get()
+    {
         $current = [MyScoop]::new()
-        $current.Ensure = if ($this.IsInstalled()) { [MyEnsure]::Present } else { [MyEnsure]::Absent }
+        $current.Ensure = if ($this.IsInstalled())
+        {
+            [MyEnsure]::Present 
+        }
+        else
+        {
+            [MyEnsure]::Absent 
+        }
         return $current
     }
 
-    [bool] Test() {
+    [bool] Test()
+    {
         $current = $this.Get()
         return ($current.Ensure -eq $this.Ensure)
     }
 
-    [void] Set() {
-        if ($this.Test()) {
+    [void] Set()
+    {
+        if ($this.Test())
+        {
             return
         }
 
-        if ($this.Ensure -eq [MyEnsure]::Present) {
+        if ($this.Ensure -eq [MyEnsure]::Present)
+        {
             # Install Scoop as admin
             Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
         }
-        elseif ($this.Ensure -eq [MyEnsure]::Absent) {
+        elseif ($this.Ensure -eq [MyEnsure]::Absent)
+        {
             scoop uninstall scoop --purge
             # Remove-Item -Recurse -Force ~\scoop
         }

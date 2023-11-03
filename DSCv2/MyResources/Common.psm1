@@ -1,4 +1,5 @@
-enum MyEnsure {
+enum MyEnsure
+{
     Absent
     Present
 }

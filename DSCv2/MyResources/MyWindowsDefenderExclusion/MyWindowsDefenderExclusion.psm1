@@ -1,9 +1,11 @@
-enum MyEnsure {
+enum MyEnsure
+{
     Absent
     Present
 }
 
-enum ExclusionType {
+enum ExclusionType
+{
     Path
     Extension
     Process
@@ -11,7 +13,8 @@ enum ExclusionType {
 }
 
 [DscResource()]
-class MyWindowsDefenderExclusion {
+class MyWindowsDefenderExclusion
+{
     [DscProperty(Key)]
     [string]$Name = 'WindowsDefenderPreference'
 
@@ -24,7 +27,8 @@ class MyWindowsDefenderExclusion {
     [DscProperty()]
     [MyEnsure]$Ensure = [MyEnsure]::Present
 
-    [MyWindowsDefenderExclusion] Get() {
+    [MyWindowsDefenderExclusion] Get()
+    {
         $current = [MyWindowsDefenderExclusion]::new()
         $current.Name = $this.Name
         $current.Type = $this.Type
@@ -34,23 +38,28 @@ class MyWindowsDefenderExclusion {
         $exclusionProperty = "Exclusion$($this.Type)"
         $exclusions = $preference.$exclusionProperty
 
-        if ($exclusions -contains $this.Value) {
+        if ($exclusions -contains $this.Value)
+        {
             $current.Ensure = [MyEnsure]::Present
         }
-        else {
+        else
+        {
             $current.Ensure = [MyEnsure]::Absent
         }
 
         return $current
     }
 
-    [bool] Test() {
+    [bool] Test()
+    {
         $current = $this.Get()
         return $current.Ensure -eq $this.Ensure
     }
 
-    [void] Set() {
-        if ($this.Test()) {
+    [void] Set()
+    {
+        if ($this.Test())
+        {
             return
         }
     
@@ -59,10 +68,12 @@ class MyWindowsDefenderExclusion {
             $parameterName = $this.Value
         }
     
-        if ($this.Ensure -eq [MyEnsure]::Present) {
+        if ($this.Ensure -eq [MyEnsure]::Present)
+        {
             Add-MpPreference @parameters
         }
-        elseif ($this.Ensure -eq [MyEnsure]::Absent) {
+        elseif ($this.Ensure -eq [MyEnsure]::Absent)
+        {
             Remove-MpPreference @parameters
         }
     }

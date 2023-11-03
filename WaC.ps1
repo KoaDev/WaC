@@ -38,9 +38,9 @@ Enable-WindowsOptionalFeature -Online -FeatureName WCF-Services45 -All
 
 # Modification du registre
 # Disable Loopback Check on a Server - to get around no local Logins on Windows Server
-New-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableLoopbackCheck" -Value "1" -PropertyType dword
+New-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'DisableLoopbackCheck' -Value '1' -PropertyType dword
 # Disable Hide file extensions for known file types
-Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced HideFileExt "0"
+Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced HideFileExt '0'
 
 # Installation des applications dont on gère le cycle de mise à jour (sans intégration shell)
 Invoke-RestMethod get.scoop.sh | Invoke-Expression
@@ -85,7 +85,7 @@ winget install -e -h --accept-package-agreements --accept-source-agreements --id
 winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerToys
 winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerBI
 winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.VisualStudioCode
-winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.VisualStudio.2022.Professionnal --override "--passive --config .vsconfig"
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.VisualStudio.2022.Professionnal --override '--passive --config .vsconfig'
 winget install -e -h --accept-package-agreements --accept-source-agreements --id Google.Chrome
 
 # Node

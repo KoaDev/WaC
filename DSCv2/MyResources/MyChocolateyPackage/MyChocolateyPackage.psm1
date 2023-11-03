@@ -1,10 +1,12 @@
-enum MyEnsure {
+enum MyEnsure
+{
     Absent
     Present
 }
 
 [DscResource()]
-class MyChocolateyPackage {
+class MyChocolateyPackage
+{
     [DscProperty(Key)]
     [string] $PackageName
 
@@ -29,15 +31,19 @@ class MyChocolateyPackage {
 
     hidden [TimeSpan] $CacheDuration = [TimeSpan]::FromMinutes(5)
 
-    hidden [hashtable] GetChocolateyPackageInfo([string] $packageName) {
-        if ([MyChocolateyPackage]::ChocolateyListCache -and ((Get-Date) - [MyChocolateyPackage]::LastChocolateyListRefreshed) -lt $this.CacheDuration) {
+    hidden [hashtable] GetChocolateyPackageInfo([string] $packageName)
+    {
+        if ([MyChocolateyPackage]::ChocolateyListCache -and ((Get-Date) - [MyChocolateyPackage]::LastChocolateyListRefreshed) -lt $this.CacheDuration)
+        {
             $packages = [MyChocolateyPackage]::ChocolateyListCache
         }
-        else {
+        else
+        {
             $chocolateyList = & choco list | Out-String
             $packages = @{}
-            $chocolateyList -split "\r?\n" | ForEach-Object {
-                if ($_ -match '^\s*(\S+)\s+(\S+)$') {
+            $chocolateyList -split '\r?\n' | ForEach-Object {
+                if ($_ -match '^\s*(\S+)\s+(\S+)$')
+                {
                     $packages[$matches[1]] = $matches[2]
                 }
             }
@@ -45,7 +51,8 @@ class MyChocolateyPackage {
             [MyChocolateyPackage]::LastChocolateyListRefreshed = Get-Date
         }
         
-        if ($packages.ContainsKey($packageName)) {
+        if ($packages.ContainsKey($packageName))
+        {
             return @{
                 Ensure  = [MyEnsure]::Present
                 Version = $packages[$packageName]
@@ -58,15 +65,19 @@ class MyChocolateyPackage {
         }
     }
 
-    hidden [string] GetLatestAvailableVersion([string] $packageName) {
-        if ([MyChocolateyPackage]::ChocolateyStatusCache -and ((Get-Date) - [MyChocolateyPackage]::LastChocolateyStatusRefreshed) -lt $this.CacheDuration) {
+    hidden [string] GetLatestAvailableVersion([string] $packageName)
+    {
+        if ([MyChocolateyPackage]::ChocolateyStatusCache -and ((Get-Date) - [MyChocolateyPackage]::LastChocolateyStatusRefreshed) -lt $this.CacheDuration)
+        {
             $packages = [MyChocolateyPackage]::ChocolateyStatusCache
         }
-        else {
+        else
+        {
             $chocolateyStatus = & choco outdated | Out-String
             $packages = @{}
-            $chocolateyStatus -split "\r?\n" | ForEach-Object {
-                if ($_ -match '^\s*(\S+)\|\S+\|(\S+)\|\S+$') {
+            $chocolateyStatus -split '\r?\n' | ForEach-Object {
+                if ($_ -match '^\s*(\S+)\|\S+\|(\S+)\|\S+$')
+                {
                     $packages[$matches[1]] = $matches[2]
                 }
             }
@@ -74,14 +85,16 @@ class MyChocolateyPackage {
             [MyChocolateyPackage]::LastChocolateyStatusRefreshed = Get-Date
         }
     
-        if ($packages.ContainsKey($packageName)) {
+        if ($packages.ContainsKey($packageName))
+        {
             return $packages[$packageName]
         }
     
         return $null
     }
 
-    [MyChocolateyPackage] Get() {
+    [MyChocolateyPackage] Get()
+    {
         $current = [MyChocolateyPackage]::new()
         $current.PackageName = $this.PackageName
 
@@ -91,18 +104,23 @@ class MyChocolateyPackage {
         $current.Version = $packageInfo.Version
     
         $latestAvailableVersion = $this.GetLatestAvailableVersion($this.PackageName)
-        if ($latestAvailableVersion) {
+        if ($latestAvailableVersion)
+        {
             $current.LatestVersion = $latestAvailableVersion
         }
-        else {
+        else
+        {
             $current.LatestVersion = $current.Version
         }
 
-        if ($current.Version -and $current.LatestVersion) {
-            if ($current.Version -eq $current.LatestVersion) {
+        if ($current.Version -and $current.LatestVersion)
+        {
+            if ($current.Version -eq $current.LatestVersion)
+            {
                 $current.State = 'Current'
             }
-            else {
+            else
+            {
                 $current.State = 'Stale'
             }
         }
@@ -112,43 +130,54 @@ class MyChocolateyPackage {
         return $current
     }
 
-    [bool] Test() {
+    [bool] Test()
+    {
         $current = $this.Get()
 
-        if ($this.Ensure -eq [MyEnsure]::Absent) {
+        if ($this.Ensure -eq [MyEnsure]::Absent)
+        {
             return ($current.Ensure -eq $this.Ensure)
         }
         
-        if ($current.Ensure -eq [MyEnsure]::Absent) {
+        if ($current.Ensure -eq [MyEnsure]::Absent)
+        {
             return $false
         }
 
-        if ($this.Version -eq 'latest') {
+        if ($this.Version -eq 'latest')
+        {
             return $current.Version -eq $current.LatestVersion
         }
-        else {
+        else
+        {
             return $current.Version -eq $this.Version
         }
     }
 
-    [void] Set() {
-        if ($this.Test()) {
+    [void] Set()
+    {
+        if ($this.Test())
+        {
             return
         }
 
         $current = $this.CachedCurrent
 
-        if ($this.Ensure -eq [MyEnsure]::Present) {
+        if ($this.Ensure -eq [MyEnsure]::Present)
+        {
             $target = $this.PackageName
-            if ($this.Version -ne 'latest') {
+            if ($this.Version -ne 'latest')
+            {
                 $target += " --version $($this.Version)"
             }
 
             # If you do not have a package installed, upgrade will install it.
             & choco upgrade $target -y
         }
-        elseif ($this.Ensure -eq [MyEnsure]::Absent) {
-            if ($current.Ensure -eq [MyEnsure]::Present) {
+        elseif ($this.Ensure -eq [MyEnsure]::Absent)
+        {
+            if ($current.Ensure -eq [MyEnsure]::Present)
+            {
                 & choco uninstall $this.PackageName -y
             }
         }

@@ -1,0 +1,26 @@
+# https://confluence.constellation.soprasteria.com/pages/viewpage.action?spaceKey=TMACRPACA&title=La+vraie+installation+de+poste
+
+# Appliquer les settings VS
+# https://learn.microsoft.com/en-us/previous-versions/zbhkx167(v=vs.140)?redirectedfrom=MSDN
+# https://learn.microsoft.com/en-us/visualstudio/ide/reference/resetsettings-devenv-exe?view=vs-2022
+
+# Installer des extensions VS
+# https://gist.github.com/ScottHutchinson/b22339c3d3688da5c9b477281e258400
+sonar lint
+productivity power tools
+productivity power tools options page
+ef core power tools
+codemaid
+
+# Configurer PS prompt
+# https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal
+# https://ohmyposh.dev
+# https://www.nerdfonts.com
+# https://github.com/devblackops/Terminal-Icons
+
+# Créer disque virtuel ?
+Test-Path "D:\"
+subst D: C:\
+
+# Oracle
+# Chemin du TNS dans variable d'environnement

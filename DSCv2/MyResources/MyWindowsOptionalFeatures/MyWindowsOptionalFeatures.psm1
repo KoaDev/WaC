@@ -1,7 +1,8 @@
 Import-Module PSDscResources
 
 [DscResource()]
-class MyWindowsOptionalFeatures {
+class MyWindowsOptionalFeatures
+{
     [DscProperty(Key)]
     [string] $Name = 'WindowsOptionalFeatureCollection'
 
@@ -16,22 +17,28 @@ class MyWindowsOptionalFeatures {
 
     hidden [MyWindowsOptionalFeatures] $CachedCurrent
 
-    [MyWindowsOptionalFeatures] Get() {
+    [MyWindowsOptionalFeatures] Get()
+    {
         $current = [MyWindowsOptionalFeatures]::new()
         $current.FeatureNames = $this.FeatureNames
     
         $current.States = @{}
-        foreach ($featureName in $this.FeatureNames) {
-            try {
+        foreach ($featureName in $this.FeatureNames)
+        {
+            try
+            {
                 $result = Invoke-DscResource -Name WindowsOptionalFeature -Method Get -Property @{Name = $featureName } -ModuleName PSDscResources
-                if ($result.Ensure -eq 'Present') {
+                if ($result.Ensure -eq 'Present')
+                {
                     $current.States[$featureName] = 'Enabled'
                 }
-                else {
+                else
+                {
                     $current.States[$featureName] = 'Disabled'
                 }
             }
-            catch {
+            catch
+            {
                 $current.States[$featureName] = 'NotPresent'
             }
         }
@@ -39,13 +46,16 @@ class MyWindowsOptionalFeatures {
         return $current
     }
 
-    [bool] Test() {
+    [bool] Test()
+    {
         $current = $this.Get()
     
-        foreach ($featureName in $this.FeatureNames) {
+        foreach ($featureName in $this.FeatureNames)
+        {
             $currentState = $current.States[$featureName] -eq 'Enabled' ? 'Present' : 'Absent'
 
-            if ($currentState -ne $this.Ensure) {
+            if ($currentState -ne $this.Ensure)
+            {
                 return $false
             }
         }
@@ -53,18 +63,22 @@ class MyWindowsOptionalFeatures {
         return $true
     }
 
-    [void] Set() {
-        if ($this.Test()) {
+    [void] Set()
+    {
+        if ($this.Test())
+        {
             return
         }
     
         $current = $this.CachedCurrent
     
-        foreach ($featureName in $this.FeatureNames) {
+        foreach ($featureName in $this.FeatureNames)
+        {
             $desiredState = $this.Ensure
             $currentState = $current.States[$featureName]
     
-            if ($currentState -eq 'NotPresent') {
+            if ($currentState -eq 'NotPresent')
+            {
                 throw "Windows optional feature '$($featureName)' is not present on this machine"
             }
     
