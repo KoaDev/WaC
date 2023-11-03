@@ -3,8 +3,9 @@
 . .\Get-DscResourcesFromYaml.ps1
 . .\Get-ShortenedPath.ps1
 
-if (-not (Get-Module -ListAvailable -Name PSDesiredStateConfiguration)) {
-    Write-Error "The PSDesiredStateConfiguration module is not installed."
+if (-not (Get-Module -ListAvailable -Name PSDesiredStateConfiguration))
+{
+    Write-Error 'The PSDesiredStateConfiguration module is not installed.'
     return $null
 }
 
@@ -12,7 +13,8 @@ Import-Module PSDesiredStateConfiguration
 
 $defaultModuleName = 'PSDscResources'
 
-function Set-DscResourceState {
+function Set-DscResourceState
+{
     [CmdletBinding()]
     param ([hashtable]$resource)
 
@@ -28,7 +30,8 @@ function Set-DscResourceState {
     return $result
 }
 
-function Get-DscResourceState {
+function Get-DscResourceState
+{
     [CmdletBinding()]
     param ([hashtable]$resource)
 
@@ -37,45 +40,61 @@ function Get-DscResourceState {
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    if (-not $dscResource.Property) {
+    if (-not $dscResource.Property)
+    {
         $dscResource.Property = @{}
     }
     $dscProperties = $dscResource.Property
     
     $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue')
 
-    switch ($resource.Name) {
-        'Registry' {
+    switch ($resource.Name)
+    {
+        'Registry'
+        {
             return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData)."
         }
-        'WindowsOptionalFeature' {
+        'WindowsOptionalFeature'
+        {
             return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
         }
-        'WingetPackage' {
+        'WingetPackage'
+        {
             return "$($resource.Name) $($dscProperties.Id) is currently $($currentValue.IsInstalled ? 'Present' : 'Absent') - current version: $($currentValue.InstalledVersion)."
         }
-        'MyCertificate' {
+        'MyCertificate'
+        {
             return "$($resource.Name) $($dscProperties.Path) is currently $($currentValue.Ensure)."
         }
-        { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' } {
+        { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' }
+        {
             return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)."
         }
-        'MyNodeVersion' {
-            return "$($resource.Name) $($dscProperties.Version) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)$($currentValue.Use ? ' used' : '')."
-        }
-        'MyWindowsDefenderExclusion' {
-            return "$($resource.Name) $($dscProperties.Type + ' - ' + $dscProperties.Value) is currently $($currentValue.Ensure)."
-        }
-        'MyWindowsFeature' {
+        'MyHosts'
+        {
             return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
         }
-        'MyWindowsOptionalFeatures' {
+        'MyNodeVersion'
+        {
+            return "$($resource.Name) $($dscProperties.Version) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)$($currentValue.Use ? ' used' : '')."
+        }
+        'MyWindowsDefenderExclusion'
+        {
+            return "$($resource.Name) $($dscProperties.Type + ' - ' + $dscProperties.Value) is currently $($currentValue.Ensure)."
+        }
+        'MyWindowsFeature'
+        {
+            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
+        }
+        'MyWindowsOptionalFeatures'
+        {
             return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.States | ConvertTo-Json)."
         }
     }
 }
 
-function Test-DscResourceState {
+function Test-DscResourceState
+{
     [CmdletBinding()]
     param ([hashtable]$resource)
 
@@ -83,7 +102,8 @@ function Test-DscResourceState {
 
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    if (-not $dscResource.Property) {
+    if (-not $dscResource.Property)
+    {
         $dscResource.Property = @{}
     }
     $dscProperties = $dscResource.Property
@@ -93,26 +113,71 @@ function Test-DscResourceState {
     # Return the necessary fields as an array
     return @(
         $resource.Name
-        switch ($resource.Name) {
-            'Registry' { $dscProperties.ValueName }
-            'WindowsOptionalFeature' { $dscProperties.Name }
-            'WingetPackage' { $dscProperties.Id }
-            'MyCertificate' { Get-ShortenedPath -Path $dscProperties.Path -MaxLength 45 }
-            'MyChocolatey' { 'Chocolatey' }
-            'MyChocolateyPackage' { $dscProperties.PackageName }
-            'MyNodeVersion' { $dscProperties.Version }
-            'MyScoop' { 'Scoop' }
-            'MyScoopPackage' { $dscProperties.PackageName }
-            'MyWindowsDefenderExclusion' { $dscProperties.Type + ' - ' + $dscProperties.Value }
-            'MyWindowsFeature' { $dscProperties.Name }
-            'MyWindowsOptionalFeatures' { $dscProperties.FeatureNames -join ',' }
-            default { 'Not handled' }
+        switch ($resource.Name)
+        {
+            'Registry'
+            {
+                $dscProperties.ValueName 
+            }
+            'WindowsOptionalFeature'
+            {
+                $dscProperties.Name 
+            }
+            'WingetPackage'
+            {
+                $dscProperties.Id 
+            }
+            'MyCertificate'
+            {
+                Get-ShortenedPath -Path $dscProperties.Path -MaxLength 45 
+            }
+            'MyChocolatey'
+            {
+                'Chocolatey' 
+            }
+            'MyChocolateyPackage'
+            {
+                $dscProperties.PackageName 
+            }
+            'MyHosts'
+            {
+                $dscProperties.Name
+            }
+            'MyNodeVersion'
+            {
+                $dscProperties.Version 
+            }
+            'MyScoop'
+            {
+                'Scoop' 
+            }
+            'MyScoopPackage'
+            {
+                $dscProperties.PackageName 
+            }
+            'MyWindowsDefenderExclusion'
+            {
+                $dscProperties.Type + ' - ' + $dscProperties.Value 
+            }
+            'MyWindowsFeature'
+            {
+                $dscProperties.Name 
+            }
+            'MyWindowsOptionalFeatures'
+            {
+                $dscProperties.FeatureNames -join ',' 
+            }
+            default
+            {
+                'Not handled' 
+            }
         }
         $isCurrent.InDesiredState
     )
 }
 
-function Compare-DscResource {
+function Compare-DscResource
+{
     [CmdletBinding()]
     param (
         [hashtable]$resource,
@@ -124,104 +189,149 @@ function Compare-DscResource {
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
     $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    if (-not $dscResource.Property) {
+    if (-not $dscResource.Property)
+    {
         $dscResource.Property = @{}
     }
     $dscProperties = $dscResource.Property
     
+    # try {
+    #     Import-Module -Name $dscResource.ModuleName
+    #     $resourceInstance = New-Object -TypeName $dscResource.Name
+    #     $dscResource.Property.GetEnumerator() | ForEach-Object {
+    #         $resourceInstance.$($_.Key) = $_.Value
+    #     }
+
+    #     return "N/A"
+    # }
+    # catch {
     $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue')
+    # }
 
     $dscProperties.Ensure = $dscProperties.Ensure ?? 'Present'
 
-    switch ($resource.Name) {
-        'Registry' {
-            if ($currentValue.ValueData -ne $dscProperties.ValueData) {
+    switch ($resource.Name)
+    {
+        'Registry'
+        {
+            if ($currentValue.ValueData -ne $dscProperties.ValueData)
+            {
                 return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData) - Desired value: $($dscProperties.ValueData)."
             }
-            elseif (-not $DifferentOnly) {
+            elseif (-not $DifferentOnly)
+            {
                 return "$($resource.Name) $($dscProperties.ValueName) is in desired state."
             }
         }
-        { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' } {
-            if ($currentValue.Ensure -ne $dscProperties.Ensure) {
+        { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' }
+        {
+            if ($currentValue.Ensure -ne $dscProperties.Ensure)
+            {
                 return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure)."
             }
-            elseif ($currentValue.Version -ne $dscProperties.Version -and $currentValue.State -eq 'Stale') {
+            elseif ($currentValue.Version -ne $dscProperties.Version -and $currentValue.State -eq 'Stale')
+            {
                 return "$($resource.Name) $($dscProperties.PackageName) current version: $($currentValue.Version) - Desired value: $($currentValue.LatestVersion)."
             }
-            elseif (-not $DifferentOnly) {
+            elseif (-not $DifferentOnly)
+            {
                 return "$($resource.Name) $($dscProperties.PackageName) is in desired state."
             }
         }
-        'MyNodeVersion' {
-            if (($currentValue.Ensure -eq 'Absent' -xor $dscProperties.Ensure -eq 'Absent') -or ($currentValue.Ensure -eq 'Present' -and $dscProperties.Ensure -eq 'Used')) {
-                return "$($resource.Name) $($dscProperties.Version) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure)."
-            }
-            elseif ($currentValue.Version -ne $dscProperties.Version -and $currentValue.State -eq 'Stale') {
-                return "$($resource.Name) $($dscProperties.Version) current version: $($currentValue.Version) - Desired value: $($currentValue.LatestVersion)."
-            }
-            elseif (-not $DifferentOnly) {
-                return "$($resource.Name) $($dscProperties.Version) is in desired state."
-            }
-        }
-        'MyWindowsFeature' {
-            if ($currentValue.Ensure -ne $dscProperties.Ensure) {
+        'MyHosts'
+        {
+            if ($currentValue.Ensure -ne $dscProperties.Ensure)
+            {
                 return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure)."
             }
-            elseif (-not $DifferentOnly) {
+            elseif (-not $DifferentOnly)
+            {
                 return "$($resource.Name) $($dscProperties.Name) is in desired state."
             }
         }
-        default {
-            if (-not $DifferentOnly) {
+        'MyNodeVersion'
+        {
+            if (($currentValue.Ensure -eq 'Absent' -xor $dscProperties.Ensure -eq 'Absent') -or ($currentValue.Ensure -eq 'Present' -and $dscProperties.Ensure -eq 'Used'))
+            {
+                return "$($resource.Name) $($dscProperties.Version) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure)."
+            }
+            elseif ($currentValue.Version -ne $dscProperties.Version -and $currentValue.State -eq 'Stale')
+            {
+                return "$($resource.Name) $($dscProperties.Version) current version: $($currentValue.Version) - Desired value: $($currentValue.LatestVersion)."
+            }
+            elseif (-not $DifferentOnly)
+            {
+                return "$($resource.Name) $($dscProperties.Version) is in desired state."
+            }
+        }
+        'MyWindowsFeature'
+        {
+            if ($currentValue.Ensure -ne $dscProperties.Ensure)
+            {
+                return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure) but desired state is $($dscProperties.Ensure)."
+            }
+            elseif (-not $DifferentOnly)
+            {
+                return "$($resource.Name) $($dscProperties.Name) is in desired state."
+            }
+        }
+        default
+        {
+            if (-not $DifferentOnly)
+            {
                 return "*** $($resource.Name) *** is not handled."
             }
         }
     }
 }
 
-function Set-DscConfiguration {
+function Set-DscConfiguration
+{
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string]$YamlFilePath
     )
 
-    Write-Verbose "Setting DSC Configuration"
+    Write-Verbose 'Setting DSC Configuration'
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
-    foreach ($resource in $resources) {
+    foreach ($resource in $resources)
+    {
         $result = Set-DscResourceState -resource $resource
         Write-Output $result
     }
 }
 
-function Get-DscConfiguration {
+function Get-DscConfiguration
+{
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string]$YamlFilePath
     )
 
-    Write-Verbose "Getting DSC Configuration"
+    Write-Verbose 'Getting DSC Configuration'
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
-    foreach ($resource in $resources) {
+    foreach ($resource in $resources)
+    {
         $result = Get-DscResourceState -resource $resource
         Write-Output $result
     }
 }
 
-function Test-DscConfiguration {
+function Test-DscConfiguration
+{
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string]$YamlFilePath
     )
 
-    Write-Verbose "Testing DSC Configuration"
+    Write-Verbose 'Testing DSC Configuration'
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
@@ -241,17 +351,25 @@ function Test-DscConfiguration {
     Write-Output $titleRow
     Write-Output $header
 
-    foreach ($resource in $resources) {
+    foreach ($resource in $resources)
+    {
         $result = Test-DscResourceState -resource $resource
-        $color = if ($result[2]) { 'green' } else { 'red' }
+        $color = if ($result[2])
+        {
+            'green' 
+        }
+        else
+        {
+            'red' 
+        }
 
-        Write-Host "|" -NoNewline
+        Write-Host '|' -NoNewline
         Write-Host "$($result[0].ToString().PadRight($colWidths['Resource Type']))" -NoNewline
-        Write-Host "|" -NoNewline
+        Write-Host '|' -NoNewline
         Write-Host "$($result[1].ToString().PadRight($colWidths['Resource Name']))" -NoNewline
-        Write-Host "|" -NoNewline
+        Write-Host '|' -NoNewline
         Write-Host "$($result[2].ToString().PadRight($colWidths['Is in desired state']))" -ForegroundColor $color -NoNewline
-        Write-Host "|"
+        Write-Host '|'
     }
 
     # Output the footer
@@ -259,7 +377,8 @@ function Test-DscConfiguration {
 }
 
 
-function Compare-DscConfiguration {
+function Compare-DscConfiguration
+{
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
@@ -267,11 +386,12 @@ function Compare-DscConfiguration {
         [switch]$DifferentOnly
     )
 
-    Write-Verbose "Comparing DSC Configuration"
+    Write-Verbose 'Comparing DSC Configuration'
 
     $resources = Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
 
-    foreach ($resource in $resources) {
+    foreach ($resource in $resources)
+    {
         $result = Compare-DscResource -resource $resource -DifferentOnly:$DifferentOnly
         Write-Output $result
     }
