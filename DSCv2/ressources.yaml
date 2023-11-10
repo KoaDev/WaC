@@ -130,6 +130,7 @@
   ModuleName: MyResources
   Property:
     - PackageName: 7zip
+    - PackageName: adobereader
     - PackageName: bulkrenameutility
     - PackageName: notepadplusplus
     - PackageName: urlrewrite
@@ -145,6 +146,14 @@
     - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
+
+- Name: VSComponents
+  ModuleName: Microsoft.VisualStudio.DSC
+  Property:
+    - productId: Microsoft.VisualStudio.Product.Enterprise
+      channelId: VisualStudio.17.Release
+      vsConfigFile: C:\Projets\WaC\.vsconfig
+      includeRecommended: true
 
 - Name: MyCertificate
   ModuleName: MyResources

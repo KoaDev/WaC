@@ -54,6 +54,10 @@ function Get-DscResourceState
         {
             return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData)."
         }
+        'VSComponents'
+        {
+            return "$($resource.Name) current value: $($currentValue | ConvertTo-Json)."
+        }
         'WindowsOptionalFeature'
         {
             return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
@@ -118,6 +122,10 @@ function Test-DscResourceState
             'Registry'
             {
                 $dscProperties.ValueName 
+            }
+            'VSComponents'
+            {
+                'Visual Studio'
             }
             'WindowsOptionalFeature'
             {
