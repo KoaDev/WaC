@@ -10,179 +10,9 @@ if (-not (Get-Module -ListAvailable -Name PSDesiredStateConfiguration))
 }
 
 Import-Module PSDesiredStateConfiguration
+Import-Module MyDscResourceState
 
 $defaultModuleName = 'PSDscResources'
-
-function Set-DscResourceState
-{
-    [CmdletBinding()]
-    param ([hashtable]$resource)
-
-    Write-Verbose "Setting DSC Resource State for $($resource | ConvertTo-Json)"
-
-    # Clone the hashtable to prevent modifying the original
-    $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    
-    $dscResource.Property.Ensure = $dscResource.Property.Ensure ?? 'Present'
-
-    $result = Invoke-DscResource @dscResource -Method Set -Verbose:($VerbosePreference -eq 'Continue')
-    return $result
-}
-
-function Get-DscResourceState
-{
-    [CmdletBinding()]
-    param ([hashtable]$resource)
-
-    Write-Verbose "Getting DSC Resource State for $($resource | ConvertTo-Json)"
-
-    # Clone the hashtable to prevent modifying the original
-    $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    if (-not $dscResource.Property)
-    {
-        $dscResource.Property = @{}
-    }
-    $dscProperties = $dscResource.Property
-    
-    $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue')
-
-    switch ($resource.Name)
-    {
-        'Registry'
-        {
-            return "$($resource.Name) $($dscProperties.ValueName) current value: $($currentValue.ValueData)."
-        }
-        'VSComponents'
-        {
-            return "$($resource.Name) current value: $($currentValue | ConvertTo-Json)."
-        }
-        'WindowsOptionalFeature'
-        {
-            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
-        }
-        'WingetPackage'
-        {
-            return "$($resource.Name) $($dscProperties.Id) is currently $($currentValue.IsInstalled ? 'Present' : 'Absent') - current version: $($currentValue.InstalledVersion)."
-        }
-        'MyCertificate'
-        {
-            return "$($resource.Name) $($dscProperties.Path) is currently $($currentValue.Ensure)."
-        }
-        { $_ -in 'MyChocolateyPackage', 'MyScoopPackage' }
-        {
-            return "$($resource.Name) $($dscProperties.PackageName) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)."
-        }
-        'MyHosts'
-        {
-            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
-        }
-        'MyNodeVersion'
-        {
-            return "$($resource.Name) $($dscProperties.Version) is currently $($currentValue.Ensure) - current version: $($currentValue.Version)$($currentValue.Use ? ' used' : '')."
-        }
-        'MyWindowsDefenderExclusion'
-        {
-            return "$($resource.Name) $($dscProperties.Type + ' - ' + $dscProperties.Value) is currently $($currentValue.Ensure)."
-        }
-        'MyWindowsFeature'
-        {
-            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.Ensure)."
-        }
-        'MyWindowsOptionalFeatures'
-        {
-            return "$($resource.Name) $($dscProperties.Name) is currently $($currentValue.States | ConvertTo-Json)."
-        }
-    }
-}
-
-function Test-DscResourceState
-{
-    [CmdletBinding()]
-    param ([hashtable]$resource)
-
-    Write-Verbose "Testing DSC Resource State for $($resource | ConvertTo-Json)"
-
-    $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
-    if (-not $dscResource.Property)
-    {
-        $dscResource.Property = @{}
-    }
-    $dscProperties = $dscResource.Property
-    
-    $isCurrent = Invoke-DscResource @dscResource -Method Test -Verbose:($VerbosePreference -eq 'Continue')
-
-    # Return the necessary fields as an array
-    return @(
-        $resource.Name
-        switch ($resource.Name)
-        {
-            'Registry'
-            {
-                $dscProperties.ValueName 
-            }
-            'VSComponents'
-            {
-                'Visual Studio'
-            }
-            'WindowsOptionalFeature'
-            {
-                $dscProperties.Name 
-            }
-            'WingetPackage'
-            {
-                $dscProperties.Id 
-            }
-            'MyCertificate'
-            {
-                Get-ShortenedPath -Path $dscProperties.Path -MaxLength 45 
-            }
-            'MyChocolatey'
-            {
-                'Chocolatey' 
-            }
-            'MyChocolateyPackage'
-            {
-                $dscProperties.PackageName 
-            }
-            'MyHosts'
-            {
-                $dscProperties.Name
-            }
-            'MyNodeVersion'
-            {
-                $dscProperties.Version 
-            }
-            'MyScoop'
-            {
-                'Scoop' 
-            }
-            'MyScoopPackage'
-            {
-                $dscProperties.PackageName 
-            }
-            'MyWindowsDefenderExclusion'
-            {
-                $dscProperties.Type + ' - ' + $dscProperties.Value 
-            }
-            'MyWindowsFeature'
-            {
-                $dscProperties.Name 
-            }
-            'MyWindowsOptionalFeatures'
-            {
-                $dscProperties.FeatureNames -join ',' 
-            }
-            default
-            {
-                'Not handled' 
-            }
-        }
-        $isCurrent.InDesiredState
-    )
-}
 
 function Compare-DscResource
 {
@@ -192,7 +22,7 @@ function Compare-DscResource
         [switch]$DifferentOnly
     )
 
-    Write-Verbose "Comparing DSC Resource State for $($resource | ConvertTo-Json)"
+    Write-Verbose "Comparing DSC Resource State for $($resource | ConvertTo-Json -Depth 100)"
 
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
@@ -383,7 +213,6 @@ function Test-DscConfiguration
     # Output the footer
     Write-Output $header
 }
-
 
 function Compare-DscConfiguration
 {

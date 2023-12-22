@@ -17,6 +17,7 @@ codemaid
 # https://ohmyposh.dev
 # https://www.nerdfonts.com
 # https://github.com/devblackops/Terminal-Icons
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.4
 
 # Créer disque virtuel ?
 Test-Path "D:\"

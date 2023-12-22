@@ -1,63 +1,54 @@
-- Name: Registry
-  Property:
-    - Key: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-      ValueName: HideFileExt
-      ValueData: "0"
-      ValueType: DWord
-    - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
-      ValueName: DisableLoopbackCheck
-      ValueData: "1"
-      ValueType: DWord
+# - Name: Registry
+#   Property:
+#     - Key: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+#       ValueName: HideFileExt
+#       ValueData: "0"
+#       ValueType: DWord
+#     - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+#       ValueName: DisableLoopbackCheck
+#       ValueData: "1"
+#       ValueType: DWord
+
+# - Name: WindowsOptionalFeature
+#   Property:
+#     - Name: IIS-ApplicationDevelopment
+#     - Name: IIS-ASPNET
+#     - Name: IIS-ASPNET45
+#     - Name: IIS-BasicAuthentication
+#     - Name: IIS-CertProvider
+#     - Name: IIS-CommonHttpFeatures
+#     - Name: IIS-DefaultDocument
+#     - Name: IIS-DirectoryBrowsing
+#     - Name: IIS-HealthAndDiagnostics
+#     - Name: IIS-HostableWebCore
+#     - Name: IIS-HttpCompressionDynamic
+#     - Name: IIS-HttpCompressionStatic
+#     - Name: IIS-HttpErrors
+#     - Name: IIS-HttpLogging
+#     - Name: IIS-ISAPIExtensions
+#     - Name: IIS-ISAPIFilter
+#     - Name: IIS-ManagementConsole
+#     - Name: IIS-ManagementScriptingTools
+#     - Name: IIS-NetFxExtensibility
+#     - Name: IIS-NetFxExtensibility45
+#     - Name: IIS-Performance
+#     - Name: IIS-RequestFiltering
+#     - Name: IIS-Security
+#     - Name: IIS-StaticContent
+#     - Name: IIS-WebServer
+#     - Name: IIS-WebServerManagementTools
+#     - Name: IIS-WebServerRole
+#     - Name: IIS-WebSockets
+#     - Name: IIS-WindowsAuthentication
+#     - Name: NetFx3
+#     - Name: NetFx4-AdvSrvs
+#     - Name: NetFx4Extended-ASPNET45
+#     - Name: WCF-HTTP-Activation
+#     - Name: WCF-HTTP-Activation45
+#     - Name: WCF-NonHTTP-Activation
+#     - Name: WCF-Services45
 
 # - Name: MyWindowsOptionalFeatures
-#   ModuleName: MyResources
-#   Property:
-#     - FeatureNames:
-#         - WCF-HTTP-Activation
-#         - WCF-HTTP-Activation45
-#         - WCF-NonHTTP-Activation
-#         - WCF-Services45
-
-- Name: WindowsOptionalFeature
-  Property:
-    - Name: IIS-ApplicationDevelopment
-    - Name: IIS-ASPNET
-    - Name: IIS-ASPNET45
-    - Name: IIS-BasicAuthentication
-    - Name: IIS-CertProvider
-    - Name: IIS-CommonHttpFeatures
-    - Name: IIS-DefaultDocument
-    - Name: IIS-DirectoryBrowsing
-    - Name: IIS-HealthAndDiagnostics
-    - Name: IIS-HostableWebCore
-    - Name: IIS-HttpCompressionDynamic
-    - Name: IIS-HttpCompressionStatic
-    - Name: IIS-HttpErrors
-    - Name: IIS-HttpLogging
-    - Name: IIS-ISAPIExtensions
-    - Name: IIS-ISAPIFilter
-    - Name: IIS-ManagementConsole
-    - Name: IIS-ManagementScriptingTools
-    - Name: IIS-NetFxExtensibility
-    - Name: IIS-NetFxExtensibility45
-    - Name: IIS-Performance
-    - Name: IIS-RequestFiltering
-    - Name: IIS-Security
-    - Name: IIS-StaticContent
-    - Name: IIS-WebServer
-    - Name: IIS-WebServerManagementTools
-    - Name: IIS-WebServerRole
-    - Name: IIS-WebSockets
-    - Name: IIS-WindowsAuthentication
-    - Name: NetFx3
-    - Name: NetFx4-AdvSrvs
-    - Name: NetFx4Extended-ASPNET45
-    - Name: WCF-HTTP-Activation
-    - Name: WCF-HTTP-Activation45
-    - Name: WCF-NonHTTP-Activation
-    - Name: WCF-Services45
-
-# - Name: MyWindowsFeature
 #   ModuleName: MyResources
 #   Property:
 #     - Name: IIS-ApplicationDevelopment
@@ -97,34 +88,34 @@
 #     - Name: WCF-NonHTTP-Activation
 #     - Name: WCF-Services45
 
-- Name: MyScoop
-  ModuleName: MyResources
+# - Name: MyScoop
+#   ModuleName: MyResources
 
-- Name: MyScoopPackage
-  ModuleName: MyResources
-  Property:
-    - PackageName: dotnet-sdk
-    - PackageName: gh
-    - PackageName: oh-my-posh
-    - PackageName: git
-    - PackageName: nvm
-    - PackageName: terraform
-    - PackageName: dotnet3-sdk
-    - PackageName: dotnet5-sdk
-    - PackageName: dotnet6-sdk
-    - PackageName: baretail
-    - PackageName: mockoon
-    - PackageName: nuget-package-explorer
-    - PackageName: paint.net
-    - PackageName: postman
-    - PackageName: vlc
-    - PackageName: wiztree
-    - PackageName: CascadiaCode-NF-Mono
-    - PackageName: FiraCode-NF
-    - PackageName: temurin-lts-jdk
+# - Name: MyScoopPackage
+#   ModuleName: MyResources
+#   Property:
+#     - PackageName: dotnet-sdk
+#     - PackageName: gh
+#     - PackageName: oh-my-posh
+#     - PackageName: git
+#     - PackageName: nvm
+#     - PackageName: terraform
+#     - PackageName: dotnet3-sdk
+#     - PackageName: dotnet5-sdk
+#     - PackageName: dotnet6-sdk
+#     - PackageName: baretail
+#     - PackageName: mockoon
+#     - PackageName: nuget-package-explorer
+#     - PackageName: paint.net
+#     - PackageName: postman
+#     - PackageName: vlc
+#     - PackageName: wiztree
+#     - PackageName: CascadiaCode-NF-Mono
+#     - PackageName: FiraCode-NF
+#     - PackageName: temurin-lts-jdk
 
-- Name: MyChocolatey
-  ModuleName: MyResources
+# - Name: MyChocolatey
+#   ModuleName: MyResources
 
 - Name: MyChocolateyPackage
   ModuleName: MyResources
@@ -143,6 +134,7 @@
     - Id: Fork.Fork
     - Id: Microsoft.PowerShell
     - Id: Microsoft.PowerToys
+    - Id: Microsoft.PowerAutomateDesktop
     - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
@@ -152,14 +144,14 @@
   Property:
     - productId: Microsoft.VisualStudio.Product.Enterprise
       channelId: VisualStudio.17.Release
-      vsConfigFile: C:\Projets\WaC\.vsconfig
+      vsConfigFile: C:\Projets\WaC\resources\visual-studio\.vsconfig
       includeRecommended: true
 
 - Name: MyCertificate
   ModuleName: MyResources
   Property:
-    - Path: C:\Projets\WaC\Certificats\_.cr-paca.fr.crt
-    - Path: C:\Projets\WaC\Certificats\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+    - Path: C:\Projets\WaC\resources\certificates\_.cr-paca.fr.crt
+    - Path: C:\Projets\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
 
 - Name: MyWindowsDefenderExclusion
   ModuleName: MyResources
@@ -180,4 +172,4 @@
   ModuleName: MyResources
   Property:
     - Name: RégionSUD
-      Path: C:\Projets\WaC\hosts
+      Path: C:\Projets\WaC\resources\hosts
