@@ -1,11 +1,16 @@
 . $PSScriptRoot\Get-DscResourcesFromYaml.ps1
 
+$script:cache = @{}
+$script:CacheDuration = [timespan]::FromMinutes(5)
+
 function Get-DscConfigurationState
 {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [string]$YamlFilePath
+        [string]$YamlFilePath,
+        
+        [switch]$Force
     )
 
     Write-Verbose 'Getting DSC Configuration'
@@ -14,7 +19,20 @@ function Get-DscConfigurationState
 
     foreach ($resource in $resources)
     {
-        $result = Get-DscResourceState -resource $resource
-        Write-Output $result
+        $cacheKey = $resource | ConvertTo-Json -Depth 100 -Compress
+        $isInCache = $script:cache.ContainsKey($cacheKey)
+        $isOutdated = $isInCache -and (Get-Date) - $script:cache[$cacheKey].Time -gt $script:CacheDuration
+        if ($Force -or -not $isInCache -or $isOutdated)
+        {
+            $result = Get-DscResourceState -resource $resource
+            $script:cache[$cacheKey] = @{
+                Result = $result
+                Time   = Get-Date
+            }
+        }
+        Write-Output $script:cache[$cacheKey].Result
+
+        # $result = Get-DscResourceState -resource $resource
+        # Write-Output $result
     }
 }

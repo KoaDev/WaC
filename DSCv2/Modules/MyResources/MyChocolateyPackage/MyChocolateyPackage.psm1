@@ -24,12 +24,12 @@ class MyChocolateyPackage
 
     hidden [MyChocolateyPackage] $CachedCurrent
 
-    hidden static [DateTime] $LastChocolateyListRefreshed
+    hidden static [datetime] $LastChocolateyListRefreshed
     hidden static [hashtable] $ChocolateyListCache
-    hidden static [DateTime] $LastChocolateyStatusRefreshed
+    hidden static [datetime] $LastChocolateyStatusRefreshed
     hidden static [hashtable] $ChocolateyStatusCache
 
-    hidden [TimeSpan] $CacheDuration = [TimeSpan]::FromMinutes(5)
+    hidden [timespan] $CacheDuration = [timespan]::FromMinutes(5)
 
     hidden [hashtable] GetChocolateyPackageInfo([string] $packageName)
     {

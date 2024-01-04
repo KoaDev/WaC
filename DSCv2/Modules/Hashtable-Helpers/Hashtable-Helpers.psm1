@@ -2,7 +2,7 @@ function Split-Hashtable
 {
     param (
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]$OriginalHashtable,
+        [hashtable]$OriginalHashtable,
 
         [Parameter(Mandatory = $true)]
         [string[]]$KeysArray
@@ -35,7 +35,7 @@ function Select-HashtableKeys
 {
     param (
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]$OriginalHashtable,
+        [hashtable]$OriginalHashtable,
         
         [Parameter(Mandatory = $true)]
         [string[]]$KeysArray,

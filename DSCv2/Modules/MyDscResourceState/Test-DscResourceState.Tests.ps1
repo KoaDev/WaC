@@ -2,7 +2,7 @@ Import-Module Functional
 Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
-    Get-ChildItem -Path "$PSScriptRoot\*.ps1" -Exclude '*.Tests.ps1' | ForEach-Object { . $_.FullName }
+    . $PSScriptRoot\Test-DscResourceState.ps1
 
     function Assert-Type
     {

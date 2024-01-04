@@ -24,12 +24,12 @@ class MyScoopPackage
 
     hidden [MyScoopPackage] $CachedCurrent
 
-    hidden static [DateTime] $LastScoopListRefreshed
+    hidden static [datetime] $LastScoopListRefreshed
     hidden static [hashtable] $ScoopListCache
-    hidden static [DateTime] $LastScoopStatusRefreshed
+    hidden static [datetime] $LastScoopStatusRefreshed
     hidden static [hashtable] $ScoopStatusCache
 
-    hidden [TimeSpan] $CacheDuration = [TimeSpan]::FromMinutes(5)
+    hidden [timespan] $CacheDuration = [timespan]::FromMinutes(5)
 
     hidden [hashtable] GetScoopPackageInfo([string] $packageName)
     {
