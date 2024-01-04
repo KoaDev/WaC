@@ -6,11 +6,16 @@ function Convert-HashtableKeysToStrings
 {
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [hashtable]$InputHashtable
+        $InputHashtable
     )
 
     process
     {
+        if ($yourVariable -isnot [hashtable])
+        {
+            return $InputHashtable
+        }
+
         $newHashtable = @{}
         foreach ($key in $InputHashtable.Keys)
         {
@@ -24,6 +29,11 @@ function Convert-HashtableKeysToStrings
 
 function Should-BeDeep ($ActualValue, $ExpectedValue, [switch] $Negate, [string] $Because)
 {
+    if ($ExpectedValue -is [hashtable] -and $ActualValue -is [psobject[]] -and $ActualValue.Count -eq 1 -and $ActualValue[0] -is [hashtable])
+    {
+        $ActualValue = $ActualValue[0]
+    }
+
     $verboseOutput = @()
     [bool] $succeeded = Compare-Deep $ExpectedValue $ActualValue -Verbose 4>&1 |
         Tee-Object -Variable verboseOutput |
@@ -52,9 +62,9 @@ $expectedString
         {
             $failureMessage = @"
 Expected objects to be equal$(if($Because) { " because $Because"}).
-Expected:
+Expected ($($ExpectedValue.GetType())):
 $expectedString
-Actual:
+Actual ($($ActualValue.GetType())):
 $actualString
 Detail:
 $($verboseOutput -join "`n")
@@ -70,4 +80,5 @@ $($verboseOutput -join "`n")
 
 Add-ShouldOperator -Name BeDeep `
     -InternalName 'Should-BeDeep' `
-    -Test ${function:Should-BeDeep}
+    -Test ${function:Should-BeDeep} `
+    -SupportsArrayInput

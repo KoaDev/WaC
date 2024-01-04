@@ -1,77 +1,7 @@
 Import-Module PSDesiredStateConfiguration
+Import-Module Hashtable-Helpers
 
 $defaultModuleName = 'PSDscResources'
-
-function Split-Hashtable
-{
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]$OriginalHashtable,
-
-        [Parameter(Mandatory = $true)]
-        [string[]]$KeysArray
-    )
-
-    # Create two new empty hashtables
-    $includedKeysHashtable = @{}
-    $excludedKeysHashtable = @{}
-
-    # Iterate through the original hashtable
-    foreach ($key in $OriginalHashtable.Keys)
-    {
-        if ($KeysArray -contains $key)
-        {
-            # If the key is in the KeysArray, add it to the includedKeysHashtable
-            $includedKeysHashtable[$key] = $OriginalHashtable[$key]
-        }
-        else
-        {
-            # If the key is not in the KeysArray, add it to the excludedKeysHashtable
-            $excludedKeysHashtable[$key] = $OriginalHashtable[$key]
-        }
-    }
-
-    # Return the two hashtables
-    return @($includedKeysHashtable, $excludedKeysHashtable)
-}
-
-function ConvertTo-Hashtable
-{
-    param (
-        [Parameter(ValueFromPipeline = $true)]
-        $object
-    )
-
-    process
-    {
-        # If the object is already a hashtable, return it directly
-        if ($object -is [hashtable])
-        {
-            return $object
-        }
-
-        # If the object is null, return an empty hashtable
-        if ($null -eq $object)
-        {
-            return @{}
-        }
-
-        # If the object is not an object, throw an exception
-        if ($object -isnot [object])
-        {
-            throw 'The input must be an object.'
-        }
-
-        # If the object is a regular object, convert it to a hashtable
-        $hashtable = @{}
-        foreach ($property in $object.PSObject.Properties)
-        {
-            $hashtable[$property.Name] = $property.Value
-        }
-
-        return $hashtable
-    }
-}
 
 # Create an empty hashtable
 $resourceIdProperties = @{}
@@ -108,7 +38,7 @@ function Get-DscResourceState
     
     $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
 
-    $idProperties = $resourceIdProperties[$resource.Name]
+    $idProperties = $resourceIdProperties[$dscResource.Name]
     $identifier, $state = Split-Hashtable -OriginalHashtable $currentValue -KeysArray $idProperties
 
     return @{

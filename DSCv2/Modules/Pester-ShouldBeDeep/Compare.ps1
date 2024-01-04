@@ -128,14 +128,37 @@ function Compare-Array
         return $false
     }
 
+    $maxShift = $array2.Count - $array1.Count
+    $shift = 0
+
     for ($i = 0; $i -lt $array1.Count; $i++)
     {
-        if (-not (Compare-Deep $array1[$i] $array2[$i] $strict -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
+        for ($shift; $shift -le $maxShift; $shift++)
         {
-            Write-Verbose "Difference found at index $i - $(Get-ObjectComparisonString $array1[$i] $array2[$i])."
+            if (Compare-Deep $array1[$i] $array2[$i + $shift] $strict -Verbose:($PSBoundParameters['Verbose'] -eq $true))
+            {
+                break
+            }
+        }
+        if ($shift -gt $maxShift)
+        {
+            Write-Verbose "Difference found at index $i - $(Get-ObjectComparisonString $array1[$i] $array2[$i + $shift - 1])."
             return $false
         }
     }
+
+    # for ($i = 0; $i -lt $array1.Count; $i++)
+    # {
+    #     while ($shift -le $maxShift -and -not (Compare-Deep $array1[$i] $array2[$i + $shift] $strict -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
+    #     {
+    #         $shift++
+    #     }
+    #     if ($shift -gt $maxShift)
+    #     {
+    #         Write-Verbose "Difference found at index $i - $(Get-ObjectComparisonString $array1[$i] $array2[$i + $shift - 1])."
+    #         return $false
+    #     }
+    # }
 
     return $true
 }

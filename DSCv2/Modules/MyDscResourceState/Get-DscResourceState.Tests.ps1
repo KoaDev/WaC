@@ -17,6 +17,19 @@ BeforeAll {
         $Result.Type | Should -Be $Resource.Name
     }
 
+    function Assert-Identifier
+    {
+        param (
+            [Parameter(Mandatory = $true)]
+            $Resource,
+    
+            [Parameter(Mandatory = $true)]
+            $Result
+        )
+    
+        $Result.Identifier | Should -BeDeep $Resource.Property
+    }
+
     function Assert-TypeAndIdentifier
     {
         param (
@@ -27,8 +40,8 @@ BeforeAll {
             $Result
         )
     
-        $Result.Type | Should -Be $Resource.Name
-        $Result.Identifier | Should -BeDeep $Resource.Property
+        Assert-Type -Resource $Resource -Result $Result
+        Assert-Identifier -Resource $Resource -Result $Result
     }
 }
 
