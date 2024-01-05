@@ -4,10 +4,10 @@
       ValueName: HideFileExt
       ValueData: "0"
       ValueType: DWord
-    - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
-      ValueName: DisableLoopbackCheck
-      ValueData: "1"
-      ValueType: DWord
+    # - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+    #   ValueName: DisableLoopbackCheck
+    #   ValueData: "1"
+    #   ValueType: DWord
 # - Name: WindowsOptionalFeature
 #   Property:
 #     - Name: IIS-ApplicationDevelopment
