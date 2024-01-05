@@ -5,8 +5,8 @@
     Author            = 'Guy Lescalier'
     CompanyName       = 'Unknown'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'
-    FunctionsToExport = @('Set-DscResourceState', 'Get-DscResourceState', 'Test-DscResourceState')
+    FunctionsToExport = @('Get-DscResourceState', 'Test-DscResourceState', 'Set-DscResourceState')
     CmdletsToExport   = @()
-    VariablesToExport = @()
+    VariablesToExport = @('DscResourcesIdProperties')
     AliasesToExport   = @()
 }

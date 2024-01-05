@@ -12,7 +12,7 @@ function Get-DscResourceState
 
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
+    $dscResource.ModuleName = $dscResource.ModuleName ?? $DefaultDscResourceModuleName
     if (-not $dscResource.Property)
     {
         $dscResource.Property = @{}
@@ -21,7 +21,7 @@ function Get-DscResourceState
     
     $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
 
-    $idProperties = $resourceIdProperties[$dscResource.Name]
+    $idProperties = $DscResourcesIdProperties[$dscResource.Name]
     $identifier, $state = Split-Hashtable -OriginalHashtable $currentValue -KeysArray $idProperties
 
     return @{

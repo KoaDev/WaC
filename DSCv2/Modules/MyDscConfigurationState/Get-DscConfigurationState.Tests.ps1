@@ -2,7 +2,7 @@ Import-Module Functional
 Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
-    Get-ChildItem -Path "$PSScriptRoot\*.ps1" -Exclude '*.Tests.ps1' | ForEach-Object { . $_.FullName }
+    . $PSScriptRoot\Get-DscConfigurationState.ps1
 }
 
 Describe 'MyDscConfiguration' {

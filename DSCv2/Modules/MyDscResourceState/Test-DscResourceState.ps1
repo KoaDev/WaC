@@ -12,7 +12,7 @@ function Test-DscResourceState
 
     # Clone the hashtable to prevent modifying the original
     $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $defaultModuleName
+    $dscResource.ModuleName = $dscResource.ModuleName ?? $DefaultDscResourceModuleName
     if (-not $dscResource.Property)
     {
         $dscResource.Property = @{}
@@ -20,7 +20,7 @@ function Test-DscResourceState
     
     $testResult = Invoke-DscResource @dscResource -Method Test -Verbose:($VerbosePreference -eq 'Continue')
 
-    $idProperties = $resourceIdProperties[$dscResource.Name]
+    $idProperties = $DscResourcesIdProperties[$dscResource.Name]
     $identifier = Select-HashtableKeys $dscResource.Property $idProperties
 
     return @{

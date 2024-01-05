@@ -1,3 +1,5 @@
+Import-Module MyDscResourceState
+
 . $PSScriptRoot\Get-DscResourcesFromYaml.ps1
 
 $script:cache = @{}
@@ -19,7 +21,8 @@ function Get-DscConfigurationState
 
     foreach ($resource in $resources)
     {
-        $cacheKey = $resource | ConvertTo-Json -Depth 100 -Compress
+        $idProperties = $DscResourcesIdProperties[$resource.Name]
+        $cacheKey = $resource.Property | Select-HashtableKeys -KeysArray $idProperties | ConvertTo-Json -Depth 100 -Compress
         $isInCache = $script:cache.ContainsKey($cacheKey)
         $isOutdated = $isInCache -and (Get-Date) - $script:cache[$cacheKey].Time -gt $script:CacheDuration
         if ($Force -or -not $isInCache -or $isOutdated)

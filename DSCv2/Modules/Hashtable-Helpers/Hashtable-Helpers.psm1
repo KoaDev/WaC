@@ -34,7 +34,7 @@ function Split-Hashtable
 function Select-HashtableKeys
 {
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [hashtable]$OriginalHashtable,
         
         [Parameter(Mandatory = $true)]
@@ -43,37 +43,40 @@ function Select-HashtableKeys
         [switch]$InvertSelection
     )
 
-    if ($InvertSelection)
+    process
     {
-        $resultHashtable = $OriginalHashtable.Clone()
-        foreach ($key in $KeysArray)
+        if ($InvertSelection)
         {
-            $resultHashtable.Remove($key)
-        }
-    }
-    else
-    {
-        $resultHashtable = @{}
-        foreach ($key in $KeysArray)
-        {
-            if ($OriginalHashtable.ContainsKey($key))
+            $resultHashtable = $OriginalHashtable.Clone()
+            foreach ($key in $KeysArray)
             {
-                $resultHashtable[$key] = $OriginalHashtable[$key]
-            }
-            else
-            {
-                Write-Error "Key '$key' not found in the original hashtable."
+                $resultHashtable.Remove($key)
             }
         }
-    }
+        else
+        {
+            $resultHashtable = @{}
+            foreach ($key in $KeysArray)
+            {
+                if ($OriginalHashtable.ContainsKey($key))
+                {
+                    $resultHashtable[$key] = $OriginalHashtable[$key]
+                }
+                else
+                {
+                    Write-Error "Key '$key' not found in the original hashtable."
+                }
+            }
+        }
 
-    return $resultHashtable
+        return $resultHashtable
+    }
 }
 
 function ConvertTo-Hashtable
 {
     param (
-        [Parameter(ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         $object
     )
 
