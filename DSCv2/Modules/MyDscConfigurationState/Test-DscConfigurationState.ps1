@@ -3,7 +3,7 @@ Import-Module MyDscResourceState
 . $PSScriptRoot\Get-DscResourcesFromYaml.ps1
 . $PSScriptRoot\Cache.ps1
 
-function Get-DscConfigurationState
+function Test-DscConfigurationState
 {
     [CmdletBinding(DefaultParameterSetName = 'YamlFilePath')]
     param (
@@ -25,10 +25,10 @@ function Get-DscConfigurationState
         $resources = $Resources
     }
 
-    Get-DscConfigurationStateFromResources -Resources $resources -Force:$Force
+    Test-DscConfigurationStateFromResources -Resources $resources -Force:$Force
 }
 
-function Get-DscConfigurationStateFromResources
+function Test-DscConfigurationStateFromResources
 {
     [CmdletBinding()]
     param (
@@ -43,10 +43,10 @@ function Get-DscConfigurationStateFromResources
     foreach ($resource in $Resources)
     {
         $cacheKey = Get-DscResourceHash -Resource $resource
-        $resourceState = Get-CacheEntry -CacheName 'State' -Key $cacheKey -CacheDuration ([timespan]::FromMinutes(5)) `
-            -ResourceAction { Get-DscResourceState -resource $resource } `
+        $resourceInDesiredState = Get-CacheEntry -CacheName 'InDesiredState' -Key $cacheKey -CacheDuration ([timespan]::FromMinutes(5)) `
+            -ResourceAction { Test-DscResourceState -resource $resource } `
             -Force:$Force
 
-        Write-Output $resourceState
+        Write-Output $resourceInDesiredState
     }
 }
