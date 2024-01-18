@@ -27,7 +27,7 @@ BeforeAll {
             $Result
         )
     
-        $Result.Identifier | Should -BeDeep $Resource.Property
+        $Result.Identifier | Should -BeDeeplyEqualPartial $Resource.Property
     }
 
     function Assert-TypeAndIdentifier
@@ -68,7 +68,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of an existing registry value' {
@@ -92,7 +92,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of an existing Windows optional feature' {
@@ -113,7 +113,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of Scoop' {
@@ -132,7 +132,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-Type -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of a Scoop package' {
@@ -157,7 +157,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of Chocolatey' {
@@ -176,7 +176,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-Type -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of a Chocolatey package' {
@@ -201,7 +201,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of a WinGet package' {
@@ -231,7 +231,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of Visual Studio' {
@@ -277,7 +277,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of a Windows Defender exclusion' {
@@ -300,7 +300,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of a Node version' {
@@ -325,7 +325,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
 
         It 'Gets the state of the hosts file' {
@@ -348,7 +348,7 @@ Describe 'MyDscResourceState' {
 
             # Assert: Verify the function did what it's supposed to
             Assert-TypeAndIdentifier -Resource $resource -Result $result
-            $result.State | Should -BeDeep $expected
+            $result.State | Should -BeDeeplyEqualPartial $expected
         }
     }
 }

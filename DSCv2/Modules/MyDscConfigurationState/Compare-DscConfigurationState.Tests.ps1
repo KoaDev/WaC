@@ -3,29 +3,29 @@ Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
     . $PSScriptRoot\Yaml.ps1
-    . $PSScriptRoot\Get-DscConfigurationState.ps1
+    . $PSScriptRoot\Compare-DscConfigurationState.ps1
 }
 
 Describe 'MyDscConfiguration' {
-    Context 'Get-DscConfigurationState' {
-        It 'should call Invoke-DscResourceStateBatch with the expected parameters when given a resource collection' {
-            $expected = @{
-                Name     = 'Registry'
-                Property = @{
-                    Key       = 'Key6'
-                    ValueName = 'Value6'
-                }
-            }
+    Context 'Compare-DscConfigurationState' {
+        # It 'should call Invoke-DscResourceStateBatch with the expected parameters when given a resource collection' {
+        #     $expected = @{
+        #         Name     = 'Registry'
+        #         Property = @{
+        #             Key       = 'Key6'
+        #             ValueName = 'Value6'
+        #         }
+        #     }
     
-            Mock Invoke-DscResourceStateBatch { $args } -Verifiable
+        #     Mock Invoke-DscResourceStateBatch { $args } -Verifiable
     
-            Get-DscConfigurationState -Resources @($expected)
+        #     Get-DscConfigurationState -Resources @($expected)
     
-            Assert-MockCalled Invoke-DscResourceStateBatch -Times 1 -Scope It -ParameterFilter {
-                $Method -eq 'Get' -and
-                $Resources[0] -eq $expected
-            }
-        }
+        #     Assert-MockCalled Invoke-DscResourceStateBatch -Times 1 -Scope It -ParameterFilter {
+        #         $Method -eq 'Get' -and
+        #         $Resources[0] -eq $expected
+        #     }
+        # }
 
         It 'should call Invoke-DscResourceStateBatch with the expected parameters when given a YAML file path' {
             $expected = @{

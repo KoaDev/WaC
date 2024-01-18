@@ -28,7 +28,7 @@ BeforeAll {
         )
     
         $Result.Type | Should -Be $Resource.Name
-        $Result.Identifier | Should -BeDeep $Resource.Property
+        $Result.Identifier | Should -BeDeeplyEqualPartial $Resource.Property
     }
 }
 

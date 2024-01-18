@@ -30,4 +30,4 @@ $result = @{
                  State = @{
                  }
              }
-$result | Should -BeDeep $expected
+$result | Should -BeDeeplyEqualPartial $expected

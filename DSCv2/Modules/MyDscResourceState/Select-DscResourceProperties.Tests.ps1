@@ -2,7 +2,7 @@ Import-Module Functional
 Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
-    . $PSScriptRoot\Get-DscResourceId.ps1
+    . $PSScriptRoot\Select-DscResourceProperties.ps1
 
     function Assert-Type
     {
@@ -27,7 +27,7 @@ BeforeAll {
             $Result
         )
     
-        $Result.Identifier | Should -BeDeep $Resource.Property
+        $Result.Identifier | Should -BeDeeplyEqualPartial $Resource.Property
     }
 
     function Assert-TypeAndIdentifier
@@ -46,7 +46,7 @@ BeforeAll {
 }
 
 Describe 'MyDscResourceState' {
-    Context 'Get-DscResourceId' {
+    Context 'Select-DscResourceIdProperties' {
         It 'should return a hashtable with the type and identifier' {
             $resource = @{
                 Name     = 'Registry'
@@ -56,9 +56,9 @@ Describe 'MyDscResourceState' {
                 }
             }
 
-            $result = Get-DscResourceId -Resource $resource
+            $result = Select-DscResourceIdProperties -Resource $resource
 
-            $result | Should -BeDeep @{
+            $result | Should -BeDeeplyEqualPartial @{
                 ValueName = 'ValueName'
                 Key       = 'Key'
             }

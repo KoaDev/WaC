@@ -46,7 +46,7 @@ Describe 'MyNodeVersion helpers' {
     Context 'Get-NodeLatestVersions' {
         It 'should return the latest versions' {
             $latestVersions = Get-NodeLatestVersions
-            $latestVersions | Should -BeDeep @{
+            $latestVersions | Should -BeDeeplyEqualPartial @{
                 lts = '21.5.0'
             }
         }

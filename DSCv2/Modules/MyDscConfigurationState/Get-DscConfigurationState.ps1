@@ -1,5 +1,6 @@
 Import-Module MyDscResourceState
 
+. $PSScriptRoot\Yaml.ps1
 . $PSScriptRoot\Invoke-DscResourceState.ps1
 
 function Get-DscConfigurationState
@@ -15,5 +16,7 @@ function Get-DscConfigurationState
         [switch]$Force
     )
 
-    Invoke-DscResourceState -Method Get @PSBoundParameters
+    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
+
+    Invoke-DscResourceStateBatch -Method Get -Resources $resources -Force:$Force
 }
