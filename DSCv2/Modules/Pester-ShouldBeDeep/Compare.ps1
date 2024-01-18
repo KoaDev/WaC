@@ -155,7 +155,7 @@ function Compare-Array
     #     }
     #     if ($shift -gt $maxShift)
     #     {
-    #         Write-Verbose "Difference found at index $i - $(Get-ObjectComparisonString $array1[$i] $array2[$i + $shift - 1])."
+    #         Write-Verbose "Difference found at index $i - $(Get-ObjectComparisonString $Array1[$i] $Array2[$i + $shift - 1])."
     #         return $false
     #     }
     # }
@@ -167,9 +167,9 @@ function Get-ObjectComparisonString
 {
     [CmdletBinding()]
     param (
-        $object1,
-        $object2
+        $Object1,
+        $Object2
     )
 
-    return "$($object1 | ConvertTo-Json -Depth 100 -Compress) vs $($object2 | ConvertTo-Json -Depth 100 -Compress)"
+    return "$($Object1 | ConvertTo-Json -Depth 100 -Compress) vs $($Object2 | ConvertTo-Json -Depth 100 -Compress)"
 }
