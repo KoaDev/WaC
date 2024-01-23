@@ -87,5 +87,26 @@ Describe 'MyDscResourceState' {
             $result.Status | Should -Be 'Missing'
             $result.Diff | Should -BeNullOrEmpty
         }
+
+        It 'Gets the status and diff when the resource is expected to be present but getting its state fails' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name     = 'Registry'
+                Property = @{
+                    Key       = 'TOTO'
+                    ValueName = 'UnknownValueName'
+                    ValueType = 'DWord'
+                    ValueData = @('0')
+                    Ensure    = 'Present'
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Compare-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            $result.Status | Should -Be 'Error'
+            $result.Diff | Should -BeNullOrEmpty
+        }
     }
 }

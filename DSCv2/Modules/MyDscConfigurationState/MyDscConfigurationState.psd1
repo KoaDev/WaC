@@ -5,7 +5,12 @@
     Author            = 'Guy Lescalier'
     CompanyName       = 'Unknown'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'
-    FunctionsToExport = @('Get-DscConfigurationState', 'Test-DscConfigurationState', 'Set-DscConfigurationState')
+    FunctionsToExport = @(
+        'Get-DscConfigurationState'
+        'Test-DscConfigurationState'
+        'Set-DscConfigurationState'
+        'Compare-DscConfigurationState'
+    )
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = @()

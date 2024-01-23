@@ -1,7 +1,6 @@
 Import-Module MyDscResourceState
 
 . $PSScriptRoot\Yaml.ps1
-. $PSScriptRoot\Invoke-DscResourceState.ps1
 
 function Compare-DscConfigurationState
 {
@@ -13,28 +12,34 @@ function Compare-DscConfigurationState
         [Parameter(ParameterSetName = 'ResourceCollection', Mandatory = $true)]
         [hashtable[]]$Resources,
         
+        [switch]$WithCompliant,
+        
         [switch]$Force
     )
 
+    $PSBoundParameters.Remove('WithCompliant')
+    $PSBoundParameters.Remove('Force')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
-    $Comparison = @()
+    $result = @{
+        Compliant    = @()
+        NonCompliant = @()
+        Missing      = @()
+        Unexpected   = @()
+        Error        = @()
+    }
 
     foreach ($resource in $resources)
     {
-        $actual = (Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force).State
-
-        $idProperties = $DscResourcesIdProperties[$resource.Name]    
-        $expected = $resource.Property | Select-HashtableKeys -KeysArray $idProperties -InvertSelection
-
-        $diff = Get-Diff $expected $actual
-
-        $Comparison += @{
-            Name = $resource.Name
-            Id   = $resource.Id
-            Diff = $diff
+        $comparison = Compare-DscResourceState $resource
+        
+        if (-not $WithCompliant -and $comparison.Status -eq 'Compliant')
+        {
+            continue
         }
+        
+        $result[$comparison.Status] += $comparison
     }
 
-    Write-Output $Comparison
+    Write-Output $result
 }

@@ -15,5 +15,5 @@ function Test-DscConfigurationState
         [switch]$Force
     )
 
-    Invoke-DscResourceState -Method Test @PSBoundParameters
+    Invoke-DscResourceStateBatch -Method Test @PSBoundParameters
 }

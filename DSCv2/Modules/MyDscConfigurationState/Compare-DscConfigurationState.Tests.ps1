@@ -8,26 +8,47 @@ BeforeAll {
 
 Describe 'MyDscConfiguration' {
     Context 'Compare-DscConfigurationState' {
-        # It 'should call Invoke-DscResourceStateBatch with the expected parameters when given a resource collection' {
-        #     $expected = @{
-        #         Name     = 'Registry'
-        #         Property = @{
-        #             Key       = 'Key6'
-        #             ValueName = 'Value6'
-        #         }
-        #     }
-    
-        #     Mock Invoke-DscResourceStateBatch { $args } -Verifiable
-    
-        #     Get-DscConfigurationState -Resources @($expected)
-    
-        #     Assert-MockCalled Invoke-DscResourceStateBatch -Times 1 -Scope It -ParameterFilter {
-        #         $Method -eq 'Get' -and
-        #         $Resources[0] -eq $expected
-        #     }
-        # }
+        It 'should call Compare-DscResourceState with the expected parameters when given a single resource' {
+            $expected = @{
+                Name     = 'Registry'
+                Property = @{
+                    Key       = 'Key4'
+                    ValueName = 'Value4'
+                }
+            }
 
-        It 'should call Invoke-DscResourceStateBatch with the expected parameters when given a YAML file path' {
+            Mock Compare-DscResourceState { @{ Status = 'Error' } } -Verifiable
+
+            Compare-DscConfigurationState -Resources @($expected)
+
+            Assert-MockCalled Compare-DscResourceState -Times 1 -Scope It -ParameterFilter {
+                $Resource.Name -eq $expected.Name -and
+                $Resource.Property.Key -eq $expected.Property.Key -and
+                $Resource.Property.ValueName -eq $expected.Property.ValueName
+            }
+        }
+
+        It 'should call Compare-DscResourceState with the expected parameters when given multiple resources' {
+            $expected = @{
+                Name     = 'Registry'
+                Property = @{
+                    Key       = 'Key5'
+                    ValueName = 'Value5'
+                }
+            }
+
+            Mock Compare-DscResourceState { @{ Status = 'Error' } } -Verifiable
+
+            Compare-DscConfigurationState -Resources @($expected, $expected)
+
+            Assert-MockCalled Compare-DscResourceState -Times 2 -Scope It -ParameterFilter {
+                $Resource.Name -eq $expected.Name -and
+                $Resource.Property.Key -eq $expected.Property.Key -and
+                $Resource.Property.ValueName -eq $expected.Property.ValueName
+            }
+        }
+
+        It 'should call Compare-DscResourceState with the expected parameters when given a YAML file path' {
             $expected = @{
                 Name     = 'Registry'
                 Property = @{
@@ -40,15 +61,14 @@ Describe 'MyDscConfiguration' {
             $tempFile = [System.IO.Path]::GetTempFileName()
             Export-DscResourcesToYaml -YamlFilePath $tempFile -DscResources @($expected)
 
-            Mock Invoke-DscResourceStateBatch { $args } -Verifiable
+            Mock Compare-DscResourceState { @{ Status = 'Error' } } -Verifiable
     
-            Get-DscConfigurationState -YamlFilePath $tempFile
+            Compare-DscConfigurationState -YamlFilePath $tempFile
     
-            Assert-MockCalled Invoke-DscResourceStateBatch -Times 1 -Scope It -ParameterFilter {
-                $Method -eq 'Get' -and
-                $Resources[0].Name -eq $expected.Name -and
-                $Resources[0].Property.Key -eq $expected.Property.Key -and
-                $Resources[0].Property.ValueName -eq $expected.Property.ValueName
+            Assert-MockCalled Compare-DscResourceState -Times 1 -Scope It -ParameterFilter {
+                $Resource.Name -eq $expected.Name -and
+                $Resource.Property.Key -eq $expected.Property.Key -and
+                $Resource.Property.ValueName -eq $expected.Property.ValueName
             }
             
             # Teardown Phase: Delete the temporary file
@@ -56,6 +76,46 @@ Describe 'MyDscConfiguration' {
             {
                 Remove-Item $tempFile -Force
             }
+        }
+
+        It 'should return non compliant only by default' {
+            $expected = @{
+                Name     = 'Registry'
+                Property = @{
+                    Key       = 'Key7'
+                    ValueName = 'Value7'
+                }
+            }
+
+            Mock Compare-DscResourceState { @{ Status = 'Compliant' } } -Verifiable
+
+            $result = Compare-DscConfigurationState -Resources @($expected)
+
+            $result.Compliant | Should -BeNullOrEmpty
+            $result.NonCompliant | Should -BeNullOrEmpty
+            $result.Missing | Should -BeNullOrEmpty
+            $result.Unexpected | Should -BeNullOrEmpty
+            $result.Error | Should -BeNullOrEmpty
+        }
+
+        It 'should return compliant when given the -WithCompliant switch' {
+            $expected = @{
+                Name     = 'Registry'
+                Property = @{
+                    Key       = 'Key8'
+                    ValueName = 'Value8'
+                }
+            }
+
+            Mock Compare-DscResourceState { @{ Status = 'Compliant' } } -Verifiable
+
+            $result = Compare-DscConfigurationState -Resources @($expected) -WithCompliant
+
+            $result.Compliant | Should -Not -BeNullOrEmpty
+            $result.NonCompliant | Should -BeNullOrEmpty
+            $result.Missing | Should -BeNullOrEmpty
+            $result.Unexpected | Should -BeNullOrEmpty
+            $result.Error | Should -BeNullOrEmpty
         }
     }
 }

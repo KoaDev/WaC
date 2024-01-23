@@ -8,7 +8,7 @@ function Get-DscResourceHash
         [hashtable]$Resource
     )
 
-    $resourceId = Get-DscResourceId -Resource $resource
+    $resourceId = Select-DscResourceIdProperties -Resource $resource
     $hash = ($resourceId | ConvertTo-Json -Depth 100 -Compress).GetHashCode().ToString()
     return $hash
 }

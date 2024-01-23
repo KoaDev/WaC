@@ -30,7 +30,6 @@ function Get-DeepClone
     }
 }
 
-
 function Compare-DscResourceState
 {
     [CmdletBinding()]
@@ -47,26 +46,37 @@ function Compare-DscResourceState
     }
     $dscResource.Property.Remove('Ensure')
     
-    $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
-
     $identifier = Select-DscResourceIdProperties -Resource $resource
-    $expected = Select-DscResourceStateProperties -Resource $resource
-    $actual = Select-DscResourceStateProperties -Resource $currentValue -ResourceName $resource.Name
 
-    if ($resource.Property.Ensure -ne $currentValue.Ensure)
+    try
     {
-        $status = $resource.Property.Ensure -eq 'Present' ? 'Missing' : 'Unexpected'
-        $diff = @{}
+        $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+
+        $expected = Select-DscResourceStateProperties -Resource $resource
+        $actual = Select-DscResourceStateProperties -Resource $currentValue -ResourceName $resource.Name
+
+        $ensure = $resource.Property.Ensure ?? 'Present'
+
+        if ($ensure -ne $currentValue.Ensure)
+        {
+            $status = $ensure -eq 'Present' ? 'Missing' : 'Unexpected'
+            $diff = @{}
+        }
+        elseif ($ensure -eq 'Absent')
+        {
+            $status = 'Compliant'
+            $diff = @{}
+        }
+        else
+        {
+            $diff = Get-Diff $expected $actual
+            $status = $diff.Count -eq 0 ? 'Compliant' : 'NonCompliant'
+        }
     }
-    elseif ($resource.Property.Ensure -eq 'Absent')
+    catch
     {
-        $status = 'Compliant'
+        $status = 'Error'
         $diff = @{}
-    }
-    else
-    {
-        $diff = Get-Diff $expected $actual
-        $status = $diff.Count -eq 0 ? 'Compliant' : 'NonCompliant'
     }
 
     return @{
