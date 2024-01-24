@@ -2,29 +2,31 @@ Import-Module PSDesiredStateConfiguration
 Import-Module Hashtable-Helpers
 
 . $PSScriptRoot\Constants.ps1
+. $PSScriptRoot\Get-DeepClone.ps1
 
 function Test-DscResourceState
 {
     [CmdletBinding()]
-    param ([hashtable]$resource)
+    param ([hashtable]$Resource)
 
-    Write-Verbose "Testing DSC Resource State for $($resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Testing DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
 
-    # Clone the hashtable to prevent modifying the original
-    $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $DefaultDscResourceModuleName
-    if (-not $dscResource.Property)
+    $resourceClone = Get-DeepClone $Resource
+    $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
+    $resourceClone.Property = $resourceClone.Property ?? @{}
+    if ($DscResourcesDefaultProperties.ContainsKey($resourceClone.Name))
     {
-        $dscResource.Property = @{}
+        $resourceClone.Property = $DscResourcesDefaultProperties[$resourceClone.Name] + $resourceClone.Property
     }
-    
-    $testResult = Invoke-DscResource @dscResource -Method Test -Verbose:($VerbosePreference -eq 'Continue')
+    $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
 
-    $idProperties = $DscResourcesIdProperties[$dscResource.Name]
-    $identifier = Select-HashtableKeys $dscResource.Property $idProperties
+    $testResult = Invoke-DscResource @resourceClone -Method Test -Verbose:($VerbosePreference -eq 'Continue')
+
+    $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
+    $identifier = Select-HashtableKeys $resourceClone.Property $idProperties
 
     return @{
-        Type           = $resource.Name
+        Type           = $resourceClone.Name
         Identifier     = $identifier
         InDesiredState = $testResult.InDesiredState
     }

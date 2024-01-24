@@ -2,27 +2,23 @@ Import-Module PSDesiredStateConfiguration
 Import-Module Hashtable-Helpers
 
 . $PSScriptRoot\Constants.ps1
+. $PSScriptRoot\Get-DeepClone.ps1
 
 function Get-DscResourceState
 {
     [CmdletBinding()]
-    param ([hashtable]$resource)
+    param ([hashtable]$Resource)
 
-    Write-Verbose "Getting DSC Resource State for $($resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Getting DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
 
-    # Clone the hashtable to prevent modifying the original
-    $dscResource = $resource.Clone()
-    $dscResource.ModuleName = $dscResource.ModuleName ?? $DefaultDscResourceModuleName
-    if (-not $dscResource.Property)
-    {
-        $dscResource.Property = @{}
-    }
-    # $dscProperties = $dscResource.Property
-    
-    $currentValue = Invoke-DscResource @dscResource -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+    $resourceClone = Get-DeepClone $Resource
+    $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
+    $resourceClone.Property = $resourceClone.Property ?? @{}
 
-    $idProperties = $DscResourcesIdProperties[$dscResource.Name]
-    $identifier, $state = Split-Hashtable -OriginalHashtable $currentValue -KeysArray $idProperties
+    $getResult = Invoke-DscResource @resourceClone -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+
+    $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
+    $identifier, $state = Split-Hashtable -OriginalHashtable $getResult -KeysArray $idProperties
 
     return @{
         Type       = $resource.Name

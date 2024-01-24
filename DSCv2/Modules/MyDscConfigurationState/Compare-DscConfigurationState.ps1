@@ -14,14 +14,17 @@ function Compare-DscConfigurationState
         
         [switch]$WithCompliant,
         
-        [switch]$Force
+        [switch]$Force,
+
+        [switch]$Report
     )
 
     $PSBoundParameters.Remove('WithCompliant')
     $PSBoundParameters.Remove('Force')
+    $PSBoundParameters.Remove('Report')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
-    $result = @{
+    $result = [ordered]@{
         Compliant    = @()
         NonCompliant = @()
         Missing      = @()
@@ -41,5 +44,14 @@ function Compare-DscConfigurationState
         $result[$comparison.Status] += $comparison
     }
 
-    Write-Output $result
+    $result = Remove-EmptyArrayProperties $result
+
+    if ($Report)
+    {
+        Write-Output $result | ConvertTo-Json -Depth 100
+    }
+    else
+    {
+        Write-Output $result
+    }
 }

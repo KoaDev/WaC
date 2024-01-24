@@ -110,3 +110,24 @@ function ConvertTo-Hashtable
         return $hashtable
     }
 }
+
+function Remove-EmptyArrayProperties
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [hashtable]$Hashtable
+    )
+
+    process
+    {
+        foreach ($key in $Hashtable.Keys)
+        {
+            if ($Hashtable[$key] -is [array] -and $Hashtable[$key].Count -eq 0)
+            {
+                $Hashtable.Remove($key)
+            }
+        }
+        return $Hashtable
+    }
+}

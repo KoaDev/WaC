@@ -1,3 +1,6 @@
+Import-Module Functional
+Import-Module Pester-ShouldBeDeep
+
 BeforeAll {
     . $PSScriptRoot\Compare-DscResourceState.ps1
 }
@@ -107,6 +110,29 @@ Describe 'MyDscResourceState' {
             # Assert: Verify the function did what it's supposed to
             $result.Status | Should -Be 'Error'
             $result.Diff | Should -BeNullOrEmpty
+        }
+    }
+    
+    Context 'Compare-DscResourceState specific cases' {
+        It 'Gets the status and diff of MyNodeVersion lts' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'MyNodeVersion'
+                ModuleName = 'MyResources'
+                Property   = @{
+                    Version = 'lts'
+                    Ensure  = 'Used'
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Compare-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            $result.Status | Should -Be 'NonCompliant'
+            $result.Diff | Should -BeDeeplyEqual @{
+                Version = 'lts'
+            }
         }
     }
 }

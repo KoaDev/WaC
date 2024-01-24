@@ -42,7 +42,7 @@ function Get-ObjectString
 
     if (Test-IsValueType $Object)
     {
-        return $Object
+        return $Object -is [enum] ? $Object.ToString() : $Object
     }
 
     if (Test-IsDiffResult $Object)

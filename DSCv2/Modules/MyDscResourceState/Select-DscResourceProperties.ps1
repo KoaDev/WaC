@@ -28,7 +28,12 @@ function Select-DscResourceIdProperties
         $properties = $resource
     }
 
+    if (-not $DscResourcesIdProperties.ContainsKey($ResourceName))
+    {
+        throw "The resource '$ResourceName' is not supported."
+    }
     $idProperties = $DscResourcesIdProperties[$ResourceName]
+
     return $properties | Select-HashtableKeys -KeysArray $idProperties
 }
 
@@ -56,6 +61,11 @@ function Select-DscResourceStateProperties
         $properties = $resource
     }
 
+    if (-not $DscResourcesIdProperties.ContainsKey($ResourceName))
+    {
+        throw "The resource '$ResourceName' is not supported."
+    }
     $idProperties = $DscResourcesIdProperties[$ResourceName]
+    
     return $properties | Select-HashtableKeys -KeysArray $idProperties -InvertSelection
 }

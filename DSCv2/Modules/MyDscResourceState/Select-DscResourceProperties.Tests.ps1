@@ -3,46 +3,6 @@ Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
     . $PSScriptRoot\Select-DscResourceProperties.ps1
-
-    function Assert-Type
-    {
-        param (
-            [Parameter(Mandatory = $true)]
-            $Resource,
-    
-            [Parameter(Mandatory = $true)]
-            $Result
-        )
-    
-        $Result.Type | Should -Be $Resource.Name
-    }
-
-    function Assert-Identifier
-    {
-        param (
-            [Parameter(Mandatory = $true)]
-            $Resource,
-    
-            [Parameter(Mandatory = $true)]
-            $Result
-        )
-    
-        $Result.Identifier | Should -BeDeeplyEqualPartial $Resource.Property
-    }
-
-    function Assert-TypeAndIdentifier
-    {
-        param (
-            [Parameter(Mandatory = $true)]
-            $Resource,
-    
-            [Parameter(Mandatory = $true)]
-            $Result
-        )
-    
-        Assert-Type -Resource $Resource -Result $Result
-        Assert-Identifier -Resource $Resource -Result $Result
-    }
 }
 
 Describe 'MyDscResourceState' {
@@ -62,6 +22,18 @@ Describe 'MyDscResourceState' {
                 ValueName = 'ValueName'
                 Key       = 'Key'
             }
+        }
+
+        It 'should throw an error when the resource name is unknown' {
+            $resource = @{
+                Name     = 'Unknown'
+                Property = @{
+                    ValueName = 'ValueName'
+                    Key       = 'Key'
+                }
+            }
+
+            { Select-DscResourceIdProperties -Resource $resource } | Should -Throw "The resource 'Unknown' is not supported."
         }
     }
 }

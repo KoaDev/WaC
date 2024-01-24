@@ -20,7 +20,7 @@ function Get-Diff
             return Get-HashtableDiff $Object1 $Object2
         }
     }
-    
+
     if ($Object1 -is [array] -and $Object2 -is [array])
     {
         if (Compare-Array $Object1 $Object2 -Verbose:($PSBoundParameters['Verbose'] -eq $true))
@@ -45,9 +45,9 @@ function Get-Diff
         }
     }
 
-    return @{
-        Error = 'Unable to compare objects of type ' + $Object1.GetType().FullName + ' and ' + $Object2.GetType().FullName + '.'
-    }
+    $result = Get-BeforeAfter $Object1 $Object2
+    $result.Error = 'Unable to compare objects of type ' + $Object1.GetType().FullName + ' and ' + $Object2.GetType().FullName + '.'
+    return $result
 }
 
 function Get-HashtableDiff
@@ -61,20 +61,19 @@ function Get-HashtableDiff
         $Hashtable2
     )
 
-    $result = @{
-        Added    = @()
-        Removed  = @()
-        Modified = @{}
-    }
+    # TODO: Turn Added and Removed into hashtables to store the values with their keys
+    $result = @{}
 
     foreach ($key in $Hashtable1.Keys)
     {
         if (-not $Hashtable2.ContainsKey($key))
         {
+            $result.Removed = $result.Removed ?? @()
             $result.Removed += $key
         }
         elseif (-not (Compare-Deep $Hashtable1[$key] $Hashtable2[$key] -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
         {
+            $result.Modified = $result.Modified ?? @{}
             $result.Modified[$key] = Get-Diff $Hashtable1[$key] $Hashtable2[$key]
         }
     }
@@ -83,6 +82,7 @@ function Get-HashtableDiff
     {
         if (-not $Hashtable1.ContainsKey($key))
         {
+            $result.Added = $result.Added ?? @()
             $result.Added += $key
         }
     }
@@ -98,10 +98,7 @@ function Get-ArrayDiff
         [array]$Array2
     )
 
-    $result = @{
-        Added   = @()
-        Removed = @()
-    }
+    $result = @{}
 
     $lastMatchI2 = -1
 
@@ -120,6 +117,7 @@ function Get-ArrayDiff
 
                 for ($j = $lastMatchI2 + 1; $j -lt $i2; $j++)
                 {
+                    $result.Added = $result.Added ?? @()
                     $result.Added += Get-ObjectString $Array2[$j]
                 }
                 $lastMatchI2 = $i2
@@ -130,12 +128,14 @@ function Get-ArrayDiff
 
         if (-not $hasMatched)
         {
+            $result.Removed = $result.Removed ?? @()
             $result.Removed += Get-ObjectString $item1
         }
     }
 
     for ($i = $lastMatchI2 + 1; $i -lt $Array2.Count; $i++)
     {
+        $result.Added = $result.Added ?? @()
         $result.Added += Get-ObjectString $Array2[$i]
     }
 

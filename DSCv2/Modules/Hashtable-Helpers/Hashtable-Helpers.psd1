@@ -5,7 +5,12 @@
     Author            = 'Guy Lescalier'
     CompanyName       = 'Unknown'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'
-    FunctionsToExport = @('Split-Hashtable', 'Select-HashtableKeys', 'ConvertTo-Hashtable')
+    FunctionsToExport = @(
+        'Split-Hashtable'
+        'Select-HashtableKeys'
+        'ConvertTo-Hashtable'
+        'Remove-EmptyArrayProperties'
+    )
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = @()

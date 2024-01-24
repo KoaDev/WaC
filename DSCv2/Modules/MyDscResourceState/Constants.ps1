@@ -13,3 +13,24 @@ $DscResourcesIdProperties['Registry'] = @('ValueName', 'Key')
 $DscResourcesIdProperties['VSComponents'] = @('productId', 'channelId')
 $DscResourcesIdProperties['WindowsOptionalFeature'] = @('Name')
 $DscResourcesIdProperties['WinGetPackage'] = @('Id')
+
+$DscResourcesDefaultProperties = @{}
+$DscResourcesDefaultProperties['MyChocolatey'] = @{
+    ResourceName = 'ChocolateyInstallation'
+}
+$DscResourcesDefaultProperties['MyChocolateyPackage'] = @{
+    State = 'UpToDate'
+}
+$DscResourcesDefaultProperties['MyNodeVersion'] = @{
+    State = 'UpToDate'
+}
+$DscResourcesDefaultProperties['MyScoop'] = @{
+    ResourceName = 'ScoopInstallation'
+}
+$DscResourcesDefaultProperties['MyScoopPackage'] = @{
+    State = 'UpToDate'
+}
+$DscResourcesDefaultProperties['WinGetPackage'] = @{
+    UseLatest         = 'Oui'
+    IsUpdateAvailable = 'Non'
+}
