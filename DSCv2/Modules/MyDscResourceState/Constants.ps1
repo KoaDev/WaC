@@ -22,7 +22,7 @@ $DscResourcesDefaultProperties['MyChocolateyPackage'] = @{
     State = 'UpToDate'
 }
 $DscResourcesDefaultProperties['MyNodeVersion'] = @{
-    State = 'UpToDate'
+    State = 'Current'
 }
 $DscResourcesDefaultProperties['MyScoop'] = @{
     ResourceName = 'ScoopInstallation'

@@ -121,13 +121,23 @@ function Remove-EmptyArrayProperties
 
     process
     {
+        $keysToRemove = @()
+
+        # First, find all keys that need to be removed
         foreach ($key in $Hashtable.Keys)
         {
             if ($Hashtable[$key] -is [array] -and $Hashtable[$key].Count -eq 0)
             {
-                $Hashtable.Remove($key)
+                $keysToRemove += $key
             }
         }
+
+        # Then, remove the keys
+        foreach ($key in $keysToRemove)
+        {
+            $Hashtable.Remove($key)
+        }
+
         return $Hashtable
     }
 }
