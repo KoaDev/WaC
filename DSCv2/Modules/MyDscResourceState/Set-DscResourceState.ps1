@@ -8,7 +8,7 @@ function Set-DscResourceState
     [CmdletBinding()]
     param ([hashtable]$Resource)
 
-    Write-Verbose "Setting DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Setting DSC Resource State for $($Resource | ConvertTo-Json -EnumsAsStrings -Depth 100)"
 
     $resourceClone = Get-DeepClone $Resource
     $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
@@ -19,7 +19,16 @@ function Set-DscResourceState
     }
     $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
 
-    $setResult = Invoke-DscResource @resourceClone -Method Set -Verbose:($VerbosePreference -eq 'Continue')
+    try
+    {
+        $originalProgressPreference = $global:ProgressPreference
+        $global:ProgressPreference = 'SilentlyContinue'
+        $setResult = Invoke-DscResource @resourceClone -Method Set -Verbose:($VerbosePreference -eq 'Continue')
+    }
+    finally
+    {
+        $global:ProgressPreference = $originalProgressPreference
+    }
     
     return $setResult
 }

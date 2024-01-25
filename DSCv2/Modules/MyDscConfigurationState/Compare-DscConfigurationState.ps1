@@ -20,9 +20,9 @@ function Compare-DscConfigurationState
         [switch]$Report
     )
 
-    $PSBoundParameters.Remove('WithCompliant')
-    $PSBoundParameters.Remove('Force')
-    $PSBoundParameters.Remove('Report')
+    $null = $PSBoundParameters.Remove('WithCompliant')
+    $null = $PSBoundParameters.Remove('Force')
+    $null = $PSBoundParameters.Remove('Report')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
     $result = [ordered]@{
@@ -49,7 +49,7 @@ function Compare-DscConfigurationState
 
     if ($Report)
     {
-        Write-Output $result | ConvertTo-Json -Depth 100
+        Write-Output $result | ConvertTo-Json -EnumsAsStrings -Depth 100
     }
     else
     {

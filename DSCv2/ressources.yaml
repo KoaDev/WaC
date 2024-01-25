@@ -127,8 +127,9 @@
     - Version: lts
       Ensure: Used
     - Version: 18
-# - Name: MyHosts
-#   ModuleName: MyResources
-#   Property:
-#     - Name: RégionSUD
-#       Path: C:\Projets\WaC\resources\hosts
+
+- Name: MyHosts
+  ModuleName: MyResources
+  Property:
+    - Name: RégionSUD
+      Path: C:\Projets\WaC\resources\hosts

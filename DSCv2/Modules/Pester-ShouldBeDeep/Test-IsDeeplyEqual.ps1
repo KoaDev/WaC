@@ -63,8 +63,8 @@ function Test-IsDeeplyEqualInternal
     $failureMessage = $null
     if (-not $succeeded)
     {
-        $actualString = $ActualValue | Convert-HashtableKeysToStrings | ConvertTo-Json -Depth 100
-        $expectedString = $ExpectedValue | Convert-HashtableKeysToStrings | ConvertTo-Json -Depth 100
+        $actualString = $ActualValue | Convert-HashtableKeysToStrings | ConvertTo-Json -EnumsAsStrings -Depth 100
+        $expectedString = $ExpectedValue | Convert-HashtableKeysToStrings | ConvertTo-Json -EnumsAsStrings -Depth 100
 
         if ($Negate)
         {

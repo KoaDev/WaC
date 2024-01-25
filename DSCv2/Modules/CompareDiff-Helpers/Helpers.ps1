@@ -50,7 +50,7 @@ function Get-ObjectString
         return $Object
     }
 
-    return $Object | ConvertTo-Json -Depth 100 -Compress
+    return $Object | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress
 }
 
 function Get-BeforeAfter

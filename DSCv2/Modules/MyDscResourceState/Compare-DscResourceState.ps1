@@ -11,7 +11,7 @@ function Compare-DscResourceState
     [CmdletBinding()]
     param ([hashtable]$Resource)
 
-    Write-Verbose "Comparing DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Comparing DSC Resource State for $($Resource | ConvertTo-Json -EnumsAsStrings -Depth 100)"
 
     $resourceClone = Get-DeepClone $resource
     $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
@@ -27,7 +27,17 @@ function Compare-DscResourceState
         $resourceArg = Get-DeepClone $resourceClone
         $resourceArg.Property.Remove('Ensure')
 
-        $getResult = Invoke-DscResource @resourceArg -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+        try
+        {
+            $originalProgressPreference = $global:ProgressPreference
+            $global:ProgressPreference = 'SilentlyContinue'
+            $getResult = Invoke-DscResource @resourceArg -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+        }
+        finally
+        {
+            $global:ProgressPreference = $originalProgressPreference
+        }
+        
 
         $expected = Select-DscResourceStateProperties -Resource $resourceClone
         $actual = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name

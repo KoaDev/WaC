@@ -9,7 +9,7 @@ function Test-DscResourceState
     [CmdletBinding()]
     param ([hashtable]$Resource)
 
-    Write-Verbose "Testing DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Testing DSC Resource State for $($Resource | ConvertTo-Json -EnumsAsStrings -Depth 100)"
 
     $resourceClone = Get-DeepClone $Resource
     $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
@@ -20,7 +20,16 @@ function Test-DscResourceState
     }
     $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
 
-    $testResult = Invoke-DscResource @resourceClone -Method Test -Verbose:($VerbosePreference -eq 'Continue')
+    try
+    {
+        $originalProgressPreference = $global:ProgressPreference
+        $global:ProgressPreference = 'SilentlyContinue'
+        $testResult = Invoke-DscResource @resourceClone -Method Test -Verbose:($VerbosePreference -eq 'Continue')
+    }
+    finally
+    {
+        $global:ProgressPreference = $originalProgressPreference
+    }
 
     $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
     $identifier = Select-HashtableKeys $resourceClone.Property $idProperties

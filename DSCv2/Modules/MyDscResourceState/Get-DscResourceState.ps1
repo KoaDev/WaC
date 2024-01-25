@@ -9,13 +9,22 @@ function Get-DscResourceState
     [CmdletBinding()]
     param ([hashtable]$Resource)
 
-    Write-Verbose "Getting DSC Resource State for $($Resource | ConvertTo-Json -Depth 100)"
+    Write-Verbose "Getting DSC Resource State for $($Resource | ConvertTo-Json -EnumsAsStrings -Depth 100)"
 
     $resourceClone = Get-DeepClone $Resource
     $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
     $resourceClone.Property = $resourceClone.Property ?? @{}
 
-    $getResult = Invoke-DscResource @resourceClone -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+    try
+    {
+        $originalProgressPreference = $global:ProgressPreference
+        $global:ProgressPreference = 'SilentlyContinue'
+        $getResult = Invoke-DscResource @resourceClone -Method Get -Verbose:($VerbosePreference -eq 'Continue') | ConvertTo-Hashtable
+    }
+    finally
+    {
+        $global:ProgressPreference = $originalProgressPreference
+    }
 
     $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
     $identifier, $state = Split-Hashtable -OriginalHashtable $getResult -KeysArray $idProperties
