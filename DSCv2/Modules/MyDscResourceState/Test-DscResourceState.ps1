@@ -20,6 +20,11 @@ function Test-DscResourceState
     }
     $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
 
+    if ($DscResourcesPropertyCleanupAction.ContainsKey($resourceClone.Name))
+    {
+        & $DscResourcesPropertyCleanupAction[$resourceClone.Name] $resourceClone.Property
+    }
+
     try
     {
         $originalProgressPreference = $global:ProgressPreference

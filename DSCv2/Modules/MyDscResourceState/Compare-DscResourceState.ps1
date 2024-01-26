@@ -62,9 +62,10 @@ function Compare-DscResourceState
         {
             $expected = Select-DscResourceStateProperties -Resource $resourceClone
             $actual = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
-            if ($DscResourcesExpectedActualCleanupAction.ContainsKey($resourceClone.Name))
+            if ($DscResourcesPropertyCleanupAction.ContainsKey($resourceClone.Name))
             {
-                & $DscResourcesExpectedActualCleanupAction[$resourceClone.Name] $expected $actual
+                & $DscResourcesPropertyCleanupAction[$resourceClone.Name] $expected
+                & $DscResourcesPropertyCleanupAction[$resourceClone.Name] $actual
             }
 
             if ($resourceClone.Name -eq 'Registry')

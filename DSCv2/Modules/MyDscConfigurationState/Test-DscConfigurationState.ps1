@@ -15,5 +15,7 @@ function Test-DscConfigurationState
         [switch]$Force
     )
 
-    Invoke-DscResourceStateBatch -Method Test @PSBoundParameters
+    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
+
+    Invoke-DscResourceStateBatch -Method Test -Resources $resources -Force:$Force
 }

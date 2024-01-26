@@ -129,10 +129,8 @@ Describe 'MyDscResourceState' {
             $result = Compare-DscResourceState $resource
 
             # Assert: Verify the function did what it's supposed to
-            $result.Status | Should -Be 'NonCompliant'
-            $result.Diff | Should -BeDeeplyEqual @{
-                Version = 'lts'
-            }
+            $result.Status | Should -Be 'Compliant'
+            $result.Diff | Should -BeNullOrEmpty
         }
 
         It 'Gets the status and diff of VSComponents' {

@@ -44,9 +44,9 @@ $DscResourcesIsPresentAction = @{
     }
 }
 
-$DscResourcesExpectedActualCleanupAction = @{
+$DscResourcesPropertyCleanupAction = @{
     VSComponents = {
-        param([hashtable]$Expected, [hashtable]$Actual)
-        $Expected.Remove('Ensure')
+        param([hashtable]$Properties)
+        $Properties.Remove('Ensure')
     }
 }

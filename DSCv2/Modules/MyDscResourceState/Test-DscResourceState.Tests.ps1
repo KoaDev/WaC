@@ -83,4 +83,23 @@ Describe 'MyDscResourceState' {
             $result.InDesiredState | Should -BeTrue
         }
     }
+
+    Context 'Test-DscResourceState specific cases' {
+        It 'Returns the desired state for VSComponents' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'VSComponents'
+                ModuleName = 'Microsoft.VisualStudio.DSC'
+                Property   = @{
+                    ProductId          = 'Microsoft.VisualStudio.Product.Enterprise'
+                    ChannelId          = 'VisualStudio.17.Release'
+                    vsConfigFile       = 'C:\Projets\WaC\resources\visual-studio\.vsconfig'
+                    includeRecommended = $true
+                }
+            }
+
+            # Act: Run the function to test
+            # Assert: Verify the function did what it's supposed to
+            { Test-DscResourceState $resource } | Should -Not -Throw }
+    }
 }
