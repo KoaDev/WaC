@@ -29,15 +29,44 @@ function Get-CacheEntry
     }
 
     $isInCache = $script:cache[$CacheName].ContainsKey($cacheKey)
-    $isOutdated = $isInCache -and (Get-Date) - $script:cache[$CacheName][$cacheKey].Time -gt $CacheDuration
+    $isOutdated = $isInCache -and $script:cache[$CacheName][$cacheKey].Expires -lt (Get-Date)
 
     if ($Force -or -not $isInCache -or $isOutdated)
     {
         $result = & $ResourceAction
         $script:cache[$CacheName][$cacheKey] = @{
-            Result = $result
-            Time   = Get-Date
+            Result  = $result
+            Expires = (Get-Date) + $CacheDuration
         }
+    }
+
+    return $script:cache[$CacheName][$cacheKey].Result
+}
+
+function Get-CacheEntryOrNull
+{
+    param(
+        [string]$CacheName,
+        [string]$Key
+    )
+
+    if (-not $script:cache.ContainsKey($CacheName))
+    {
+        return $null
+    }
+
+    $isInCache = $script:cache[$CacheName].ContainsKey($cacheKey)
+
+    if (-not $isInCache)
+    {
+        return $null
+    }
+
+    $isOutdated = $isInCache -and $script:cache[$CacheName][$cacheKey].Expires -lt (Get-Date)
+
+    if ($isOutdated)
+    {
+        return $null
     }
 
     return $script:cache[$CacheName][$cacheKey].Result

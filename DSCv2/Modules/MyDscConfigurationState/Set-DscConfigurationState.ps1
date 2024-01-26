@@ -11,14 +11,28 @@ function Set-DscConfigurationState
         [string]$YamlFilePath,
 
         [Parameter(ParameterSetName = 'ResourceCollection', Mandatory = $true)]
-        [hashtable[]]$Resources
+        [hashtable[]]$Resources,
+
+        [switch]$Force
     )
 
+    $null = $PSBoundParameters.Remove('Force')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
     $result = @()
     foreach ($resource in $resources)
     {
+        if (-not $Force)
+        {
+            $cacheKey = Get-DscResourceHash -Resource $resource
+            $testedResource = Get-CacheEntryOrNull -CacheName 'Test' -Key $cacheKey
+
+            if ($null -ne $testedResource -and $testedResource.InDesiredState)
+            {
+                continue
+            }
+        }
+
         $setResult = Set-DscResourceState $resource
         
         $result += $setResult
