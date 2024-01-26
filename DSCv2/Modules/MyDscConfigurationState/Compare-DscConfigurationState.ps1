@@ -33,18 +33,24 @@ function Compare-DscConfigurationState
         Error        = @()
     }
 
-    foreach ($resource in $resources)
+    $totalResources = $resources.Count
+    
+    foreach ($index in 0..($totalResources - 1))
     {
-        $comparison = Compare-DscResourceState $resource
+        $resource = $resources[$index]
         
-        if (-not $WithCompliant -and $comparison.Status -eq 'Compliant')
-        {
-            continue
-        }
+        $progressPercent = ($index / $totalResources) * 100
+        $progressMessage = "Processing resource $index of $totalResources ($([Math]::Floor($progressPercent))%)"
+        Write-Progress -Activity 'Comparing DSC Resource States' -Status $progressMessage -PercentComplete $progressPercent
+    
+        $comparison = Compare-DscResourceState $resource
         
         $result[$comparison.Status] += $comparison
         $comparison.remove('Status')
     }
+    
+    # Ensure to complete the progress bar when the loop is done
+    Write-Progress -Activity 'Comparing DSC Resource States' -Completed
 
     $result = Remove-EmptyArrayProperties $result
 
