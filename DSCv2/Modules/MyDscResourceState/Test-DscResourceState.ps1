@@ -34,7 +34,7 @@ function Test-DscResourceState
     $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
     $identifier = Select-HashtableKeys $resourceClone.Property $idProperties
 
-    return @{
+    return [ordered]@{
         Type           = $resourceClone.Name
         Identifier     = $identifier
         InDesiredState = $testResult.InDesiredState

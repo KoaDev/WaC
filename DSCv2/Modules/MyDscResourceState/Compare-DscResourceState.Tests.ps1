@@ -134,5 +134,26 @@ Describe 'MyDscResourceState' {
                 Version = 'lts'
             }
         }
+
+        It 'Gets the status and diff of VSComponents' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'VSComponents'
+                ModuleName = 'Microsoft.VisualStudio.DSC'
+                Property   = @{
+                    ProductId          = 'Microsoft.VisualStudio.Product.Enterprise'
+                    ChannelId          = 'VisualStudio.17.Release'
+                    vsConfigFile       = 'C:\Projets\WaC\resources\visual-studio\.vsconfig'
+                    includeRecommended = $true
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Compare-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            $result.Status | Should -Be 'Compliant'
+            $result.Diff | Should -BeNullOrEmpty
+        }
     }
 }

@@ -29,7 +29,7 @@ function Get-DscResourceState
     $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
     $identifier, $state = Split-Hashtable -OriginalHashtable $getResult -KeysArray $idProperties
 
-    return @{
+    return [ordered]@{
         Type       = $resource.Name
         Identifier = $identifier
         State      = $state

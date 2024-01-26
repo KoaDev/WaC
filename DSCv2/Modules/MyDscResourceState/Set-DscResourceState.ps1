@@ -2,6 +2,7 @@ Import-Module PSDesiredStateConfiguration
 Import-Module Hashtable-Helpers
 
 . $PSScriptRoot\Constants.ps1
+. $PSScriptRoot\Get-DeepClone.ps1
 
 function Set-DscResourceState
 {

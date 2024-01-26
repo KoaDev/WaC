@@ -37,23 +37,36 @@ function Compare-DscResourceState
         {
             $global:ProgressPreference = $originalProgressPreference
         }
-        
 
-        $expected = Select-DscResourceStateProperties -Resource $resourceClone
-        $actual = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
-
-        if ($resourceClone.Property.Ensure -eq 'Absent' -and $getResult.Ensure -ne 'Absent')
+        $shouldBePresent = $resourceClone.Property.Ensure -ne 'Absent'
+        if ($DscResourcesIsPresentAction.ContainsKey($resourceClone.Name))
         {
-            $status = 'Unexpected'
-            $diff = @{}
+            $isPresent = (& $DscResourcesIsPresentAction[$resourceClone.Name] $getResult)
         }
-        elseif ($resourceClone.Property.Ensure -ne 'Absent' -and $getResult.Ensure -eq 'Absent')
+        else
+        {
+            $isPresent = $getResult.Ensure -ne 'Absent'
+        }
+
+        if ($shouldBePresent -and -not $isPresent)
         {
             $status = 'Missing'
             $diff = @{}
         }
+        elseif (-not $shouldBePresent -and $isPresent)
+        {
+            $status = 'Unexpected'
+            $diff = @{}
+        }
         else
         {
+            $expected = Select-DscResourceStateProperties -Resource $resourceClone
+            $actual = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
+            if ($DscResourcesExpectedActualCleanupAction.ContainsKey($resourceClone.Name))
+            {
+                & $DscResourcesExpectedActualCleanupAction[$resourceClone.Name] $expected $actual
+            }
+
             if ($resourceClone.Name -eq 'Registry')
             {
                 $expected.ValueData = @($expected.ValueData)
@@ -67,15 +80,23 @@ function Compare-DscResourceState
     catch
     {
         $status = 'Error'
+        $errorMessage = $_.Exception.Message
         $diff = @{}
     }
 
     $identifier = Select-DscResourceIdProperties -Resource $resourceClone
 
-    return [ordered]@{
+    $result = [ordered]@{
         Type       = $resourceClone.Name
         Identifier = $identifier
         Status     = $status
         Diff       = $diff
     }
+
+    if ($errorMessage)
+    {
+        $result.ErrorMessage = $errorMessage
+    }
+
+    return $result
 }

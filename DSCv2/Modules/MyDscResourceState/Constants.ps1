@@ -1,36 +1,52 @@
 $DefaultDscResourceModuleName = 'PSDscResources'
 
-$DscResourcesIdProperties = @{}
-$DscResourcesIdProperties['MyCertificate'] = @('Path')
-$DscResourcesIdProperties['MyChocolatey'] = @('ResourceName')
-$DscResourcesIdProperties['MyChocolateyPackage'] = @('PackageName')
-$DscResourcesIdProperties['MyHosts'] = @('Name', 'Path')
-$DscResourcesIdProperties['MyNodeVersion'] = @('Version')
-$DscResourcesIdProperties['MyScoop'] = @('ResourceName')
-$DscResourcesIdProperties['MyScoopPackage'] = @('PackageName')
-$DscResourcesIdProperties['MyWindowsDefenderExclusion'] = @('Type', 'Value')
-$DscResourcesIdProperties['Registry'] = @('ValueName', 'Key')
-$DscResourcesIdProperties['VSComponents'] = @('productId', 'channelId')
-$DscResourcesIdProperties['WindowsOptionalFeature'] = @('Name')
-$DscResourcesIdProperties['WinGetPackage'] = @('Id')
+$DscResourcesIdProperties = @{
+    MyCertificate              = @('Path')
+    MyChocolatey               = @('ResourceName')
+    MyChocolateyPackage        = @('PackageName')
+    MyHosts                    = @('Name', 'Path')
+    MyNodeVersion              = @('Version')
+    MyScoop                    = @('ResourceName')
+    MyScoopPackage             = @('PackageName')
+    MyWindowsDefenderExclusion = @('Type', 'Value')
+    Registry                   = @('ValueName', 'Key')
+    VSComponents               = @('productId', 'channelId')
+    WindowsOptionalFeature     = @('Name')
+    WinGetPackage              = @('Id')
+}
 
-$DscResourcesDefaultProperties = @{}
-$DscResourcesDefaultProperties['MyChocolatey'] = @{
-    ResourceName = 'ChocolateyInstallation'
+$DscResourcesDefaultProperties = @{
+    MyChocolatey        = @{
+        ResourceName = 'ChocolateyInstallation'
+    }
+    MyChocolateyPackage = @{
+        State = 'UpToDate'
+    }
+    MyNodeVersion       = @{
+        State = 'Current'
+    }
+    MyScoop             = @{
+        ResourceName = 'ScoopInstallation'
+    }
+    MyScoopPackage      = @{
+        State = 'UpToDate'
+    }
+    WinGetPackage       = @{
+        UseLatest         = $true
+        IsUpdateAvailable = $false
+    }
 }
-$DscResourcesDefaultProperties['MyChocolateyPackage'] = @{
-    State = 'UpToDate'
+
+$DscResourcesIsPresentAction = @{
+    VSComponents = {
+        param([hashtable]$Resource)
+        $Resource.installedComponents -is [array] -and $Resource.installedComponents.Count -gt 0
+    }
 }
-$DscResourcesDefaultProperties['MyNodeVersion'] = @{
-    State = 'Current'
-}
-$DscResourcesDefaultProperties['MyScoop'] = @{
-    ResourceName = 'ScoopInstallation'
-}
-$DscResourcesDefaultProperties['MyScoopPackage'] = @{
-    State = 'UpToDate'
-}
-$DscResourcesDefaultProperties['WinGetPackage'] = @{
-    UseLatest         = 'Oui'
-    IsUpdateAvailable = 'Non'
+
+$DscResourcesExpectedActualCleanupAction = @{
+    VSComponents = {
+        param([hashtable]$Expected, [hashtable]$Actual)
+        $Expected.Remove('Ensure')
+    }
 }
