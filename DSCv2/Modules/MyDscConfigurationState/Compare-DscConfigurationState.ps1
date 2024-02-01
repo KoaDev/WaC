@@ -2,6 +2,7 @@ Import-Module MyDscResourceState
 Import-Module Hashtable-Helpers
 
 . $PSScriptRoot\Yaml.ps1
+. $PSScriptRoot\ConvertTo-Result.ps1
 
 function Compare-DscConfigurationState
 {
@@ -17,12 +18,15 @@ function Compare-DscConfigurationState
         
         [switch]$Force,
 
-        [switch]$Report
+        [switch]$Report,
+
+        [switch]$JsonDiff
     )
 
     $null = $PSBoundParameters.Remove('WithCompliant')
     $null = $PSBoundParameters.Remove('Force')
     $null = $PSBoundParameters.Remove('Report')
+    $null = $PSBoundParameters.Remove('JsonDiff')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
     $result = [ordered]@{
@@ -34,30 +38,45 @@ function Compare-DscConfigurationState
     }
 
     $totalResources = $resources.Count
-    
+
     foreach ($index in 0..($totalResources - 1))
     {
         $resource = $resources[$index]
         
         $progressPercent = ($index / $totalResources) * 100
         $progressMessage = "Processing resource $index of $totalResources ($([Math]::Floor($progressPercent))%)"
-        Write-Progress -Activity 'Comparing DSC Resource States' -Status $progressMessage -PercentComplete $progressPercent
+        Write-Progress -Activity 'Processing DSC Resources' -Status $progressMessage -PercentComplete $progressPercent
     
         $comparison = Compare-DscResourceState $resource
-        
-        $result[$comparison.Status] += $comparison
-        $comparison.remove('Status')
+
+        if (-not $Report)
+        {
+            if ($comparison.Status -eq 'Compliant' -and -not $WithCompliant)
+            {
+                continue
+            }
+            
+            $comparison = [PSCustomObject]@{
+                Type       = $comparison.Type
+                Identifier = ConvertTo-StringIdentifier $comparison.Identifier
+                Status     = $comparison.Status
+                Diff       = $JsonDiff ? (ConvertTo-JsonDiff $comparison.Diff) : $comparison.Diff
+                Error      = $comparison.ErrorMessage
+            }
+
+            Write-Output $comparison
+        }
+        else
+        {
+            $result[$comparison.Status] += $comparison
+        }    
     }
     
     # Ensure to complete the progress bar when the loop is done
-    Write-Progress -Activity 'Comparing DSC Resource States' -Completed
-
-    $result = Remove-EmptyArrayProperties $result
+    Write-Progress -Activity 'Processing DSC Resources' -Completed
 
     if ($Report)
     {
-        # Write-Output $result | ConvertTo-Json -EnumsAsStrings -Depth 100
-
         Write-Output "$($resources.Count) resources were compared."
 
         $countTable = @()
@@ -77,18 +96,20 @@ function Compare-DscConfigurationState
                 continue
             }
 
-            Write-Output "$status resources:"
+            if ($result[$status].Count -eq 0)
+            {
+                continue
+            }
+
+            Write-Output "-> $status resources:"
             Write-Output $result[$status] | ForEach-Object {
                 [PSCustomObject]@{
                     Type       = $_.Type
-                    Identifier = ConvertTo-Json -EnumsAsStrings -Depth 100 $_.Identifier
-                    Diff       = ConvertTo-Json -EnumsAsStrings -Depth 100 $_.Diff
+                    Identifier = ConvertTo-StringIdentifier $_.Identifier
+                    Diff       = $JsonDiff ? (ConvertTo-JsonDiff $_.Diff) : $_.Diff
+                    Error      = $_.ErrorMessage
                 }
             } | Format-Table -Wrap -AutoSize
         }
-    }
-    else
-    {
-        Write-Output $result
     }
 }

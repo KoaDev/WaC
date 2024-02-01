@@ -87,17 +87,11 @@ function Compare-DscResourceState
 
     $identifier = Select-DscResourceIdProperties -Resource $resourceClone
 
-    $result = [ordered]@{
-        Type       = $resourceClone.Name
-        Identifier = $identifier
-        Status     = $status
-        Diff       = $diff
+    return [PSCustomObject]@{
+        Type         = $resourceClone.Name
+        Identifier   = $identifier
+        Status       = $status
+        Diff         = $diff
+        ErrorMessage = $errorMessage
     }
-
-    if ($errorMessage)
-    {
-        $result.ErrorMessage = $errorMessage
-    }
-
-    return $result
 }
