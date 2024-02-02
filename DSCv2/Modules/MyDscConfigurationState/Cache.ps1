@@ -71,3 +71,16 @@ function Get-CacheEntryOrNull
 
     return $script:cache[$CacheName][$cacheKey].Result
 }
+
+function Remove-CacheEntry
+{
+    param(
+        [string]$CacheName,
+        [string]$Key
+    )
+
+    if ($script:cache.ContainsKey($CacheName))
+    {
+        $script:cache[$CacheName].Remove($cacheKey)
+    }
+}

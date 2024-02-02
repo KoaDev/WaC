@@ -43,7 +43,7 @@ function Set-DscConfigurationState
         if (-not $Force)
         {
             $cacheKey = Get-DscResourceHash -Resource $resource
-            $testedResource = Get-CacheEntryOrNull -CacheName 'Test' -Key $cacheKey
+            $testedResource = Get-CacheEntryOrNull 'Test' $cacheKey
 
             if ($null -ne $testedResource -and $testedResource.InDesiredState)
             {
@@ -59,6 +59,9 @@ function Set-DscConfigurationState
         try
         {
             $setResult = Set-DscResourceState $resource
+
+            $cacheKey = Get-DscResourceHash -Resource $resource
+            Remove-CacheEntry 'Test' $cacheKey
         
             $result.Set += [PSCustomObject]@{
                 Type       = $setResult.Type

@@ -1,52 +1,52 @@
-# - Name: Registry
-#   Property:
-#     - Key: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-#       ValueName: HideFileExt
-#       ValueData: "0"
-#       ValueType: DWord
-#     - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
-#       ValueName: DisableLoopbackCheck
-#       ValueData: "1"
-#       ValueType: DWord
+- Name: Registry
+  Property:
+    - Key: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: HideFileExt
+      ValueData: "0"
+      ValueType: DWord
+    - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+      ValueName: DisableLoopbackCheck
+      ValueData: "1"
+      ValueType: DWord
 
-# - Name: WindowsOptionalFeature
-#   Property:
-#     - Name: IIS-ApplicationDevelopment
-#     - Name: IIS-ASPNET
-#     - Name: IIS-ASPNET45
-#     - Name: IIS-BasicAuthentication
-#     - Name: IIS-CertProvider
-#     - Name: IIS-CommonHttpFeatures
-#     - Name: IIS-DefaultDocument
-#     - Name: IIS-DirectoryBrowsing
-#     - Name: IIS-HealthAndDiagnostics
-#     - Name: IIS-HostableWebCore
-#     - Name: IIS-HttpCompressionDynamic
-#     - Name: IIS-HttpCompressionStatic
-#     - Name: IIS-HttpErrors
-#     - Name: IIS-HttpLogging
-#     - Name: IIS-ISAPIExtensions
-#     - Name: IIS-ISAPIFilter
-#     - Name: IIS-ManagementConsole
-#     - Name: IIS-ManagementScriptingTools
-#     - Name: IIS-NetFxExtensibility
-#     - Name: IIS-NetFxExtensibility45
-#     - Name: IIS-Performance
-#     - Name: IIS-RequestFiltering
-#     - Name: IIS-Security
-#     - Name: IIS-StaticContent
-#     - Name: IIS-WebServer
-#     - Name: IIS-WebServerManagementTools
-#     - Name: IIS-WebServerRole
-#     - Name: IIS-WebSockets
-#     - Name: IIS-WindowsAuthentication
-#     - Name: NetFx3
-#     - Name: NetFx4-AdvSrvs
-#     - Name: NetFx4Extended-ASPNET45
-#     - Name: WCF-HTTP-Activation
-#     - Name: WCF-HTTP-Activation45
-#     - Name: WCF-NonHTTP-Activation
-#     - Name: WCF-Services45
+- Name: WindowsOptionalFeature
+  Property:
+    - Name: IIS-ApplicationDevelopment
+    - Name: IIS-ASPNET
+    - Name: IIS-ASPNET45
+    - Name: IIS-BasicAuthentication
+    - Name: IIS-CertProvider
+    - Name: IIS-CommonHttpFeatures
+    - Name: IIS-DefaultDocument
+    - Name: IIS-DirectoryBrowsing
+    - Name: IIS-HealthAndDiagnostics
+    - Name: IIS-HostableWebCore
+    - Name: IIS-HttpCompressionDynamic
+    - Name: IIS-HttpCompressionStatic
+    - Name: IIS-HttpErrors
+    - Name: IIS-HttpLogging
+    - Name: IIS-ISAPIExtensions
+    - Name: IIS-ISAPIFilter
+    - Name: IIS-ManagementConsole
+    - Name: IIS-ManagementScriptingTools
+    - Name: IIS-NetFxExtensibility
+    - Name: IIS-NetFxExtensibility45
+    - Name: IIS-Performance
+    - Name: IIS-RequestFiltering
+    - Name: IIS-Security
+    - Name: IIS-StaticContent
+    - Name: IIS-WebServer
+    - Name: IIS-WebServerManagementTools
+    - Name: IIS-WebServerRole
+    - Name: IIS-WebSockets
+    - Name: IIS-WindowsAuthentication
+    - Name: NetFx3
+    - Name: NetFx4-AdvSrvs
+    - Name: NetFx4Extended-ASPNET45
+    # - Name: WCF-HTTP-Activation
+    # - Name: WCF-HTTP-Activation45
+    # - Name: WCF-NonHTTP-Activation
+    - Name: WCF-Services45
 
 - Name: MyScoop
   ModuleName: MyResources
@@ -70,8 +70,8 @@
     - PackageName: postman
     - PackageName: vlc
     - PackageName: wiztree
-    - PackageName: CascadiaCode-NF-Mono
-    - PackageName: FiraCode-NF
+    # - PackageName: CascadiaCode-NF-Mono
+    # - PackageName: FiraCode-NF
     - PackageName: temurin-lts-jdk
 
 - Name: MyChocolatey
@@ -121,12 +121,12 @@
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
 
-- Name: MyNodeVersion
-  ModuleName: MyResources
-  Property:
-    - Version: lts
-      Ensure: Used
-    - Version: 18
+# - Name: MyNodeVersion
+#   ModuleName: MyResources
+#   Property:
+#     - Version: lts
+#       Ensure: Used
+#     - Version: 18
 
 - Name: MyHosts
   ModuleName: MyResources
