@@ -20,7 +20,7 @@ $DscResourcesDefaultProperties = @{
         ResourceName = 'ChocolateyInstallation'
     }
     MyChocolateyPackage = @{
-        State = 'UpToDate'
+        State = 'Current'
     }
     MyNodeVersion       = @{
         State = 'Current'
@@ -37,16 +37,13 @@ $DscResourcesDefaultProperties = @{
     }
 }
 
+$DscResourcesWithoutEnsure = @(
+    'VSComponents'
+)
+
 $DscResourcesIsPresentAction = @{
     VSComponents = {
         param([hashtable]$Resource)
         $Resource.installedComponents -is [array] -and $Resource.installedComponents.Count -gt 0
-    }
-}
-
-$DscResourcesPropertyCleanupAction = @{
-    VSComponents = {
-        param([hashtable]$Properties)
-        $Properties.Remove('Ensure')
     }
 }

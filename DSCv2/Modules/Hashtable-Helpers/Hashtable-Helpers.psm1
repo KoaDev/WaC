@@ -64,7 +64,7 @@ function Select-HashtableKeys
                 }
                 else
                 {
-                    Write-Error "Key '$key' not found in the original hashtable."
+                    Write-Error "Key '$key' not found in the original hashtable ($($OriginalHashtable | ConvertTo-Json -Depth 100 -Compress))."
                 }
             }
         }

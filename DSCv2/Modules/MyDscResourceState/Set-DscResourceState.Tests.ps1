@@ -47,20 +47,20 @@ BeforeAll {
 
 Describe 'MyDscResourceState' {
     Context 'Test-DscResourceState' {
-        # It 'Returns InDesiredState = True for an existing resource' {
-        #     # Arrange: Set up any preconditions and inputs
-        #     $resource = @{
-        #         Name       = 'WinGetPackage'
-        #         ModuleName = 'Microsoft.WinGet.DSC'
-        #         Property   = @{
-        #             Id = 'Microsoft.PowerShell'
-        #         }
-        #     }
+        It 'Returns InDesiredState = True for an existing resource' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'WinGetPackage'
+                ModuleName = 'Microsoft.WinGet.DSC'
+                Property   = @{
+                    Id = 'Microsoft.PowerShell'
+                }
+            }
 
-        #     # Act: Run the function to test
-        #     $result = Set-DscResourceState $resource
+            # Act: Run the function to test
+            $result = Set-DscResourceState $resource
 
-        #     # Assert: Verify the function did what it's supposed to
-        # }
+            # Assert: Verify the function did what it's supposed to
+        }
     }
 }

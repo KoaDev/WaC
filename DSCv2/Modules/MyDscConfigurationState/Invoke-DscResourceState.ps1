@@ -31,7 +31,6 @@ function Invoke-DscResourceStateBatch
         Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force
     }
     
-    # Ensure to complete the progress bar when the loop is done
     Write-Progress -Activity 'Processing DSC Resources' -Completed
 }
 

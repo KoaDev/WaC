@@ -14,19 +14,7 @@ function Select-DscResourceIdProperties
         [string]$ResourceName
     )
 
-    if (-not $ResourceName)
-    {
-        $ResourceName = $Resource.Name
-    }
-
-    if ($Resource.ContainsKey('Property'))
-    {
-        $properties = $resource.Property
-    }
-    else
-    {
-        $properties = $resource
-    }
+    $ResourceName = $ResourceName ? $ResourceName : $Resource.Name
 
     if (-not $DscResourcesIdProperties.ContainsKey($ResourceName))
     {
@@ -34,7 +22,22 @@ function Select-DscResourceIdProperties
     }
     $idProperties = $DscResourcesIdProperties[$ResourceName]
 
-    return $properties | Select-HashtableKeys -KeysArray $idProperties
+    $properties = $Resource.ContainsKey('Property') ? $resource.Property : $resource
+
+    $mergedProperties = @{}
+    if ($DscResourcesDefaultProperties.ContainsKey($ResourceName))
+    {
+        foreach ($key in $DscResourcesDefaultProperties[$ResourceName].Keys)
+        {
+            $mergedProperties[$key] = $DscResourcesDefaultProperties[$ResourceName][$key]
+        }
+    }
+    foreach ($key in $properties.Keys)
+    {
+        $mergedProperties[$key] = $properties[$key]
+    }
+
+    return $mergedProperties | Select-HashtableKeys -KeysArray $idProperties
 }
 
 function Select-DscResourceStateProperties
@@ -47,19 +50,7 @@ function Select-DscResourceStateProperties
         [string]$ResourceName
     )
 
-    if (-not $ResourceName)
-    {
-        $ResourceName = $Resource.Name
-    }
-
-    if ($Resource.ContainsKey('Property'))
-    {
-        $properties = $resource.Property
-    }
-    else
-    {
-        $properties = $resource
-    }
+    $ResourceName = $ResourceName ? $ResourceName : $Resource.Name
 
     if (-not $DscResourcesIdProperties.ContainsKey($ResourceName))
     {
@@ -67,5 +58,20 @@ function Select-DscResourceStateProperties
     }
     $idProperties = $DscResourcesIdProperties[$ResourceName]
     
-    return $properties | Select-HashtableKeys -KeysArray $idProperties -InvertSelection
+    $properties = $Resource.ContainsKey('Property') ? $resource.Property : $resource
+
+    $mergedProperties = @{}
+    if ($DscResourcesDefaultProperties.ContainsKey($ResourceName))
+    {
+        foreach ($key in $DscResourcesDefaultProperties[$ResourceName].Keys)
+        {
+            $mergedProperties[$key] = $DscResourcesDefaultProperties[$ResourceName][$key]
+        }
+    }
+    foreach ($key in $properties.Keys)
+    {
+        $mergedProperties[$key] = $properties[$key]
+    }
+
+    return $mergedProperties | Select-HashtableKeys -KeysArray $idProperties -InvertSelection
 }

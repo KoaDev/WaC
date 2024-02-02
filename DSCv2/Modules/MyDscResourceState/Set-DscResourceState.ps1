@@ -16,9 +16,18 @@ function Set-DscResourceState
     $resourceClone.Property = $resourceClone.Property ?? @{}
     if ($DscResourcesDefaultProperties.ContainsKey($resourceClone.Name))
     {
-        $resourceClone.Property = $DscResourcesDefaultProperties[$resourceClone.Name] + $resourceClone.Property
+        foreach ($key in $DscResourcesDefaultProperties[$resourceClone.Name].Keys)
+        {
+            if (-not $resourceClone.Property.ContainsKey($key))
+            {
+                $resourceClone.Property[$key] = $DscResourcesDefaultProperties[$resourceClone.Name][$key]
+            }
+        }
     }
-    $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
+    if ($DscResourcesWithoutEnsure -notcontains $resourceClone.Name)
+    {
+        $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'
+    }
 
     try
     {

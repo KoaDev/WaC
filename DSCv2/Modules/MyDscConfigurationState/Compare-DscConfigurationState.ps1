@@ -26,6 +26,8 @@ function Compare-DscConfigurationState
     $null = $PSBoundParameters.Remove('JsonDiff')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
+    $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
     $result = [ordered]@{
         Compliant    = @()
         NonCompliant = @()
@@ -35,8 +37,6 @@ function Compare-DscConfigurationState
     }
 
     $totalResources = $resources.Count
-
-    $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
     foreach ($index in 0..($totalResources - 1))
     {
@@ -71,7 +71,6 @@ function Compare-DscConfigurationState
         }
     }
 
-    # Ensure to complete the progress bar when the loop is done
     Write-Progress -Activity 'Processing DSC Resources' -Completed
 
     $stopwatch.Stop()
