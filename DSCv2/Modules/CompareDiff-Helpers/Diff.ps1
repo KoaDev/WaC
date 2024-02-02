@@ -61,15 +61,14 @@ function Get-HashtableDiff
         $Hashtable2
     )
 
-    # TODO: Turn Added and Removed into hashtables to store the values with their keys
     $result = @{}
 
     foreach ($key in $Hashtable1.Keys)
     {
         if (-not $Hashtable2.ContainsKey($key))
         {
-            $result.Removed = $result.Removed ?? @()
-            $result.Removed += $key
+            $result.Removed = $result.Removed ?? @{}
+            $result.Removed[$key] = $Hashtable1[$key]
         }
         elseif (-not (Compare-Deep $Hashtable1[$key] $Hashtable2[$key] -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
         {
@@ -82,8 +81,8 @@ function Get-HashtableDiff
     {
         if (-not $Hashtable1.ContainsKey($key))
         {
-            $result.Added = $result.Added ?? @()
-            $result.Added += $key
+            $result.Added = $result.Added ?? @{}
+            $result.Added[$key] = $Hashtable2[$key]
         }
     }
 
