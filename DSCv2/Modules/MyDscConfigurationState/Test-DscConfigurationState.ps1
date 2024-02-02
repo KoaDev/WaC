@@ -11,11 +11,15 @@ function Test-DscConfigurationState
 
         [Parameter(ParameterSetName = 'ResourceCollection', Mandatory = $true)]
         [hashtable[]]$Resources,
+
+        [switch]$WithInDesiredState,
         
         [switch]$Force
     )
 
+    # TODO: Find a better way to remove these parameters
+    $null = $PSBoundParameters.Remove('WithInDesiredState')
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
-    Invoke-DscResourceStateBatch -Method Test -Resources $resources -Force:$Force
+    Invoke-DscResourceStateBatch -Method Test -Resources $resources -Force:$Force -WithInDesiredState:$WithInDesiredState
 }

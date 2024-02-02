@@ -48,31 +48,31 @@
 #     - Name: WCF-NonHTTP-Activation
 #     - Name: WCF-Services45
 
-# - Name: MyScoop
-#   ModuleName: MyResources
+- Name: MyScoop
+  ModuleName: MyResources
 
-# - Name: MyScoopPackage
-#   ModuleName: MyResources
-#   Property:
-#     - PackageName: dotnet-sdk
-#     - PackageName: gh
-#     - PackageName: oh-my-posh
-#     - PackageName: git
-#     - PackageName: nvm
-#     - PackageName: terraform
-#     - PackageName: dotnet3-sdk
-#     - PackageName: dotnet5-sdk
-#     - PackageName: dotnet6-sdk
-#     - PackageName: baretail
-#     - PackageName: mockoon
-#     - PackageName: nuget-package-explorer
-#     - PackageName: paint.net
-#     - PackageName: postman
-#     - PackageName: vlc
-#     - PackageName: wiztree
-#     - PackageName: CascadiaCode-NF-Mono
-#     - PackageName: FiraCode-NF
-#     - PackageName: temurin-lts-jdk
+- Name: MyScoopPackage
+  ModuleName: MyResources
+  Property:
+    - PackageName: dotnet-sdk
+    - PackageName: gh
+    - PackageName: oh-my-posh
+    - PackageName: git
+    - PackageName: nvm
+    - PackageName: terraform
+    - PackageName: dotnet3-sdk
+    - PackageName: dotnet5-sdk
+    - PackageName: dotnet6-sdk
+    - PackageName: baretail
+    - PackageName: mockoon
+    - PackageName: nuget-package-explorer
+    - PackageName: paint.net
+    - PackageName: postman
+    - PackageName: vlc
+    - PackageName: wiztree
+    - PackageName: CascadiaCode-NF-Mono
+    - PackageName: FiraCode-NF
+    - PackageName: temurin-lts-jdk
 
 - Name: MyChocolatey
   ModuleName: MyResources

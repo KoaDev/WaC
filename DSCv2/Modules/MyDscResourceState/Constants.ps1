@@ -29,7 +29,7 @@ $DscResourcesDefaultProperties = @{
         ResourceName = 'ScoopInstallation'
     }
     MyScoopPackage      = @{
-        State = 'UpToDate'
+        State = 'Current'
     }
     WinGetPackage       = @{
         UseLatest         = $true

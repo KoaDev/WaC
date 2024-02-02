@@ -15,6 +15,8 @@ function Invoke-DscResourceStateBatch
         [Parameter(Mandatory = $true)]
         [hashtable[]]$Resources,
         
+        [switch]$WithInDesiredState,
+        
         [switch]$Force
     )
 
@@ -28,7 +30,7 @@ function Invoke-DscResourceStateBatch
         $progressMessage = "Processing resource $index of $totalResources ($([Math]::Floor($progressPercent))%)"
         Write-Progress -Activity 'Processing DSC Resources' -Status $progressMessage -PercentComplete $progressPercent
     
-        Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force
+        Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force -WithInDesiredState:$WithInDesiredState
     }
     
     Write-Progress -Activity 'Processing DSC Resources' -Completed
@@ -44,6 +46,8 @@ function Invoke-DscResourceState
 
         [Parameter(Mandatory = $true)]
         [hashtable]$Resource,
+
+        [switch]$WithInDesiredState,
         
         [switch]$Force
     )
@@ -58,21 +62,22 @@ function Invoke-DscResourceState
     {
         'Get'
         {
-            $result = [PSCustomObject]@{
-                Type       = $result.Type
-                Identifier = ConvertTo-StringIdentifier $result.Identifier
-                State      = $result.State
-            }
+            Write-Output ([PSCustomObject]@{
+                    Type       = $result.Type
+                    Identifier = ConvertTo-StringIdentifier $result.Identifier
+                    State      = $result.State
+                })
         }
         'Test'
         {
-            $result = [PSCustomObject]@{
-                Type           = $result.Type
-                Identifier     = ConvertTo-StringIdentifier $result.Identifier
-                InDesiredState = $result.InDesiredState
+            if ($WithInDesiredState -or -not $result.InDesiredState)
+            {
+                Write-Output ([PSCustomObject]@{
+                        Type           = $result.Type
+                        Identifier     = ConvertTo-StringIdentifier $result.Identifier
+                        InDesiredState = $result.InDesiredState
+                    })
             }
         }
     }
-
-    Write-Output $result
 }
