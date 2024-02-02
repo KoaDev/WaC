@@ -39,6 +39,13 @@ function Set-DscResourceState
     {
         $global:ProgressPreference = $originalProgressPreference
     }
-    
-    return $setResult
+
+    $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
+    $identifier = Select-HashtableKeys $resourceClone.Property $idProperties
+
+    return [PSCustomObject]@{
+        Type       = $resourceClone.Name
+        Identifier = $identifier
+        Result     = $setResult
+    }
 }

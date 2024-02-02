@@ -74,19 +74,19 @@
 #     - PackageName: FiraCode-NF
 #     - PackageName: temurin-lts-jdk
 
-# - Name: MyChocolatey
-#   ModuleName: MyResources
+- Name: MyChocolatey
+  ModuleName: MyResources
 
-# - Name: MyChocolateyPackage
-#   ModuleName: MyResources
-#   Property:
-#     - PackageName: 7zip
-#     - PackageName: adobereader
-#     - PackageName: bulkrenameutility
-#     - PackageName: notepadplusplus
-#     - PackageName: urlrewrite
-#     - PackageName: webdeploy
-#     - PackageName: winmerge
+- Name: MyChocolateyPackage
+  ModuleName: MyResources
+  Property:
+    - PackageName: 7zip
+    - PackageName: adobereader
+    - PackageName: bulkrenameutility
+    - PackageName: notepadplusplus
+    - PackageName: urlrewrite
+    - PackageName: webdeploy
+    - PackageName: winmerge
 
 - Name: WinGetPackage
   ModuleName: Microsoft.WinGet.DSC
@@ -94,8 +94,8 @@
     - Id: Fork.Fork
     - Id: Microsoft.PowerShell
     - Id: Microsoft.PowerToys
-    - Id: Microsoft.PowerAutomateDesktop
-    - Id: Microsoft.PowerBI
+    # - Id: Microsoft.PowerAutomateDesktop
+    # - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
 
