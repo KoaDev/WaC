@@ -2,8 +2,6 @@ Import-Module Hashtable-Helpers
 
 . $PSScriptRoot\Constants.ps1
 
-# TODO : Remplace les appels à Select-HashtableKeys par un appel à Select-DscResourceIdProperties
-# TODO : Faire la même chose pour Get-DscResourceState
 function Select-DscResourceIdProperties
 {
     [CmdletBinding()]
