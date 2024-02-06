@@ -46,7 +46,7 @@ BeforeAll {
 }
 
 Describe 'MyDscResourceState' {
-    Context 'Test-DscResourceState' {
+    Context 'Set-DscResourceState' {
         It 'Returns InDesiredState = True for an existing resource' {
             # Arrange: Set up any preconditions and inputs
             $resource = @{
@@ -61,6 +61,43 @@ Describe 'MyDscResourceState' {
             $result = Set-DscResourceState $resource
 
             # Assert: Verify the function did what it's supposed to
+        }
+    }
+
+    Context 'Set-DscResourceState specific cases' {
+        It 'Sets desired state for WCF-HTTP-Activation Windows optional feature' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name     = 'WindowsOptionalFeature'
+                Property = @{
+                    Name = 'WCF-HTTP-Activation45'
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Set-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            Assert-TypeAndIdentifier -Resource $resource -Result $result
+            $result.InDesiredState | Should -Be $true
+        }
+
+        It 'Sets desired state fo CascadiaCode-NF-Mono Scoop package' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'MyScoopPackage'
+                ModuleName = 'MyResources'
+                Property   = @{
+                    PackageName = 'CascadiaCode-NF-Mono'
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Set-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            Assert-TypeAndIdentifier -Resource $resource -Result $result
+            $result.Result.RebootRequired | Should -Be $false
         }
     }
 }
