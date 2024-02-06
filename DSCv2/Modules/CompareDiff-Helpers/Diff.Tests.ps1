@@ -71,32 +71,32 @@ Describe 'Diff' {
             $actual | Should -BeNullOrEmpty
         }
 
-        It 'should return the before and after values when given a null and non-null value' {
+        It 'should return the expected and actual values when given a null and non-null value' {
             $actual = Get-Diff $null 'a'
 
-            $actual.Before | Should -Be $null
-            $actual.After | Should -Be 'a'
+            $actual.Expected | Should -Be $null
+            $actual.Actual | Should -Be 'a'
         }
 
-        It 'should return the before and after values when given a non-null and null value' {
+        It 'should return the expected and actual values when given a non-null and null value' {
             $actual = Get-Diff 'a' $null
 
-            $actual.Before | Should -Be 'a'
-            $actual.After | Should -Be $null
+            $actual.Expected | Should -Be 'a'
+            $actual.Actual | Should -Be $null
         }
 
-        It 'should return the before and after values when given value types of different types' {
+        It 'should return the expected and actual values when given value types of different types' {
             $actual = Get-Diff 'a' 1
 
-            $actual.Before | Should -Be 'a'
-            $actual.After | Should -Be 1
+            $actual.Expected | Should -Be 'a'
+            $actual.Actual | Should -Be 1
         }
 
-        It 'should return the before and after values when given object types of different types' {
+        It 'should return the expected and actual values when given object types of different types' {
             $actual = Get-Diff 'a' @(1, 2)
 
-            $actual.Before | Should -Be 'a'
-            $actual.After | Should -Be '[1,2]'
+            $actual.Expected | Should -Be 'a'
+            $actual.Actual | Should -Be '[1,2]'
         }
 
         It 'should return an empty result when given two identical enum values' {
@@ -105,11 +105,11 @@ Describe 'Diff' {
             $actual | Should -BeNullOrEmpty
         }
 
-        It 'should return the before and after values for different enum values' {
+        It 'should return the expected and actual values for different enum values' {
             $actual = Get-Diff ([System.DayOfWeek]::Monday) ([System.DayOfWeek]::Tuesday)
 
-            $actual.Before | Should -Be 'Monday'
-            $actual.After | Should -Be 'Tuesday'
+            $actual.Expected | Should -Be 'Monday'
+            $actual.Actual | Should -Be 'Tuesday'
         }
 
         It 'should return an empty result when given two identical string values' {
@@ -118,11 +118,11 @@ Describe 'Diff' {
             $actual | Should -BeNullOrEmpty
         }
 
-        It 'should return the before and after values for different string values' {
+        It 'should return the expected and actual values for different string values' {
             $actual = Get-Diff 'a' 'b'
 
-            $actual.Before | Should -Be 'a'
-            $actual.After | Should -Be 'b'
+            $actual.Expected | Should -Be 'a'
+            $actual.Actual | Should -Be 'b'
         }
 
         It 'should return an empty result when given two identical value type values' {
@@ -131,11 +131,11 @@ Describe 'Diff' {
             $actual | Should -BeNullOrEmpty
         }
 
-        It 'should return the before and after values for different value type values' {
+        It 'should return the expected and actual values for different value type values' {
             $actual = Get-Diff 1 2
 
-            $actual.Before | Should -Be 1
-            $actual.After | Should -Be 2
+            $actual.Expected | Should -Be 1
+            $actual.Actual | Should -Be 2
         }
 
         It 'should return an empty result when given two identical array values' {
@@ -144,11 +144,11 @@ Describe 'Diff' {
             $actual | Should -BeNullOrEmpty
         }
 
-        It 'should return the before and after values for different array values' {
+        It 'should return the expected and actual values for different array values' {
             $actual = Get-Diff @(1, 2) @(1, 2, 3)
 
-            $actual.Before | Should -Be '[1,2]'
-            $actual.After | Should -Be '[1,2,3]'
+            $actual.Expected | Should -Be '[1,2]'
+            $actual.Actual | Should -Be '[1,2,3]'
         }
     }
 }

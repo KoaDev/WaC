@@ -53,16 +53,16 @@ function Get-ObjectString
     return $Object | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress
 }
 
-function Get-BeforeAfter
+function Get-ExpectedActual
 {
     [CmdletBinding()]
     param (
-        $Before,
-        $After
+        $Expected,
+        $Actual
     )
 
     return @{
-        Before = Get-ObjectString $Before
-        After  = Get-ObjectString $After
+        Expected = Get-ObjectString $Expected
+        Actual   = Get-ObjectString $Actual
     }
 }

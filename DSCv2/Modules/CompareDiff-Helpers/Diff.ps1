@@ -5,48 +5,48 @@ function Get-Diff
 {
     [CmdletBinding()]
     param (
-        $Object1,
-        $Object2
+        $ExpectedObject,
+        $ActualObject
     )
 
-    if ($Object1 -is [collections.IDictionary] -and $Object2 -is [collections.IDictionary])
+    if ($ExpectedObject -is [collections.IDictionary] -and $ActualObject -is [collections.IDictionary])
     {
-        if (Compare-Deep $Object1 $Object2 -Verbose:($PSBoundParameters['Verbose'] -eq $true))
+        if (Compare-Deep $ExpectedObject $ActualObject -Verbose:($PSBoundParameters['Verbose'] -eq $true))
         {
             return @{}
         }
         else
         {
-            return Get-HashtableDiff $Object1 $Object2
+            return Get-HashtableDiff $ExpectedObject $ActualObject
         }
     }
 
-    if ($Object1 -is [array] -and $Object2 -is [array])
+    if ($ExpectedObject -is [array] -and $ActualObject -is [array])
     {
-        if (Compare-Array $Object1 $Object2 -Verbose:($PSBoundParameters['Verbose'] -eq $true))
+        if (Compare-Array $ExpectedObject $ActualObject -Verbose:($PSBoundParameters['Verbose'] -eq $true))
         {
             return @{}
         }
         else
         {
-            return Get-BeforeAfter $Object1 $Object2
+            return Get-ExpectedActual $ExpectedObject $ActualObject
         }
     }
 
-    if ((Test-IsValueType $Object1) -and (Test-IsValueType $Object2))
+    if ((Test-IsValueType $ExpectedObject) -and (Test-IsValueType $ActualObject))
     {
-        if ($Object1 -eq $Object2)
+        if ($ExpectedObject -eq $ActualObject)
         {
             return @{}
         }
         else
         {
-            return Get-BeforeAfter $Object1 $Object2
+            return Get-ExpectedActual $ExpectedObject $ActualObject
         }
     }
 
-    $result = Get-BeforeAfter $Object1 $Object2
-    $result.Error = 'Unable to compare objects of type ' + $Object1.GetType().FullName + ' and ' + $Object2.GetType().FullName + '.'
+    $result = Get-ExpectedActual $ExpectedObject $ActualObject
+    $result.Error = 'Unable to compare objects of type ' + $ExpectedObject.GetType().FullName + ' and ' + $ActualObject.GetType().FullName + '.'
     return $result
 }
 
@@ -55,34 +55,34 @@ function Get-HashtableDiff
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        $Hashtable1,
+        $ExpectedHashtable,
 
         [Parameter(Mandatory = $true)]
-        $Hashtable2
+        $ActualHashtable
     )
 
     $result = @{}
 
-    foreach ($key in $Hashtable1.Keys)
+    foreach ($key in $ExpectedHashtable.Keys)
     {
-        if (-not $Hashtable2.ContainsKey($key))
+        if (-not $ActualHashtable.ContainsKey($key))
         {
             $result.Removed = $result.Removed ?? @{}
-            $result.Removed[$key] = $Hashtable1[$key]
+            $result.Removed[$key] = $ExpectedHashtable[$key]
         }
-        elseif (-not (Compare-Deep $Hashtable1[$key] $Hashtable2[$key] -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
+        elseif (-not (Compare-Deep $ExpectedHashtable[$key] $ActualHashtable[$key] -Verbose:($PSBoundParameters['Verbose'] -eq $true)))
         {
             $result.Modified = $result.Modified ?? @{}
-            $result.Modified[$key] = Get-Diff $Hashtable1[$key] $Hashtable2[$key]
+            $result.Modified[$key] = Get-Diff $ExpectedHashtable[$key] $ActualHashtable[$key]
         }
     }
 
-    foreach ($key in $Hashtable2.Keys)
+    foreach ($key in $ActualHashtable.Keys)
     {
-        if (-not $Hashtable1.ContainsKey($key))
+        if (-not $ExpectedHashtable.ContainsKey($key))
         {
             $result.Added = $result.Added ?? @{}
-            $result.Added[$key] = $Hashtable2[$key]
+            $result.Added[$key] = $ActualHashtable[$key]
         }
     }
 
@@ -93,22 +93,22 @@ function Get-ArrayDiff
 {
     [CmdletBinding()]
     param (
-        [array]$Array1,
-        [array]$Array2
+        [array]$ExpectedArray,
+        [array]$ActualArray
     )
 
     $result = @{}
 
     $lastMatchI2 = -1
 
-    for ($i1 = 0; $i1 -lt $Array1.Count; $i1++)
+    for ($i1 = 0; $i1 -lt $ExpectedArray.Count; $i1++)
     {
-        $item1 = $Array1[$i1]
+        $item1 = $ExpectedArray[$i1]
         $hasMatched = $false
 
-        for ($i2 = $lastMatchI2 + 1; $i2 -lt $Array2.Count; $i2++)
+        for ($i2 = $lastMatchI2 + 1; $i2 -lt $ActualArray.Count; $i2++)
         {
-            $item2 = $Array2[$i2]
+            $item2 = $ActualArray[$i2]
 
             if (Compare-Deep $item1 $item2 -Verbose:($PSBoundParameters['Verbose'] -eq $true))
             {
@@ -117,7 +117,7 @@ function Get-ArrayDiff
                 for ($j = $lastMatchI2 + 1; $j -lt $i2; $j++)
                 {
                     $result.Added = $result.Added ?? @()
-                    $result.Added += Get-ObjectString $Array2[$j]
+                    $result.Added += Get-ObjectString $ActualArray[$j]
                 }
                 $lastMatchI2 = $i2
 
@@ -132,10 +132,10 @@ function Get-ArrayDiff
         }
     }
 
-    for ($i = $lastMatchI2 + 1; $i -lt $Array2.Count; $i++)
+    for ($i = $lastMatchI2 + 1; $i -lt $ActualArray.Count; $i++)
     {
         $result.Added = $result.Added ?? @()
-        $result.Added += Get-ObjectString $Array2[$i]
+        $result.Added += Get-ObjectString $ActualArray[$i]
     }
 
     return $result
