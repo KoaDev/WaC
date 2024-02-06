@@ -68,10 +68,11 @@
     - PackageName: nuget-package-explorer
     - PackageName: paint.net
     - PackageName: postman
+    # - PackageName: rustup
     - PackageName: vlc
     - PackageName: wiztree
-    # - PackageName: CascadiaCode-NF-Mono
-    # - PackageName: FiraCode-NF
+    - PackageName: CascadiaCode-NF-Mono
+    - PackageName: FiraCode-NF
     - PackageName: temurin-lts-jdk
 
 - Name: MyChocolatey
@@ -106,6 +107,11 @@
       channelId: VisualStudio.17.Release
       vsConfigFile: C:\Projets\WaC\resources\visual-studio\.vsconfig
       includeRecommended: true
+
+- Name: MyScoopPackage
+  ModuleName: MyResources
+  Property:
+    - PackageName: rustup
 
 - Name: MyCertificate
   ModuleName: MyResources

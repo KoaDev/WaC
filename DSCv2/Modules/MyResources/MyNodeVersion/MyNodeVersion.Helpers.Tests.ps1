@@ -21,6 +21,12 @@ AfterAll {
 
 Describe 'MyNodeVersion helpers' {
     Context 'Get-NvmInstalledVersions' {
+        #TODO: https://github.com/coreybutler/nvm-windows/issues/1068
+        It 'should return the nvm list' {
+            $installedVersions = & nvm list
+            $installedVersions | Should -Be ''
+        }
+        
         It 'should return the installed versions' {
             $installedVersions = Get-NvmInstalledVersions
             $installedVersions | Should -Contain $script:testVersion
