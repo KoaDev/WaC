@@ -6,13 +6,17 @@ enum MyEnsure
 
 function Get-RawScoopList
 {
-    & scoop list
+    return & scoop list
 }
 
 function Get-RawScoopStatus
 {
-    & scoop update
-    & scoop status
+    $statusResult = & scoop status 6>&1
+    if ($statusResult -match 'WARN.*scoop update')
+    {
+        & scoop update
+    }
+    return & scoop status
 }
 
 function  Convert-ObjectArrayToHashtable

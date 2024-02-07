@@ -27,6 +27,7 @@ Describe 'MyScoopPackage' {
 
             # Assert
             # $scoopStatus | Should -BeOfType '[PSCustomObject]'
+            $scoopStatus | Should -Not -BeNullOrEmpty
             $scoopStatus | ForEach-Object {
                 $_ | Should -BeOfType 'PSCustomObject'
                 $_.PSObject.Properties | Where-Object { $_.Name -eq 'Name' } | Should -Not -BeNullOrEmpty
