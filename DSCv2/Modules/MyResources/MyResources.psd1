@@ -2,7 +2,7 @@
 
 @{
     ModuleVersion        = '0.0.1'
-    GUID                 = 'f8618f7b-413c-4464-a391-584c6129c651'
+    GUID                 = '530fd41e-bbda-4f5e-ae44-4bdac28a04c2'
     Author               = 'Guy Lescalier'
     CompanyName          = 'SopraSteria'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'
@@ -15,8 +15,6 @@
         'MyScoop\MyScoop.psd1'
         'MyScoopPackage\MyScoopPackage.psd1'
         'MyWindowsDefenderExclusion\MyWindowsDefenderExclusion.psd1'
-        'MyWindowsFeature\MyWindowsFeature.psd1'
-        'MyWindowsOptionalFeatures\MyWindowsOptionalFeatures.psd1'
     )
     FunctionsToExport    = @()
     CmdletsToExport      = '*'
@@ -31,8 +29,6 @@
         'MyScoop'
         'MyScoopPackage'
         'MyWindowsDefenderExclusion'
-        'MyWindowsFeature'
-        'MyWindowsOptionalFeatures'
     )
     PrivateData          = @{
         PSData = @{

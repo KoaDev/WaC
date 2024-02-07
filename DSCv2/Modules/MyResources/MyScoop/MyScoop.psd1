@@ -1,7 +1,7 @@
 @{
     RootModule           = 'MyScoop.psm1'
     ModuleVersion        = '0.0.1'
-    GUID                 = 'ab5eb2e2-b5da-4a5f-b418-ce5cec5fb9a0'
+    GUID                 = 'e7d12eca-bff7-405e-afa6-685143c37b6b'
     Author               = 'Guy Lescalier'
     CompanyName          = 'SopraSteria'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'

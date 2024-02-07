@@ -82,13 +82,32 @@ Describe 'MyDscResourceState' {
             $result.InDesiredState | Should -Be $true
         }
 
-        It 'Sets desired state fo CascadiaCode-NF-Mono Scoop package' {
+        It 'Sets desired state for CascadiaCode-NF-Mono Scoop package' {
             # Arrange: Set up any preconditions and inputs
             $resource = @{
                 Name       = 'MyScoopPackage'
                 ModuleName = 'MyResources'
                 Property   = @{
                     PackageName = 'CascadiaCode-NF-Mono'
+                }
+            }
+
+            # Act: Run the function to test
+            $result = Set-DscResourceState $resource
+
+            # Assert: Verify the function did what it's supposed to
+            Assert-TypeAndIdentifier -Resource $resource -Result $result
+            $result.Result.RebootRequired | Should -Be $false
+        }
+
+        It 'Sets desired state for MyWindowsDefenderExclusion' {
+            # Arrange: Set up any preconditions and inputs
+            $resource = @{
+                Name       = 'MyWindowsDefenderExclusion'
+                ModuleName = 'MyResources'
+                Property   = @{
+                    Type  = 'Path'
+                    Value = 'C:\Projets'
                 }
             }
 

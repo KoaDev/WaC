@@ -1,7 +1,7 @@
 @{
     RootModule        = 'Hashtable-Helpers.psm1'
     ModuleVersion     = '0.0.1'
-    GUID              = '67f40b88-3676-4c2f-81e0-d0613b8c70c7'
+    GUID              = 'a1485411-e984-496e-87da-2603f265508c'
     Author            = 'Guy Lescalier'
     CompanyName       = 'SopraSteria'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'

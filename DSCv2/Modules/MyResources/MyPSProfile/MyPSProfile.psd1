@@ -1,7 +1,7 @@
 @{
     RootModule           = 'MyPSProfile.psm1'
     ModuleVersion        = '0.0.1'
-    GUID                 = '9d4d5729-4bd2-4682-b8a4-1a60e78b0a9f'
+    GUID                 = '5efd2ce4-0b2e-4614-b0b1-16cfe357844a'
     Author               = 'Guy Lescalier'
     CompanyName          = 'SopraSteria'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'

@@ -46,3 +46,13 @@ Get-InstalledModule | ForEach-Object {
 ```powershell
 Update-Module -Name ModuleName
 ```
+
+// Use WAC
+Get-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
+Test-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
+Compare-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml -Report -JsonDiff
+Set-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml -Report
+
+// Prérequis ???
+Déposer les modules dans [Environment]::GetFolderPath("MyDocuments") -> \PowerShell\Modules
+winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerShell

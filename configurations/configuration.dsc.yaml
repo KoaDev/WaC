@@ -16,11 +16,6 @@ properties:
         description: dotnet-sdk
       settings:
         packageName: dotnet-sdk
-    - resource: MyResources/MyWindowsFeature
-      directives:
-        description: IIS-WebServer
-      settings:
-        name: IIS-WebServer
     # - resource: PSDesiredStateConfiguration/WindowsOptionalFeature
     #   directives:
     #     description: IIS-WebServer

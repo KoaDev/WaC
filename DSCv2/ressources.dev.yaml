@@ -55,24 +55,16 @@
   ModuleName: MyResources
   Property:
     - PackageName: dotnet-sdk
-    - PackageName: gh
-    - PackageName: oh-my-posh
     - PackageName: git
     - PackageName: nvm
-    - PackageName: terraform
     - PackageName: dotnet3-sdk
     - PackageName: dotnet5-sdk
     - PackageName: dotnet6-sdk
+    - PackageName: dotnet8-sdk
     - PackageName: baretail
     - PackageName: mockoon
     - PackageName: nuget-package-explorer
     - PackageName: paint.net
-    - PackageName: postman
-    - PackageName: vlc
-    - PackageName: wiztree
-    - PackageName: CascadiaCode-NF-Mono
-    - PackageName: FiraCode-NF
-    - PackageName: temurin-lts-jdk
 
 - Name: MyChocolatey
   ModuleName: MyResources
@@ -82,7 +74,6 @@
   Property:
     - PackageName: 7zip
     - PackageName: adobereader
-    - PackageName: bulkrenameutility
     - PackageName: notepadplusplus
     - PackageName: urlrewrite
     - PackageName: webdeploy
@@ -94,15 +85,13 @@
     - Id: Fork.Fork
     - Id: Microsoft.PowerShell
     - Id: Microsoft.PowerToys
-    - Id: Microsoft.PowerAutomateDesktop
-    - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
 
 - Name: VSComponents
   ModuleName: Microsoft.VisualStudio.DSC
   Property:
-    - productId: Microsoft.VisualStudio.Product.Enterprise
+    - productId: Microsoft.VisualStudio.Product.Professional
       channelId: VisualStudio.17.Release
       vsConfigFile: C:\Projets\WaC\resources\visual-studio\.vsconfig
       includeRecommended: true
@@ -120,13 +109,6 @@
       Value: C:\Projets
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
-
-- Name: MyNodeVersion
-  ModuleName: MyResources
-  Property:
-    - Version: lts
-      Ensure: Used
-    - Version: 18
 
 - Name: MyHosts
   ModuleName: MyResources

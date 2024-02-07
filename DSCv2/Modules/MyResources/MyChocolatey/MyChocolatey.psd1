@@ -3,7 +3,7 @@
 @{
     RootModule           = 'MyChocolatey.psm1'
     ModuleVersion        = '0.0.1'
-    GUID                 = 'ab5eb2e2-b5da-4a5f-b418-ce5cec5fb9a0'
+    GUID                 = '0fcc04b9-b393-444d-b796-04dc402f8b67'
     Author               = 'Guy Lescalier'
     CompanyName          = 'SopraSteria'
     Copyright            = '(c) Guy Lescalier. All rights reserved.'

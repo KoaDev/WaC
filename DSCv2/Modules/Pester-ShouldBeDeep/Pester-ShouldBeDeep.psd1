@@ -1,7 +1,7 @@
 @{
     RootModule        = 'Pester-ShouldBeDeep.psm1'
     ModuleVersion     = '0.0.1'
-    GUID              = '67f40b88-3676-4c2f-81e0-d0613b8c70c7'
+    GUID              = 'dc9d7f22-491e-4f62-8e18-28c3ae751dc8'
     Author            = 'Guy Lescalier'
     CompanyName       = 'SopraSteria'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'

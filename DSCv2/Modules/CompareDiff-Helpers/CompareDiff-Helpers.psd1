@@ -1,7 +1,7 @@
 @{
     RootModule        = 'CompareDiff-Helpers.psm1'
     ModuleVersion     = '0.0.1'
-    GUID              = '67f40b88-3676-4c2f-81e0-d0613b8c70c7'
+    GUID              = 'e06e904f-7bcf-4924-8ddf-5535ef893f29'
     Author            = 'Guy Lescalier'
     CompanyName       = 'SopraSteria'
     Copyright         = '(c) Guy Lescalier. All rights reserved.'
