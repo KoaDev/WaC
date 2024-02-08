@@ -1,7 +1,3 @@
-Import-Module PSDesiredStateConfiguration
-Import-Module Hashtable-Helpers
-Import-Module CompareDiff-Helpers
-
 . $PSScriptRoot\Constants.ps1
 . $PSScriptRoot\Get-DeepClone.ps1
 . $PSScriptRoot\Select-DscResourceProperties.ps1

@@ -1,5 +1,3 @@
-Import-Module MyDscResourceState
-
 . $PSScriptRoot\Yaml.ps1
 . $PSScriptRoot\Invoke-DscResourceState.ps1
 

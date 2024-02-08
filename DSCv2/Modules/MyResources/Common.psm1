@@ -1,5 +1,0 @@
-enum MyEnsure
-{
-    Absent
-    Present
-}

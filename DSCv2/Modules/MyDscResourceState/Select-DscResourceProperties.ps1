@@ -1,5 +1,3 @@
-Import-Module Hashtable-Helpers
-
 . $PSScriptRoot\Constants.ps1
 
 function Select-DscResourceIdProperties

@@ -1,5 +1,3 @@
-Import-Module MyDscResourceState
-
 . $PSScriptRoot\Yaml.ps1
 . $PSScriptRoot\Cache.ps1
 . $PSScriptRoot\ConvertTo-Result.ps1

@@ -1,5 +1,3 @@
-Import-Module MyDscResourceState
-
 . $PSScriptRoot\Invoke-DscResourceState.ps1
 
 function Test-DscConfigurationState

@@ -1,5 +1,3 @@
-Import-Module MyDscResourceState
-
 $script:cache = @{}
 
 function Get-DscResourceHash

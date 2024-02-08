@@ -14,4 +14,8 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = @()
+    RequiredModules   = @(
+        'MyDscResourceState'
+        'Hashtable-Helpers'
+    )
 }

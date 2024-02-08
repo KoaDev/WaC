@@ -1,5 +1,3 @@
-Import-Module CompareDiff-Helpers
-
 function Convert-HashtableKeysToStrings
 {
     param (

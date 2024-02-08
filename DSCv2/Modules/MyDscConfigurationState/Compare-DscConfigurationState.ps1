@@ -1,6 +1,3 @@
-Import-Module MyDscResourceState
-Import-Module Hashtable-Helpers
-
 . $PSScriptRoot\Yaml.ps1
 . $PSScriptRoot\ConvertTo-Result.ps1
 

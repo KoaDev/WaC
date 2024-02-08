@@ -47,6 +47,19 @@ Get-InstalledModule | ForEach-Object {
 Update-Module -Name ModuleName
 ```
 
+// List PS modules
+
+```powershell
+$env:PSModulePath -split ';' | ForEach-Object {
+    if (Test-Path $_) {
+        Write-Host "=================================================="
+        Write-Host "Modules in path: $_"
+        Write-Host "=================================================="
+        Get-ChildItem -Path $_ -Directory | ForEach-Object { " - $($_.Name)" }
+    }
+}
+```
+
 // Use WAC
 Get-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
 Test-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
@@ -54,5 +67,12 @@ Compare-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
 Set-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml -Report
 
 // Prérequis ???
+Set-PSRepository PSGallery -InstallationPolicy Trusted
+Install-Module powershell-yaml
+Install-Module PSDscResources -Repository PSGallery
+Install-Module PSDesiredStateConfiguration -Repository PSGallery
+Install-Module Microsoft.WinGet.DSC -AllowPrerelease
+Install-Module Microsoft.VisualStudio.DSC
+
 Déposer les modules dans [Environment]::GetFolderPath("MyDocuments") -> \PowerShell\Modules
 winget install -e -h --accept-package-agreements --accept-source-agreements --id Microsoft.PowerShell

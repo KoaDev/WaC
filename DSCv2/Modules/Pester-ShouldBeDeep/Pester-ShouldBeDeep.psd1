@@ -9,4 +9,7 @@
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = @()
+    RequiredModules   = @(
+        'CompareDiff-Helpers'
+    )
 }

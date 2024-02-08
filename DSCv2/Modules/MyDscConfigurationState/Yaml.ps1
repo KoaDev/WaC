@@ -29,14 +29,12 @@ function Get-DscResourcesFromYaml
 
     if (-not (Get-Module -ListAvailable -Name powershell-yaml))
     {
-        Write-Error 'The powershell-yaml module is not installed.'
-        return
+        throw 'The powershell-yaml module is not installed.'
     }
 
     if (-not (Test-Path $YamlFilePath))
     {
-        Write-Error 'The specified YAML file does not exist.'
-        return
+        throw 'The specified YAML file does not exist.'
     }
 
     Import-Module powershell-yaml
@@ -74,8 +72,7 @@ function Export-DscResourcesToYaml
 
     if (-not (Get-Module -ListAvailable -Name powershell-yaml))
     {
-        Write-Error 'The powershell-yaml module is not installed.'
-        return
+        throw 'The powershell-yaml module is not installed.'
     }
 
     Import-Module powershell-yaml

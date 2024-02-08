@@ -16,4 +16,12 @@
     CmdletsToExport   = @()
     VariablesToExport = @('DscResourcesIdProperties')
     AliasesToExport   = @()
+    RequiredModules   = @(
+        @{
+            ModuleName    = 'PSDesiredStateConfiguration'
+            ModuleVersion = '2.0.7'
+        }
+        'Hashtable-Helpers'
+        'CompareDiff-Helpers'
+    )
 }
