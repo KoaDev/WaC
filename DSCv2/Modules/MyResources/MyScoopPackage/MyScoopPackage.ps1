@@ -6,7 +6,14 @@ enum MyEnsure
 
 function Get-RawScoopList
 {
-    return & scoop list
+    $result = & scoop list
+
+    if (-not $?)
+    {
+        throw "Failed to get scoop list: $result"
+    }
+    
+    return $result ? $result : @()
 }
 
 function Get-RawScoopStatus
@@ -16,7 +23,15 @@ function Get-RawScoopStatus
     {
         & scoop update
     }
-    return & scoop status
+    
+    $result = & scoop status
+    
+    if (-not $?)
+    {
+        throw "Failed to get scoop status: $result"
+    }
+    
+    return $result ? $result : @()
 }
 
 function  Convert-ObjectArrayToHashtable
@@ -90,7 +105,7 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
     }
     else
     {
-        $scoopStatus = & scoop status | Out-String
+        $scoopStatus = Get-RawScoopStatus
         $packages = Convert-ObjectArrayToHashtable $scoopStatus 'Name'
         $script:ScoopStatusCache = $packages
         $script:ScoopStatusCacheExpires = (Get-Date) + $script:CacheDuration
@@ -98,7 +113,7 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
 
     if ($packages.ContainsKey($packageName))
     {
-        return $packages[$packageName]['Latest Version']
+        return $packages[$packageName].'Latest Version'
     }
 
     return $null

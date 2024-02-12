@@ -27,10 +27,12 @@ Describe 'MyScoopPackage' {
 
             # Assert
             # $scoopStatus | Should -BeOfType '[PSCustomObject]'
-            $scoopStatus | Should -Not -BeNullOrEmpty
-            $scoopStatus | ForEach-Object {
-                $_ | Should -BeOfType 'PSCustomObject'
-                $_.PSObject.Properties | Where-Object { $_.Name -eq 'Name' } | Should -Not -BeNullOrEmpty
+            if ($scoopStatus)
+            {
+                $scoopStatus | ForEach-Object {
+                    $_ | Should -BeOfType 'PSCustomObject'
+                    $_.PSObject.Properties | Where-Object { $_.Name -eq 'Name' } | Should -Not -BeNullOrEmpty
+                }
             }
         }
     }
@@ -62,7 +64,8 @@ Describe 'MyScoopPackage' {
             $packages | Should -BeOfType 'Hashtable'
             $packages.Values | ForEach-Object {
                 $_ | Should -BeOfType 'PSCustomObject'
-                $_.PSObject.Properties | Where-Object { $_.Name -eq 'Version' } | Should -Not -BeNullOrEmpty
+                $_.PSObject.Properties | Where-Object { $_.Name -eq 'Installed Version' } | Should -Not -BeNullOrEmpty
+                $_.PSObject.Properties | Where-Object { $_.Name -eq 'Latest Version' } | Should -Not -BeNullOrEmpty
             }
         }
     }
@@ -82,12 +85,26 @@ Describe 'MyScoopPackage' {
             $packageInfo['Version'] | Should -Not -BeNullOrEmpty
             $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+$'
         }
+
+        It 'Should return package info for not installed package' {
+            # Arrange
+            $packageName = 'notarealpackage'
+
+            # Act
+            $packageInfo = Get-ScoopPackageInfo $packageName
+
+            # Assert
+            $packageInfo | Should -BeOfType 'Hashtable'
+            $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'Version')
+            $packageInfo['Ensure'] | Should -Be 'Absent'
+            $packageInfo['Version'] | Should -BeNullOrEmpty
+        }
     }
 
     Context 'Get-ScoopPackageLatestAvailableVersion' {
         It 'Should return latest available version' {
             # Arrange
-            $packageName = 'git'
+            $packageName = 'dotnet-sdk'
 
             # Act
             $latestVersion = Get-ScoopPackageLatestAvailableVersion $packageName

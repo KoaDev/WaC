@@ -35,19 +35,17 @@ class MyScoopPackage
 
         $current.Ensure = $packageInfo.Ensure
         $current.Version = $packageInfo.Version
-    
-        $current.LatestVersion = Get-ScoopPackageLatestAvailableVersion $this.PackageName
 
-        if ($current.Version -and $current.LatestVersion)
+        if ($current.Version)
+        {    
+            $current.LatestVersion = Get-ScoopPackageLatestAvailableVersion $this.PackageName
+            $current.LatestVersion = $current.LatestVersion ? $current.LatestVersion : $current.Version
+            $current.State = $current.LatestVersion -ne $current.Version ? 'Stale' : 'Current'
+        }
+        else
         {
-            if ($current.Version -eq $current.LatestVersion)
-            {
-                $current.State = 'Current'
-            }
-            else
-            {
-                $current.State = 'Stale'
-            }
+            $current.LatestVersion = $null
+            $current.State = 'NotInstalled'
         }
 
         $this.CachedCurrent = $current
