@@ -12,16 +12,6 @@ function Compare-DscResourceState
     $resourceClone = Get-DeepClone $resource
     $resourceClone.ModuleName = $resourceClone.ModuleName ?? $DefaultDscResourceModuleName
     $resourceClone.Property = $resourceClone.Property ?? @{}
-    if ($DscResourcesDefaultProperties.ContainsKey($resourceClone.Name))
-    {
-        foreach ($key in $DscResourcesDefaultProperties[$resourceClone.Name].Keys)
-        {
-            if (-not $resourceClone.Property.ContainsKey($key))
-            {
-                $resourceClone.Property[$key] = $DscResourcesDefaultProperties[$resourceClone.Name][$key]
-            }
-        }
-    }
     if ($DscResourcesWithoutEnsure -notcontains $resourceClone.Name)
     {
         $resourceClone.Property.Ensure = $resourceClone.Property.Ensure ?? 'Present'

@@ -8,7 +8,7 @@ enum MyEnsure
 class MyChocolatey
 {
     [DscProperty(Key)]
-    [string] $ResourceName = 'ChocolateyInstallation'
+    [string] $MyChocolateyKey = 'MyChocolateyKey'
 
     [DscProperty()]
     [MyEnsure] $Ensure = [MyEnsure]::Present

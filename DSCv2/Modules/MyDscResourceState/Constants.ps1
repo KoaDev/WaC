@@ -2,11 +2,11 @@ $DefaultDscResourceModuleName = 'PSDscResources'
 
 $DscResourcesIdProperties = @{
     MyCertificate              = @('Path')
-    MyChocolatey               = @('ResourceName')
+    MyChocolatey               = @()
     MyChocolateyPackage        = @('PackageName')
     MyHosts                    = @('Name', 'Path')
     MyNodeVersion              = @('Version')
-    MyScoop                    = @('ResourceName')
+    MyScoop                    = @()
     MyScoopPackage             = @('PackageName')
     MyWindowsDefenderExclusion = @('Type', 'Value')
     Registry                   = @('ValueName', 'Key')
@@ -16,17 +16,11 @@ $DscResourcesIdProperties = @{
 }
 
 $DscResourcesDefaultProperties = @{
-    MyChocolatey        = @{
-        ResourceName = 'ChocolateyInstallation'
-    }
     MyChocolateyPackage = @{
         State = 'Current'
     }
     MyNodeVersion       = @{
         State = 'Current'
-    }
-    MyScoop             = @{
-        ResourceName = 'ScoopInstallation'
     }
     MyScoopPackage      = @{
         State = 'Current'

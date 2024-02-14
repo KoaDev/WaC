@@ -8,7 +8,7 @@ enum MyEnsure
 class MyScoop
 {
     [DscProperty(Key)]
-    [string] $ResourceName = 'ScoopInstallation'
+    [string] $MyScoopKey = 'MyScoopKey'
 
     [DscProperty()]
     [MyEnsure] $Ensure = [MyEnsure]::Present

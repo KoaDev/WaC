@@ -37,7 +37,6 @@ function Select-HashtableKeys
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [hashtable]$OriginalHashtable,
         
-        [Parameter(Mandatory = $true)]
         [string[]]$KeysArray,
         
         [switch]$InvertSelection

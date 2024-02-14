@@ -23,8 +23,8 @@ function Get-DscResourceState
         $global:ProgressPreference = $originalProgressPreference
     }
 
-    $idProperties = $DscResourcesIdProperties[$resourceClone.Name]
-    $identifier, $state = Split-Hashtable -OriginalHashtable $getResult -KeysArray $idProperties
+    $identifier = Select-DscResourceIdProperties -Resource $resourceClone
+    $state = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
 
     return [ordered]@{
         Type       = $resource.Name

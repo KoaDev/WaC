@@ -63,6 +63,7 @@
     - PackageName: gh
     - PackageName: git
     - PackageName: nvm
+      Version: 1.1.11
     - PackageName: oh-my-posh
     - PackageName: terraform
     - PackageName: CascadiaCode-NF-Mono
@@ -99,6 +100,7 @@
     # - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
+    - Id: HP.ImageAssistant
 
 - Name: VSComponents
   ModuleName: Microsoft.VisualStudio.DSC
@@ -127,12 +129,12 @@
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
 
-# - Name: MyNodeVersion
-#   ModuleName: MyResources
-#   Property:
-#     - Version: lts
-#       Ensure: Used
-#     - Version: 18
+- Name: MyNodeVersion
+  ModuleName: MyResources
+  Property:
+    - Version: lts
+      Ensure: Used
+    - Version: 18
 
 - Name: MyHosts
   ModuleName: MyResources

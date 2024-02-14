@@ -14,7 +14,8 @@
         'Select-DscResourceStateProperties'
     )
     CmdletsToExport   = @()
-    VariablesToExport = @('DscResourcesIdProperties')
+    VariablesToExport = @()
+    # VariablesToExport = @('DscResourcesIdProperties')
     AliasesToExport   = @()
     RequiredModules   = @(
         @{
