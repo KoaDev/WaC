@@ -37,10 +37,18 @@ class MyScoopPackage
         $current.Version = $packageInfo.Version
 
         if ($current.Version)
-        {    
-            $current.LatestVersion = Get-ScoopPackageLatestAvailableVersion $this.PackageName
-            $current.LatestVersion = $current.LatestVersion ? $current.LatestVersion : $current.Version
-            $current.State = $current.LatestVersion -ne $current.Version ? 'Stale' : 'Current'
+        {
+            if ($this.Version -eq 'latest')
+            {
+                $current.LatestVersion = Get-ScoopPackageLatestAvailableVersion $this.PackageName
+                $current.LatestVersion = $current.LatestVersion ? $current.LatestVersion : $current.Version
+                $current.State = $current.LatestVersion -eq $current.Version ? 'Current' : 'Stale'
+            }
+            else
+            {
+                $current.LatestVersion = 'NotApplicable'
+                $current.State = $current.Version -eq $this.Version ? 'Current' : 'Stale'
+            }
         }
         else
         {
@@ -96,36 +104,19 @@ class MyScoopPackage
 
             if ($current.Ensure -eq [MyEnsure]::Present -and $this.Version -eq 'latest')
             {
-                $output = & scoop update $target *>&1
-                if (-not $?)
-                {
-                    $outputString = $output | Out-String
-                    throw "Failed to update scoop package '$target'.`nDetails: $outputString"
-                }
+                Update-ScoopPackage $target
             }
             else
             {
-                & scoop install $target
-                if (-not $?)
-                {
-                    throw "Failed to install scoop package '$target'"
-                }
+                Install-ScoopPackage $target
             }
         }
         elseif ($this.Ensure -eq [MyEnsure]::Absent)
         {
             if ($current.Ensure -eq [MyEnsure]::Present)
             {
-                & scoop uninstall $this.PackageName
-                if (-not $?)
-                {
-                    throw "Failed to uninstall scoop package '$($this.PackageName)'"
-                }
+                Uninstall-ScoopPackage $this.PackageName
             }
         }
-        
-        # Invalidate the caches
-        [MyScoopPackage]::ScoopListCache = $null
-        [MyScoopPackage]::ScoopStatusCache = $null
     }
 }

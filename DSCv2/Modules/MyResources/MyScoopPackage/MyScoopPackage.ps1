@@ -118,3 +118,60 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
 
     return $null
 }
+
+function Update-ScoopPackage()
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $packageName
+    )
+
+    $output = & scoop update $packageName *>&1
+    if (-not $?)
+    {
+        $outputString = $output | Out-String
+        throw "Failed to update scoop package '$packageName'.`nDetails: $outputString"
+    }
+
+    Clear-Cache
+}
+
+function Install-ScoopPackage()
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $packageName
+    )
+    
+    & scoop install $target
+    if (-not $?)
+    {
+        throw "Failed to install scoop package '$target'"
+    }
+
+    Clear-Cache
+}
+
+function Uninstall-ScoopPackage()
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $packageName
+    )
+
+    & scoop uninstall $this.PackageName
+    if (-not $?)
+    {
+        throw "Failed to uninstall scoop package '$($this.PackageName)'"
+    }
+
+    Clear-Cache
+}
+
+function Clear-Cache
+{
+    $script:ScoopListCache = $null
+    $script:ScoopListCacheExpires = $null
+    $script:ScoopStatusCache = $null
+    $script:ScoopStatusCacheExpires = $null
+}
