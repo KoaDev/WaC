@@ -58,10 +58,9 @@ function Compare-DscResourceState
             $expected = Select-DscResourceStateProperties -Resource $resourceClone
             $actual = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
 
-            # TODO : Remove this
-            if ($resourceClone.Name -eq 'Registry')
+            if ($DscResourcesPostInvokeAction.ContainsKey($resourceClone.Name))
             {
-                $expected.ValueData = @($expected.ValueData)
+                & $DscResourcesPostInvokeAction[$resourceClone.Name] $actual
             }
             $diff = Get-Diff $expected $actual
             $diff.remove('Added')

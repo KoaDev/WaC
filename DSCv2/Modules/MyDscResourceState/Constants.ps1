@@ -41,3 +41,13 @@ $DscResourcesIsPresentAction = @{
         $Resource.installedComponents -is [array] -and $Resource.installedComponents.Count -gt 0
     }
 }
+
+$DscResourcesPostInvokeAction = @{
+    Registry = {
+        param([hashtable]$Property)
+        if ($Property.ValueData.Count -eq 1)
+        {
+            $Property.ValueData = $Property.ValueData[0]
+        }
+    }
+}
