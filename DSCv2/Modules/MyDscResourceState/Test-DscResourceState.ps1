@@ -22,6 +22,8 @@ function Test-DscResourceState
 
     try
     {
+        Write-Verbose "Tested properties: $($resourceClone.Property | ConvertTo-Json -EnumsAsStrings -Depth 100)"
+
         $originalProgressPreference = $global:ProgressPreference
         $global:ProgressPreference = 'SilentlyContinue'
         $testResult = Invoke-DscResource @resourceClone -Method Test -Verbose:($VerbosePreference -eq 'Continue')

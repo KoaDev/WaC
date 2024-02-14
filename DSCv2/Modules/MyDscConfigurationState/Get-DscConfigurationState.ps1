@@ -16,5 +16,5 @@ function Get-DscConfigurationState
 
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
 
-    Invoke-DscResourceStateBatch -Method Get -Resources $resources -Force:$Force
+    Invoke-DscResourceStateBatch -Method Get -Resources $resources -Force:$Force -Verbose:($VerbosePreference -eq 'Continue')
 }

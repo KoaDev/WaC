@@ -43,7 +43,7 @@ function Compare-DscConfigurationState
         $progressMessage = "Processing resource $index of $totalResources ($([Math]::Floor($progressPercent))%)"
         Write-Progress -Activity 'Processing DSC Resources' -Status $progressMessage -PercentComplete $progressPercent
     
-        $comparison = Compare-DscResourceState $resource
+        $comparison = Compare-DscResourceState $resource -Verbose:($VerbosePreference -eq 'Continue')
 
         if (-not $Report)
         {

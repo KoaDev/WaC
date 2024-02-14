@@ -56,7 +56,7 @@ function Set-DscConfigurationState
 
         try
         {
-            $setResult = Set-DscResourceState $resource
+            $setResult = Set-DscResourceState $resource -Verbose:($VerbosePreference -eq 'Continue')
 
             $cacheKey = Get-DscResourceHash -Resource $resource
             Remove-CacheEntry 'Test' $cacheKey

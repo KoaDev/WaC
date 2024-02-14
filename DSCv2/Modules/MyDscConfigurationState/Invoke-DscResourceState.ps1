@@ -51,7 +51,8 @@ function Invoke-DscResourceState
     )
 
     $cacheKey = Get-DscResourceHash -Resource $resource
-    $action = { Invoke-Expression "$Method-DscResourceState -resource `$resource" }
+    $verboseArg = $VerbosePreference -eq 'Continue' ? '-Verbose' : ''
+    $action = { Invoke-Expression "$Method-DscResourceState -Resource `$resource $verboseArg" }
     $result = Get-CacheEntry -CacheName $Method -Key $cacheKey -CacheDuration ([timespan]::FromMinutes(5)) `
         -ResourceAction $action `
         -Force:$Force
