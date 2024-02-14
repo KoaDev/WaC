@@ -15,9 +15,7 @@ function Test-DscConfigurationState
         [switch]$Force
     )
 
-    # TODO: Find a better way to remove these parameters
-    $null = $PSBoundParameters.Remove('WithInDesiredState')
-    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
+    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection -YamlFilePath $YamlFilePath -Resources $Resources
 
     Invoke-DscResourceStateBatch -Method Test -Resources $resources -Force:$Force -WithInDesiredState:$WithInDesiredState -Verbose:($VerbosePreference -eq 'Continue')
 }

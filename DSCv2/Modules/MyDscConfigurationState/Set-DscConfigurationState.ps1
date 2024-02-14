@@ -16,9 +16,7 @@ function Set-DscConfigurationState
         [switch]$Report
     )
 
-    $null = $PSBoundParameters.Remove('Force')
-    $null = $PSBoundParameters.Remove('Report')
-    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
+    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection -YamlFilePath $YamlFilePath -Resources $Resources
 
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 

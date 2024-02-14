@@ -1,21 +1,22 @@
 function Get-ResourcesFromYamlFilePathOrResourceCollection
 {
-    [CmdletBinding(DefaultParameterSetName = 'YamlFilePath')]
+    [CmdletBinding()]
     param (
-        [Parameter(ParameterSetName = 'YamlFilePath', Mandatory = $true)]
         [string]$YamlFilePath,
-
-        [Parameter(ParameterSetName = 'ResourceCollection', Mandatory = $true)]
         [hashtable[]]$Resources
     )
 
-    if ($PSCmdlet.ParameterSetName -eq 'YamlFilePath')
+    if ($YamlFilePath)
     {
         return Get-DscResourcesFromYaml -YamlFilePath $YamlFilePath
     }
-    else
+    elseif ($Resources)
     {
         return $Resources
+    }
+    else
+    {
+        throw 'Either the YamlFilePath or Resources parameter must be specified.'
     }
 }
 

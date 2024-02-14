@@ -18,10 +18,7 @@ function Compare-DscConfigurationState
         [switch]$JsonDiff
     )
 
-    $null = $PSBoundParameters.Remove('WithCompliant')
-    $null = $PSBoundParameters.Remove('Report')
-    $null = $PSBoundParameters.Remove('JsonDiff')
-    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection @PSBoundParameters
+    $resources = Get-ResourcesFromYamlFilePathOrResourceCollection -YamlFilePath $YamlFilePath -Resources $Resources
 
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
