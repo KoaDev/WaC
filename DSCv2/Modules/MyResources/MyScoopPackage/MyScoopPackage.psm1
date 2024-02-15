@@ -6,6 +6,8 @@ enum MyEnsure
     Present
 }
 
+# TODO: Same properties as WinGetPackage
+# Ensure, IsUpdateAvailable, MatchOption, UseLatest, InstallMode, Source, IsInstalled, InstalledVersion, Version
 [DscResource()]
 class MyScoopPackage
 {

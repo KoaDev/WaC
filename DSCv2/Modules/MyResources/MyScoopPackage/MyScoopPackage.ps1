@@ -106,6 +106,12 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
     else
     {
         $scoopStatus = Get-RawScoopStatus
+
+        if (-not $scoopStatus)
+        {
+            return 'Unable to get scoop status'
+        }
+
         $packages = Convert-ObjectArrayToHashtable $scoopStatus 'Name'
         $script:ScoopStatusCache = $packages
         $script:ScoopStatusCacheExpires = (Get-Date) + $script:CacheDuration

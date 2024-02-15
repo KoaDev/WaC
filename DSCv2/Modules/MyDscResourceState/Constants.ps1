@@ -51,3 +51,12 @@ $DscResourcesPostInvokeAction = @{
         }
     }
 }
+
+$DscResourcesMinimalStateProperties = @{
+    MyCertificate              = @('StoreName', 'Location')
+    MyWindowsDefenderExclusion = @()
+    Registry                   = @('ValueData')
+    VSComponents               = @('installedComponents')
+    WindowsOptionalFeature     = @()
+    WinGetPackage              = @('IsUpdateAvailable', 'UseLatest', 'InstalledVersion')
+}

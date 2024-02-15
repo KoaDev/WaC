@@ -11,10 +11,12 @@ function Get-DscConfigurationState
         [Parameter(ParameterSetName = 'ResourceCollection', Mandatory = $true)]
         [hashtable[]]$Resources,
         
-        [switch]$Force
+        [switch]$Force,
+
+        [switch]$Minimal
     )
 
     $resources = Get-ResourcesFromYamlFilePathOrResourceCollection -YamlFilePath $YamlFilePath -Resources $Resources
 
-    Invoke-DscResourceStateBatch -Method Get -Resources $resources -Force:$Force -Verbose:($VerbosePreference -eq 'Continue')
+    Invoke-DscResourceStateBatch -Method Get -Resources $resources -Force:$Force -Minimal:$Minimal -Verbose:($VerbosePreference -eq 'Continue')
 }

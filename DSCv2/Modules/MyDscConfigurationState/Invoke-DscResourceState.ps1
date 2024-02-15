@@ -15,7 +15,9 @@ function Invoke-DscResourceStateBatch
         
         [switch]$WithInDesiredState,
         
-        [switch]$Force
+        [switch]$Force,
+
+        [switch]$Minimal
     )
 
     $totalResources = $resources.Count
@@ -28,7 +30,7 @@ function Invoke-DscResourceStateBatch
         $progressMessage = "Processing resource $index of $totalResources ($([Math]::Floor($progressPercent))%)"
         Write-Progress -Activity 'Processing DSC Resources' -Status $progressMessage -PercentComplete $progressPercent
     
-        Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force -WithInDesiredState:$WithInDesiredState
+        Invoke-DscResourceState -Method $Method -Resource $resource -Force:$Force -WithInDesiredState:$WithInDesiredState -Minimal:$Minimal
     }
     
     Write-Progress -Activity 'Processing DSC Resources' -Completed
@@ -47,12 +49,15 @@ function Invoke-DscResourceState
 
         [switch]$WithInDesiredState,
         
-        [switch]$Force
+        [switch]$Force,
+
+        [switch]$Minimal
     )
 
     $cacheKey = Get-DscResourceHash -Resource $resource
     $verboseArg = $VerbosePreference -eq 'Continue' ? '-Verbose' : ''
-    $action = { Invoke-Expression "$Method-DscResourceState -Resource `$resource $verboseArg" }
+    $MinimalArg = $Method -eq 'Get' -and $Minimal ? '-Minimal' : ''
+    $action = { Invoke-Expression "$Method-DscResourceState -Resource `$resource $verboseArg $MinimalArg" }
     $result = Get-CacheEntry -CacheName $Method -Key $cacheKey -CacheDuration ([timespan]::FromMinutes(5)) `
         -ResourceAction $action `
         -Force:$Force

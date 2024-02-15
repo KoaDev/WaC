@@ -4,7 +4,12 @@
 function Get-DscResourceState
 {
     [CmdletBinding()]
-    param ([hashtable]$Resource)
+    param (
+        [Parameter(Mandatory = $true)]
+        [hashtable]$Resource,
+
+        [switch]$Minimal
+    )
 
     Write-Verbose "Getting DSC Resource State for $($Resource | ConvertTo-Json -EnumsAsStrings -Depth 100)"
 
@@ -25,6 +30,21 @@ function Get-DscResourceState
 
     $identifier = Select-DscResourceIdProperties -Resource $resourceClone
     $state = Select-DscResourceStateProperties -Resource $getResult -ResourceName $resourceClone.Name
+
+    if ($DscResourcesPostInvokeAction.ContainsKey($resourceClone.Name))
+    {
+        & $DscResourcesPostInvokeAction[$resourceClone.Name] $state
+    }
+
+    if ($Minimal -and $DscResourcesMinimalStateProperties.ContainsKey($resourceClone.Name))
+    {
+        $minimalStateProperties = $DscResourcesMinimalStateProperties[$resourceClone.Name]
+        if ($DscResourcesWithoutEnsure -notcontains $resourceClone.Name)
+        {
+            $minimalStateProperties = $minimalStateProperties + 'Ensure'
+        }
+        $state = $state | Select-HashtableKeys -KeysArray $minimalStateProperties
+    }
 
     return [ordered]@{
         Type       = $resource.Name
