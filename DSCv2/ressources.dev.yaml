@@ -57,6 +57,7 @@
     - PackageName: dotnet-sdk
     - PackageName: git
     - PackageName: nvm
+      Version: 1.1.11
     - PackageName: dotnet3-sdk
     - PackageName: dotnet5-sdk
     - PackageName: dotnet6-sdk
@@ -109,6 +110,12 @@
       Value: C:\Projets
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
+
+- Name: MyNodeVersion
+  ModuleName: MyResources
+  Property:
+    - Version: lts
+      Ensure: Used
 
 - Name: MyHosts
   ModuleName: MyResources

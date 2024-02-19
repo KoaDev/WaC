@@ -52,7 +52,14 @@ function  Convert-ObjectArrayToHashtable
 
     foreach ($obj in $ObjectArray)
     {
-        $hashtable[$obj.$KeyProperty] = $obj
+        try
+        {
+            $hashtable[$obj.$KeyProperty] = $obj
+        }
+        catch
+        {
+            throw "Failed to insert object '$($obj | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' from array '$($ObjectArray | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' into hashtable.`nDetails: $_"
+        }
     }
 
     return $hashtable
@@ -78,9 +85,16 @@ function Get-ScoopPackageInfo()
     else
     {
         $scoopList = Get-RawScoopList
-        $packages = Convert-ObjectArrayToHashtable $scoopList 'Name'
-        $script:ScoopListCache = $packages
-        $script:ScoopListCacheExpires = (Get-Date) + $script:CacheDuration
+        try
+        {
+            $packages = Convert-ObjectArrayToHashtable $scoopList 'Name'
+            $script:ScoopListCache = $packages
+            $script:ScoopListCacheExpires = (Get-Date) + $script:CacheDuration
+        }
+        catch
+        {
+            throw "Failed to convert scoop list '$($scoopList | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' to hashtable.`nDetails: $_"
+        }
     }
     
     if ($packages.ContainsKey($packageName))
@@ -112,9 +126,16 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
             return 'Unable to get scoop status'
         }
 
-        $packages = Convert-ObjectArrayToHashtable $scoopStatus 'Name'
-        $script:ScoopStatusCache = $packages
-        $script:ScoopStatusCacheExpires = (Get-Date) + $script:CacheDuration
+        try
+        {
+            $packages = Convert-ObjectArrayToHashtable $scoopStatus 'Name'
+            $script:ScoopStatusCache = $packages
+            $script:ScoopStatusCacheExpires = (Get-Date) + $script:CacheDuration
+        }
+        catch
+        {
+            throw "Failed to convert scoop status '$($scoopStatus | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' to hashtable.`nDetails: $_"
+        }
     }
 
     if ($packages.ContainsKey($packageName))

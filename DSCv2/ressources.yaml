@@ -128,6 +128,8 @@
       Value: C:\Projets
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
+    - Type: Path
+      Value: C:\Users\%user%\scoop
 
 - Name: MyNodeVersion
   ModuleName: MyResources

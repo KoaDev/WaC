@@ -67,6 +67,7 @@ Compare-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml
 Set-DscConfigurationState -YamlFilePath C:\Projets\WaC\DSCv2\ressources.yaml -Report
 
 // Prérequis ???
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module powershell-yaml
 Install-Module PSDscResources -Repository PSGallery
