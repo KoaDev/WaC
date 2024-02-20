@@ -1,8 +1,17 @@
+. $PSScriptRoot\Convert-ObjectArrayToHashtable.ps1
+. $PSScriptRoot\Invoke-RetryableOperation.ps1
+
 enum MyEnsure
 {
     Absent
     Present
 }
+
+$script:ScoopListCache
+$script:ScoopListCacheExpires
+$script:ScoopStatusCache
+$script:ScoopStatusCacheExpires
+$script:CacheDuration = [TimeSpan]::FromMinutes(5)
 
 function Get-RawScoopList
 {
@@ -34,42 +43,50 @@ function Get-RawScoopStatus
     return $result ? $result : @()
 }
 
-function  Convert-ObjectArrayToHashtable
+function Update-ScoopListCache
 {
-    param (
-        [PSCustomObject[]] $ObjectArray,
+    Invoke-RetryableOperation {
+        $scoopList = Get-RawScoopList
 
-        [Parameter(Mandatory = $true)]
-        [string] $KeyProperty
-    )
+        if (-not $scoopList)
+        {
+            throw 'Unable to get scoop list'
+        }
 
-    if (-not $ObjectArray)
-    {
-        return @{}
-    }
-
-    $hashtable = @{}
-
-    foreach ($obj in $ObjectArray)
-    {
         try
         {
-            $hashtable[$obj.$KeyProperty] = $obj
+            $packages = Convert-ObjectArrayToHashtable $scoopList 'Name'
+            $script:ScoopListCache = $packages
+            $script:ScoopListCacheExpires = (Get-Date) + $script:CacheDuration
         }
         catch
         {
-            throw "Failed to insert object '$($obj | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' from array '$($ObjectArray | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' into hashtable.`nDetails: $_"
+            throw "Failed to convert scoop list '$($scoopList | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' to hashtable.`nDetails: $_"
+        }
+    }
+}
+
+function Get-ScoopPackageInfo
+{
+    param (
+        [string]$PackageName
+    )
+
+    if (-not $script:ScoopListCache -or $script:ScoopListCacheExpires -le (Get-Date))
+    {
+        Update-ScoopListCache
+    }
+
+    if ($script:ScoopListCache.ContainsKey($PackageName))
+    {
+        return @{
+            Ensure  = [MyEnsure]::Present
+            Version = $script:ScoopListCache[$packageName].Version
         }
     }
 
-    return $hashtable
+    return $null
 }
-
-$script:ScoopListCache
-$script:ScoopListCacheExpires
-$script:ScoopStatusCache
-$script:ScoopStatusCacheExpires
-$script:CacheDuration = [TimeSpan]::FromMinutes(5)
 
 function Get-ScoopPackageInfo()
 {
@@ -111,19 +128,14 @@ function Get-ScoopPackageInfo()
     }
 }
 
-function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
+function Update-ScoopStatusCache
 {
-    if ($script:ScoopStatusCache -and $script:ScoopStatusCacheExpires -gt (Get-Date))
-    {
-        $packages = $script:ScoopStatusCache
-    }
-    else
-    {
+    Invoke-RetryableOperation {
         $scoopStatus = Get-RawScoopStatus
-
+            
         if (-not $scoopStatus)
         {
-            return 'Unable to get scoop status'
+            throw 'Unable to get scoop status'
         }
 
         try
@@ -137,10 +149,22 @@ function Get-ScoopPackageLatestAvailableVersion([string] $packageName)
             throw "Failed to convert scoop status '$($scoopStatus | ConvertTo-Json -EnumsAsStrings -Depth 100 -Compress)' to hashtable.`nDetails: $_"
         }
     }
+}
 
-    if ($packages.ContainsKey($packageName))
+function Get-ScoopPackageLatestAvailableVersion
+{
+    param (
+        [string]$PackageName
+    )
+
+    if (-not $script:ScoopStatusCache -or $script:ScoopStatusCacheExpires -le (Get-Date))
     {
-        return $packages[$packageName].'Latest Version'
+        Update-ScoopStatusCache
+    }
+
+    if ($script:ScoopStatusCache.ContainsKey($PackageName))
+    {
+        return $script:ScoopStatusCache[$PackageName].'Latest Version'
     }
 
     return $null

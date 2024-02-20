@@ -13,13 +13,7 @@ function Set-DscResourceState
     $resourceClone.Property = $resourceClone.Property ?? @{}
     if ($DscResourcesDefaultProperties.ContainsKey($resourceClone.Name))
     {
-        foreach ($key in $DscResourcesDefaultProperties[$resourceClone.Name].Keys)
-        {
-            if (-not $resourceClone.Property.ContainsKey($key))
-            {
-                $resourceClone.Property[$key] = $DscResourcesDefaultProperties[$resourceClone.Name][$key]
-            }
-        }
+        $resourceClone.Property = New-MergedHashtable $DscResourcesDefaultProperties[$resourceClone.Name] $resourceClone.Property
     }
     if ($DscResourcesWithoutEnsure -notcontains $resourceClone.Name)
     {
