@@ -4,104 +4,175 @@
       ValueName: HideFileExt
       ValueData: "0"
       ValueType: DWord
+      Description: Configure to show file extensions
     - Key: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
       ValueName: DisableLoopbackCheck
       ValueData: "1"
       ValueType: DWord
+      Description: Disable loopback check for local applications
 
 - Name: WindowsOptionalFeature
   Property:
     - Name: IIS-ApplicationDevelopment
+      Description: Install IIS Application Development features
     - Name: IIS-ASPNET
+      Description: Install ASP.NET
     - Name: IIS-ASPNET45
+      Description: Install ASP.NET 4.5
     - Name: IIS-BasicAuthentication
+      Description: Install IIS Basic Authentication
     - Name: IIS-CertProvider
+      Description: Install IIS Certificate Provider
     - Name: IIS-CommonHttpFeatures
+      Description: Install Common HTTP Features
     - Name: IIS-DefaultDocument
+      Description: Install IIS Default Document
     - Name: IIS-DirectoryBrowsing
+      Description: Install Directory Browsing
     - Name: IIS-HealthAndDiagnostics
+      Description: Install IIS Health and Diagnostics
     - Name: IIS-HostableWebCore
+      Description: Install Hostable Web Core
     - Name: IIS-HttpCompressionDynamic
+      Description: Install Dynamic HTTP Compression
     - Name: IIS-HttpCompressionStatic
+      Description: Install Static HTTP Compression
     - Name: IIS-HttpErrors
+      Description: Install IIS HTTP Errors
     - Name: IIS-HttpLogging
+      Description: Install IIS HTTP Logging
     - Name: IIS-ISAPIExtensions
+      Description: Install IIS ISAPI Extensions
     - Name: IIS-ISAPIFilter
+      Description: Install IIS ISAPI Filter
     - Name: IIS-ManagementConsole
+      Description: Install IIS Management Console
     - Name: IIS-ManagementScriptingTools
+      Description: Install Management Scripting Tools
     - Name: IIS-NetFxExtensibility
+      Description: Install IIS .NET Extensibility
     - Name: IIS-NetFxExtensibility45
+      Description: Install IIS .NET Extensibility 4.5
     - Name: IIS-Performance
+      Description: Install IIS Performance features
     - Name: IIS-RequestFiltering
+      Description: Install Request Filtering
     - Name: IIS-Security
+      Description: Install IIS Security features
     - Name: IIS-StaticContent
+      Description: Install Static Content
     - Name: IIS-WebServer
+      Description: Install IIS Web Server
     - Name: IIS-WebServerManagementTools
+      Description: Install IIS Web Server Management Tools
     - Name: IIS-WebServerRole
+      Description: Install IIS Web Server Role
     - Name: IIS-WebSockets
+      Description: Install Web Sockets
     - Name: IIS-WindowsAuthentication
+      Description: Install Windows Authentication
     - Name: NetFx3
+      Description: Install .NET Framework 3.5
     - Name: NetFx4-AdvSrvs
+      Description: Install .NET Framework 4.8 Advanced Services
     - Name: NetFx4Extended-ASPNET45
-    # - Name: WCF-HTTP-Activation
-    # - Name: WCF-HTTP-Activation45
-    # - Name: WCF-NonHTTP-Activation
+      Description: Install ASP.NET 4.5 Extended
     - Name: WCF-Services45
+      Description: Install WCF Services 4.5
 
 - Name: MyScoop
   ModuleName: MyResources
+  Property:
+      Description: Add Scoop
 
 - Name: MyScoopPackage
   ModuleName: MyResources
   Property:
     - PackageName: dotnet-sdk
+      Description: Install .NET SDK
     - PackageName: dotnet3-sdk
+      Description: Install .NET 3 SDK
     - PackageName: dotnet5-sdk
+      Description: Install .NET 5 SDK
     - PackageName: dotnet6-sdk
+      Description: Install .NET 6 SDK
     - PackageName: dotnet8-sdk
+      Description: Install .NET 8 SDK
     - PackageName: temurin-lts-jdk
+      Description: Install Temurin LTS JDK
     - PackageName: gh
+      Description: Install GitHub CLI
     - PackageName: git
+      Description: Install Git
     - PackageName: nuget
+      Description: Install NuGet
     - PackageName: nvm
       Version: 1.1.11
+      Description: Install Node Version Manager
     - PackageName: oh-my-posh
+      Description: Install Oh My Posh
     - PackageName: terraform
+      Description: Install Terraform
     - PackageName: CascadiaCode-NF-Mono
+      Description: Install Cascadia Code NF Mono font
     - PackageName: FiraCode-NF
+      Description: Install Fira Code NF font
     - PackageName: baretail
+      Description: Install BareTail
     - PackageName: mockoon
+      Description: Install Mockoon
     - PackageName: nuget-package-explorer
+      Description: Install NuGet Package Explorer
     - PackageName: paint.net
+      Description: Install Paint.NET
     - PackageName: postman
+      Description: Install Postman
     - PackageName: vlc
+      Description: Install VLC
     - PackageName: wiztree
+      Description: Install WizTree
 
 - Name: MyChocolatey
   ModuleName: MyResources
+  Property:
 
 - Name: MyChocolateyPackage
   ModuleName: MyResources
   Property:
     - PackageName: 7zip
+      Description: Install 7zip
     - PackageName: adobereader
+      Description: Install Adobe Reader
     - PackageName: bulkrenameutility
+      Description: Install Bulk Rename Utility
     - PackageName: notepadplusplus
+      Description: Install Notepad++
     - PackageName: urlrewrite
+      Description: Install URL Rewrite
     - PackageName: webdeploy
+      Description: Install Web Deploy
     - PackageName: winmerge
+      Description: Install WinMerge
 
 - Name: WinGetPackage
   ModuleName: Microsoft.WinGet.DSC
   Property:
     - Id: Fork.Fork
+      Description: Install Fork
     - Id: Microsoft.PowerShell
+      Description: Install PowerShell
     - Id: Microsoft.PowerToys
-    # - Id: Microsoft.PowerAutomateDesktop
-    # - Id: Microsoft.PowerBI
+      Description: Install PowerToys
+    - Id: Microsoft.PowerAutomateDesktop
+      Description: Install Power Automate Desktop
+    - Id: Microsoft.PowerBI
+      Description: Install Power BI
     - Id: Microsoft.VisualStudioCode
+      Description: Install VS Code
     - Id: Google.Chrome
+      Description: Install Google Chrome
     - Id: HP.ImageAssistant
+      Description: Install HP Image Assistant
 
 - Name: VSComponents
   ModuleName: Microsoft.VisualStudio.DSC
@@ -110,37 +181,47 @@
       channelId: VisualStudio.17.Release
       vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
       includeRecommended: true
+      Description: Install Visual Studio Enterprise components
 
 - Name: MyScoopPackage
   ModuleName: MyResources
   Property:
     - PackageName: rustup
+      Description: Install Rustup
 
 - Name: MyCertificate
   ModuleName: MyResources
   Property:
     - Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
+      Description: Install Paca Certificate
     - Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+      Description: Install Region SUD Root CA
 
 - Name: MyWindowsDefenderExclusion
   ModuleName: MyResources
   Property:
     - Type: Path
       Value: C:\Projets
+      Description: Exclude Projects folder from Windows Defender
     - Type: Path
       Value: C:\Users\%user%\.dotnet\tools
+      Description: Exclude .NET tools folder from Windows Defender
     - Type: Path
       Value: C:\Users\%user%\scoop
+      Description: Exclude Scoop folder from Windows Defender
 
 - Name: MyNodeVersion
   ModuleName: MyResources
   Property:
     - Version: lts
       Ensure: Used
+      Description: Use LTS Node.js version
     - Version: 18
+      Description: Install Node.js version 18
 
 - Name: MyHosts
   ModuleName: MyResources
   Property:
     - Name: RégionSUD
       Path: C:\WaC\resources\hosts
+      Description: Configure Hosts for Région SUD

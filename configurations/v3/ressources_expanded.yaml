@@ -1,0 +1,63 @@
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/v3/bundled/config/document.json
+resources:
+- name: Configure to show file extensions
+  type: Microsoft.Windows/Registry
+  properties:
+    keyPath: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: HideFileExt
+    valueData:
+      DWord: 0
+- name: Disable loopback check for local applications
+  type: Microsoft.Windows/Registry
+  properties:
+    keyPath: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+    valueName: DisableLoopbackCheck
+    valueData:
+      DWord: 1
+- name: Add Scoop
+  type: MyScoop/MyScoop
+  properties: {}
+- name: Install .NET SDK
+  type: MyScoopPackage/MyScoopPackage
+  properties:
+    PackageName: dotnet-sdk
+- name: Install MyChocolatey
+  type: MyChocolatey/MyChocolatey
+  properties: {}
+- name: Install Paca Certificate
+  type: MyCertificate/MyCertificate
+  properties:
+    Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
+- name: Install Region SUD Root CA
+  type: MyCertificate/MyCertificate
+  properties:
+    Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+- name: ExcludeProjectsFolder
+  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  properties:
+    Value: C:\Projets
+    Type: Path
+- name: ExcludeDotnetTools
+  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  properties:
+    Value: C:\Users\%user%\.dotnet\tools
+    Type: Path
+- name: ExcludeScoopFolder
+  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  properties:
+    Value: C:\Users\%user%\scoop
+    Type: Path
+- name: Use LTS Node.js version
+  type: MyNodeVersion/MyNodeVersion
+  properties:
+    Version: lts
+    Ensure: Used
+- name: Install Node.js version 18
+  type: MyNodeVersion/MyNodeVersion
+  properties:
+    Version: 18
+- name: Configure Hosts for Région SUD
+  type: MyHosts/MyHosts
+  properties:
+    Path: C:\WaC\resources\hosts
+
