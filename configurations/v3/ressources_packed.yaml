@@ -16,12 +16,12 @@
 #    - Name: IIS-ApplicationDevelopment
 #      Name: Install IIS Application Development features
 
-- Name: MyScoop
+- Name: MyResouces
   ModuleName: MyScoop
   Property:
       Name: Add Scoop
 
-- Name: MyScoopPackage
+- Name: MyResouces
   ModuleName: MyScoopPackage
   Property:
     - PackageName: dotnet-sdk
@@ -68,11 +68,11 @@
 #    - PackageName: wiztree
 #      Name: Install WizTree
 
-- Name: MyChocolatey
+- Name: MyResouces
   ModuleName: MyChocolatey
   Property:
 
-#- Name: MyChocolateyPackage
+#- Name: MyResouces
 #  ModuleName: MyChocolateyPackage
 #  Property:
 #    - PackageName: 7zip
@@ -119,13 +119,13 @@
 #      includeRecommended: true
 #      Name: Install Visual Studio Enterprise components
 
-#- Name: MyScoopPackage
+#- Name: MyResouces
 #  ModuleName: MyScoopPackage
 #  Property:
 #    - PackageName: rustup
 #      Name: Install Rustup
 
-- Name: MyCertificate
+- Name: MyResouces
   ModuleName: MyCertificate
   Property:
     - Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
@@ -133,7 +133,7 @@
     - Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
       Name: Install Region SUD Root CA
 
-- Name: MyWindowsDefenderExclusion
+- Name: MyResouces
   ModuleName: MyWindowsDefenderExclusion
   Property:
     - Type: Path
@@ -146,7 +146,7 @@
       Value: C:\Users\%user%\scoop
       Name: ExcludeScoopFolder
 
-- Name: MyNodeVersion
+- Name: MyResouces
   ModuleName: MyNodeVersion
   Property:
     - Version: lts
@@ -155,7 +155,7 @@
     - Version: 18
       Name: Install Node.js version 18
 
-- Name: MyHosts
+- Name: MyResouces
   ModuleName: MyHosts
   Property:
     - Name: RégionSUD

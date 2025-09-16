@@ -15,49 +15,49 @@ resources:
     valueData:
       DWord: 1
 - name: Add Scoop
-  type: MyScoop/MyScoop
+  type: MyScoop/MyResouces
   properties: {}
 - name: Install .NET SDK
-  type: MyScoopPackage/MyScoopPackage
+  type: MyScoopPackage/MyResouces
   properties:
     PackageName: dotnet-sdk
-- name: Install MyChocolatey
-  type: MyChocolatey/MyChocolatey
+- name: Install MyResouces
+  type: MyChocolatey/MyResouces
   properties: {}
 - name: Install Paca Certificate
-  type: MyCertificate/MyCertificate
+  type: MyCertificate/MyResouces
   properties:
     Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
 - name: Install Region SUD Root CA
-  type: MyCertificate/MyCertificate
+  type: MyCertificate/MyResouces
   properties:
     Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
 - name: ExcludeProjectsFolder
-  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  type: MyWindowsDefenderExclusion/MyResouces
   properties:
     Value: C:\Projets
     Type: Path
 - name: ExcludeDotnetTools
-  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  type: MyWindowsDefenderExclusion/MyResouces
   properties:
     Value: C:\Users\%user%\.dotnet\tools
     Type: Path
 - name: ExcludeScoopFolder
-  type: MyWindowsDefenderExclusion/MyWindowsDefenderExclusion
+  type: MyWindowsDefenderExclusion/MyResouces
   properties:
     Value: C:\Users\%user%\scoop
     Type: Path
 - name: Use LTS Node.js version
-  type: MyNodeVersion/MyNodeVersion
+  type: MyNodeVersion/MyResouces
   properties:
     Version: lts
     Ensure: Used
 - name: Install Node.js version 18
-  type: MyNodeVersion/MyNodeVersion
+  type: MyNodeVersion/MyResouces
   properties:
     Version: 18
 - name: Configure Hosts for Région SUD
-  type: MyHosts/MyHosts
+  type: MyHosts/MyResouces
   properties:
     Path: C:\WaC\resources\hosts
 
