@@ -66,19 +66,21 @@
     - Id: Google.Chrome
     - Id: HP.ImageAssistant
 
-- name: VSComponents - [productId]
+- name: VSComponents
   type: Microsoft.VisualStudio.DSC
   properties:
-    - productId: Microsoft.VisualStudio.Product.Enterprise
+      productId: Microsoft.VisualStudio.Product.Enterprise
       channelId: VisualStudio.17.Release
       vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
       includeRecommended: true
 
-- name: MyCertificate - [Path]
+- name: MyCertificate - [resourceName]
   type: MyResources/MyCertificate
   properties:
     - Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
+      resourceName: CR-PACA
     - Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+      resourceName: AC-PACA
 
 - name: MyWindowsDefenderExclusion - [Value]
   type: MyResources/MyWindowsDefenderExclusion
@@ -97,7 +99,8 @@
       Ensure: Used
     - Version: 18
 
-- name: MyHosts - [Path]
+- name: MyHosts - [Name]
   type: MyResources/MyHosts
   properties:
       Path: C:\WaC\resources\hosts
+      Name: PACA

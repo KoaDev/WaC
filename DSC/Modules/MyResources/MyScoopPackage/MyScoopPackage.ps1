@@ -15,62 +15,32 @@ $script:CacheDuration = [TimeSpan]::FromMinutes(5)
 
 function Get-RawScoopList
 {
-    # Capture all output and filter only for JSON content to avoid contamination
-    $allOutput = & scoop export *>&1
-    
-    # Filter for JSON content (starts with { or [)
-    $jsonLines = $allOutput | Where-Object { 
-        $_ -is [string] -and $_ -match '^\s*[\{\[]' 
-    }
-    
-    if (-not $jsonLines) {
-        throw "Failed to get scoop export data: No valid JSON output received"
-    }
-    
     try {
-        # Join all JSON lines and parse
-        $jsonString = $jsonLines -join "`n"
-        $jsonResult = $jsonString | ConvertFrom-Json
+         $json = & scoop export | ConvertFrom-Json
     }
     catch {
         throw "Failed to parse scoop export JSON: $_"
     }
     
     # scoop export outputs a JSON object with 'apps' and 'buckets' keys. We only need the 'apps'.
-    return $jsonResult.apps ? $jsonResult.apps : @()
+    return $json.apps ?? @()
 }
 
 function Get-RawScoopStatus
 {
-    # Capture all output streams
-    $allOutput = & scoop status *>&1
-    
-    # Check if we need to update buckets (but suppress all output)
-    if ($allOutput -match 'WARN.*scoop update') {
-        & scoop update *>$null
-        # Re-run status after update
-        $allOutput = & scoop status *>&1
+    $statusResult = & scoop status 6>&1
+    if ($statusResult -match 'WARN.*scoop update')
+    {
+        & scoop update
     }
-    
-    # Filter for JSON content only
-    $jsonLines = $allOutput | Where-Object { 
-        $_ -is [string] -and ($_ -match '^\s*[\{\[]' -or $_ -match '^\s*"Name"')
+
+    $result = & scoop status
+
+    if (-not $?)
+    {
+        throw "Failed to get scoop status: $result"
     }
-    
-    if (-not $jsonLines) {
-        # No updates available - this is normal
-        return @()
-    }
-    
-    try {
-        $jsonString = $jsonLines -join "`n"
-        $result = $jsonString | ConvertFrom-Json
-    }
-    catch {
-        # If parsing fails, it might mean no updates available
-        return @()
-    }
-    
+
     return $result ? $result : @()
 }
 

@@ -4,16 +4,16 @@ resources:
   type: Microsoft.Windows/Registry
   properties:
     valueName: HideFileExt
+    keyPath: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
     valueData:
       DWord: 0
-    keyPath: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
 - name: Registry - DisableLoopbackCheck
   type: Microsoft.Windows/Registry
   properties:
     valueName: DisableLoopbackCheck
+    keyPath: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
     valueData:
       DWord: 1
-    keyPath: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
 - name: MyScoop
   type: MyResources/MyScoop
   properties: {}
@@ -164,18 +164,18 @@ resources:
   type: Microsoft.WinGet.DSC
   properties:
     Id: HP.ImageAssistant
-- name: VSComponents - Microsoft.VisualStudio.Product.Enterprise
+- name: VSComponents
   type: Microsoft.VisualStudio.DSC
   properties:
-    productId: Microsoft.VisualStudio.Product.Enterprise
-    channelId: VisualStudio.17.Release
     vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
+    channelId: VisualStudio.17.Release
+    productId: Microsoft.VisualStudio.Product.Enterprise
     includeRecommended: true
-- name: MyCertificate - C:\WaC\resources\certificates\_.cr-paca.fr.crt
+- name: MyCertificate - CR-PACA
   type: MyResources/MyCertificate
   properties:
     Path: C:\WaC\resources\certificates\_.cr-paca.fr.crt
-- name: MyCertificate - C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
+- name: MyCertificate - AC-PACA
   type: MyResources/MyCertificate
   properties:
     Path: C:\WaC\resources\certificates\Autorite de Certification Region SUD Provence-Alpes-Cote d'Azur.crt
@@ -197,14 +197,15 @@ resources:
 - name: MyNodeVersion - lts
   type: MyResources/MyNodeVersion
   properties:
-    Ensure: Used
     Version: lts
+    Ensure: Used
 - name: MyNodeVersion - 18
   type: MyResources/MyNodeVersion
   properties:
     Version: 18
-- name: MyHosts - C:\WaC\resources\hosts
+- name: MyHosts - PACA
   type: MyResources/MyHosts
   properties:
+    Name: PACA
     Path: C:\WaC\resources\hosts
 

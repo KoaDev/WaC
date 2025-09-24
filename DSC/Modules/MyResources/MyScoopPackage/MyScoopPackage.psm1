@@ -28,31 +28,39 @@ class MyScoopPackage
 
     hidden [MyScoopPackage] $CachedCurrent
 
-    [MyScoopPackage] Get() {
-        # Toujours ré-émettre la clé telle que demandée
-        $this.PackageName = $this.PackageName
+    [MyScoopPackage] Get()
+    {
+        $current = [MyScoopPackage]::new()
+        $current.PackageName = $this.PackageName
 
         $packageInfo = Get-ScoopPackageInfo $this.PackageName
-        $this.Ensure   = $packageInfo.Ensure
-        $this.Version  = $packageInfo.Version
 
-        if ($this.Version) {
-            if ($PSBoundParameters.ContainsKey('Version') -and $this.Version -ne 'latest') {
-                # Cible une version spécifique
-                $this.LatestVersion = 'NotApplicable'
-                $this.State         = ($packageInfo.Version -eq $this.Version) ? 'Current' : 'Stale'
-            } else {
-                # Mode 'latest' (par défaut quand non spécifiée dans le document)
-                $lv = Get-ScoopPackageLatestAvailableVersion $this.PackageName
-                $this.LatestVersion = $lv ? $lv : $packageInfo.Version
-                $this.State         = ($packageInfo.Version -eq $this.LatestVersion) ? 'Current' : 'Stale'
+        $current.Ensure = $packageInfo.Ensure
+        $current.Version = $packageInfo.Version
+
+        if ($current.Version)
+        {
+            if ($this.Version -eq 'latest')
+            {
+                $current.LatestVersion = Get-ScoopPackageLatestAvailableVersion $this.PackageName
+                $current.LatestVersion = $current.LatestVersion ? $current.LatestVersion : $current.Version
+                $current.State = $current.LatestVersion -eq $current.Version ? 'Current' : 'Stale'
             }
-        } else {
-            $this.LatestVersion = $null
-            $this.State         = 'NotInstalled'
+            else
+            {
+                $current.LatestVersion = 'NotApplicable'
+                $current.State = $current.Version -eq $this.Version ? 'Current' : 'Stale'
+            }
+        }
+        else
+        {
+            $current.LatestVersion = $null
+            $current.State = 'NotInstalled'
         }
 
-        return $this
+        $this.CachedCurrent = $current
+
+        return $current
     }
 
     [bool] Test()
