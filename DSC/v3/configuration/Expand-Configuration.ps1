@@ -17,8 +17,8 @@ function Expand-Name {
         [Parameter(Mandatory = $true)]
         [string] $name,
 
-        [Parameter(Mandatory = $true)]
-        [object] $properties
+        # properties devient optionnel
+        [object] $properties = @{}
     )
 
     if (-not $name -or -not ($properties -is [System.Collections.IDictionary])) {
@@ -30,13 +30,8 @@ function Expand-Name {
         '\[([^\]]+)\]',
         {
             param ($m)
-
             $key = $m.Groups[1].Value
-
-            if ($properties.ContainsKey($key)) {
-                return [string] $properties[$key]
-            }
-
+            if ($properties.ContainsKey($key)) { return [string] $properties[$key] }
             return $m.Value
         }
     )
@@ -49,18 +44,16 @@ function Strip-ResourceName {
     )
 
     if ($null -eq $obj) {
-        return [ordered] @{}
+        return [ordered] @{ }
     }
 
     if ($obj -is [System.Collections.IDictionary]) {
-        $out = [ordered] @{}
-
+        $out = [ordered] @{ }
         foreach ($k in $obj.Keys) {
             if ($k -ne 'resourceName') {
                 $out[$k] = $obj[$k]
             }
         }
-
         return $out
     }
 
@@ -70,33 +63,36 @@ function Strip-ResourceName {
 $expandedResources = foreach ($resource in $compressedResources) {
     $props = $resource.properties
 
-    if (
-        $props -is [System.Collections.IEnumerable] -and
-        -not ($props -is [string]) -and
-        -not ($props -is [System.Collections.IDictionary])
-    ) {
-        foreach ($propSet in $props) {
-            [ordered] @{
-                name       = Expand-Name $resource.name $propSet   # utilise resourceName pour le placeholder
-                type       = $resource.type
-                properties = Strip-ResourceName $propSet           # ne garde pas resourceName en sortie
-            }
+    # Normalise toujours en collection de "prop sets"
+    $propSets =
+        if ($null -eq $props) {
+            ,@{}  # properties manquant ou null -> un set vide
         }
-    }
-    else {
-        [ordered] @{
-            name       = Expand-Name $resource.name $props
+        elseif ($props -is [System.Collections.IEnumerable] -and
+                $props -isnot [string] -and
+                $props -isnot [System.Collections.IDictionary]) {
+            $props # déjà une collection (liste d'objets/ht)
+        }
+        else {
+            ,$props # singleton (ht/objet)
+        }
+
+    foreach ($propSet in $propSets) {
+        # Expand-Name reçoit toujours une ht (au pire {})
+        $forExpand = if ($propSet -is [System.Collections.IDictionary]) { $propSet } else { @{} }
+
+        [ordered]@{
+            name       = Expand-Name $resource.name $forExpand
             type       = $resource.type
-            properties = Strip-ResourceName $props
+            properties = if ($null -eq $propSet) { @{} } else { Strip-ResourceName $propSet }
         }
     }
 }
 
-$finalDocument = [ordered] @{
+$finalDocument = [ordered]@{
     '$schema' = 'https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/v3/bundled/config/document.json'
     resources = $expandedResources
 }
 
 $finalDocument | ConvertTo-Yaml | Set-Content -Path $OutputFilePath -Encoding UTF8
-
 Write-Host "Le fichier de configuration a été développé avec succès dans '$OutputFilePath'."
