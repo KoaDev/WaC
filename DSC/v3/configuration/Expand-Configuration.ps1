@@ -1,9 +1,8 @@
 ﻿# .\Expand-Configuration.ps1 -InputFilePath ".\configuration.dsc.yaml" -OutputFilePath ".\expanded-configuration.dsc.yaml"
 
-param (
+param(
     [Parameter(Mandatory = $true)]
     [string] $InputFilePath,
-
     [Parameter(Mandatory = $true)]
     [string] $OutputFilePath
 )
@@ -12,80 +11,108 @@ Import-Module powershell-yaml
 
 $compressedResources = Get-Content -Raw -Path $InputFilePath | ConvertFrom-Yaml
 
-function Expand-Name {
-    param (
-        [Parameter(Mandatory = $true)]
-        [string] $name,
+function ConvertToHashtable {
+    param([object]$InputObject)
 
-        # properties devient optionnel
-        [object] $properties = @{}
-    )
-
-    if (-not $name -or -not ($properties -is [System.Collections.IDictionary])) {
-        return $name
+    if ($null -eq $InputObject) {
+        return @{}
     }
 
-    return [regex]::Replace(
-        $name,
-        '\[([^\]]+)\]',
-        {
-            param ($m)
-            $key = $m.Groups[1].Value
-            if ($properties.ContainsKey($key)) { return [string] $properties[$key] }
+    if ($InputObject -is [System.Collections.IDictionary]) {
+        return $InputObject
+    }
+
+    $hash = @{}
+    foreach ($p in $InputObject.PSObject.Properties) {
+        $hash[$p.Name] = $p.Value
+    }
+    return $hash
+}
+
+function GetPropertySets {
+    param([object]$Properties)
+
+    $result = @()
+
+    if ($null -eq $Properties) {
+        $result = $result + @(@{})
+        return $result
+    }
+
+    $isEnumerable = $Properties -is [System.Collections.IEnumerable]
+    $isString = $Properties -is [string]
+
+    if ($isEnumerable -and (-not $isString)) {
+        foreach ($p in $Properties) {
+            $converted = ConvertToHashtable $p
+            $result = $result + @($converted)
+        }
+        return $result
+    }
+
+    $single = ConvertToHashtable $Properties
+    $result = $result + @($single)
+    return $result
+}
+
+function ExpandResourceName {
+    param(
+        [Parameter(Mandatory = $true)] [string]$Name,
+        [object]$Properties
+    )
+
+    if ($null -eq $Properties) {
+        $Properties = @{}
+    }
+
+    $props = ConvertToHashtable $Properties
+
+    if (-not $Name) {
+        return $Name
+    }
+
+    $pattern = '\[([^\]]+)\]'
+    $expanded = [regex]::Replace($Name, $pattern, {
+        param($m)
+        $key = $m.Groups[1].Value
+        if ($props.ContainsKey($key)) {
+            return [string]$props[$key]
+        } else {
             return $m.Value
         }
-    )
+    })
+
+    return $expanded
 }
 
-function Strip-ResourceName {
-    param (
-        [Parameter(Mandatory = $true)]
-        [object] $obj
-    )
+function RemoveResourceNameKey {
+    param([object]$InputObject)
 
-    if ($null -eq $obj) {
-        return [ordered] @{ }
-    }
+    $ht = ConvertToHashtable $InputObject
+    $out = [ordered]@{}
 
-    if ($obj -is [System.Collections.IDictionary]) {
-        $out = [ordered] @{ }
-        foreach ($k in $obj.Keys) {
-            if ($k -ne 'resourceName') {
-                $out[$k] = $obj[$k]
-            }
+    foreach ($k in $ht.Keys) {
+        if ($k -ne 'resourceName') {
+            $out[$k] = $ht[$k]
         }
-        return $out
     }
 
-    return $obj
+    return $out
 }
 
-$expandedResources = foreach ($resource in $compressedResources) {
-    $props = $resource.properties
+$expandedResources = @()
 
-    # Normalise toujours en collection de "prop sets"
-    $propSets =
-        if ($null -eq $props) {
-            ,@{}  # properties manquant ou null -> un set vide
-        }
-        elseif ($props -is [System.Collections.IEnumerable] -and
-                $props -isnot [string] -and
-                $props -isnot [System.Collections.IDictionary]) {
-            $props # déjà une collection (liste d'objets/ht)
-        }
-        else {
-            ,$props # singleton (ht/objet)
-        }
+foreach ($resource in $compressedResources) {
+    $propSets = GetPropertySets -Properties $resource.properties
 
     foreach ($propSet in $propSets) {
-        # Expand-Name reçoit toujours une ht (au pire {})
-        $forExpand = if ($propSet -is [System.Collections.IDictionary]) { $propSet } else { @{} }
-
-        [ordered]@{
-            name       = Expand-Name $resource.name $forExpand
+        $expandedItem = [ordered]@{
+            name       = ExpandResourceName -Name $resource.name -Properties $propSet
             type       = $resource.type
-            properties = if ($null -eq $propSet) { @{} } else { Strip-ResourceName $propSet }
+            properties = RemoveResourceNameKey -InputObject $propSet
         }
+
+        $expandedResources = $expandedResources + @($expandedItem)
     }
 }
 
@@ -94,5 +121,7 @@ $finalDocument = [ordered]@{
     resources = $expandedResources
 }
 
-$finalDocument | ConvertTo-Yaml | Set-Content -Path $OutputFilePath -Encoding UTF8
+$yamlOut = ConvertTo-Yaml -Data $finalDocument
+Set-Content -Path $OutputFilePath -Value $yamlOut -Encoding UTF8
+
 Write-Host "Le fichier de configuration a été développé avec succès dans '$OutputFilePath'."
