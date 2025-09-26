@@ -8,110 +8,64 @@ param(
 )
 
 Import-Module powershell-yaml
-
 $compressedResources = Get-Content -Raw -Path $InputFilePath | ConvertFrom-Yaml
 
-function ConvertToHashtable {
-    param([object]$InputObject)
-
-    if ($null -eq $InputObject) {
-        return @{}
-    }
-
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        return $InputObject
-    }
-
-    $hash = @{}
-    foreach ($p in $InputObject.PSObject.Properties) {
-        $hash[$p.Name] = $p.Value
-    }
-    return $hash
-}
-
-function GetPropertySets {
+function Get-PropertySets {
     param([object]$Properties)
-
-    $result = @()
-
+    
+    # null 
     if ($null -eq $Properties) {
-        $result = $result + @(@{})
-        return $result
+        return @(@{})
     }
-
-    $isEnumerable = $Properties -is [System.Collections.IEnumerable]
-    $isString = $Properties -is [string]
-
-    if ($isEnumerable -and (-not $isString)) {
-        foreach ($p in $Properties) {
-            $converted = ConvertToHashtable $p
-            $result = $result + @($converted)
-        }
-        return $result
+    
+    # objet unique
+    if (-not ($Properties -is [System.Collections.IEnumerable]) -or $Properties -is [string]) {
+        return @($Properties)
     }
-
-    $single = ConvertToHashtable $Properties
-    $result = $result + @($single)
-    return $result
+    
+    # liste
+    return @($Properties)
 }
 
-function ExpandResourceName {
+function Expand-ResourceName {
     param(
         [Parameter(Mandatory = $true)] [string]$Name,
         [object]$Properties
     )
-
     if ($null -eq $Properties) {
         $Properties = @{}
     }
-
-    $props = ConvertToHashtable $Properties
-
     if (-not $Name) {
         return $Name
     }
-
     $pattern = '\[([^\]]+)\]'
     $expanded = [regex]::Replace($Name, $pattern, {
         param($m)
         $key = $m.Groups[1].Value
-        if ($props.ContainsKey($key)) {
-            return [string]$props[$key]
+        if ($Properties.ContainsKey($key)) {
+            return [string]$Properties[$key]
         } else {
             return $m.Value
         }
     })
-
     return $expanded
 }
 
-function RemoveResourceNameKey {
+function Remove-ResourceNameKey {
     param([object]$InputObject)
-
-    $ht = ConvertToHashtable $InputObject
-    $out = [ordered]@{}
-
-    foreach ($k in $ht.Keys) {
-        if ($k -ne 'resourceName') {
-            $out[$k] = $ht[$k]
-        }
-    }
-
-    return $out
+    $InputObject.Remove('resourceName')
+    return $InputObject
 }
 
 $expandedResources = @()
-
 foreach ($resource in $compressedResources) {
-    $propSets = GetPropertySets -Properties $resource.properties
-
+    $propSets = Get-PropertySets -Properties $resource.properties
     foreach ($propSet in $propSets) {
         $expandedItem = [ordered]@{
-            name       = ExpandResourceName -Name $resource.name -Properties $propSet
+            name       = Expand-ResourceName -Name $resource.name -Properties $propSet
             type       = $resource.type
-            properties = RemoveResourceNameKey -InputObject $propSet
+            properties = Remove-ResourceNameKey -InputObject $propSet
         }
-
         $expandedResources = $expandedResources + @($expandedItem)
     }
 }
@@ -123,5 +77,4 @@ $finalDocument = [ordered]@{
 
 $yamlOut = ConvertTo-Yaml -Data $finalDocument
 Set-Content -Path $OutputFilePath -Value $yamlOut -Encoding UTF8
-
 Write-Host "Le fichier de configuration a été développé avec succès dans '$OutputFilePath'."
