@@ -17,9 +17,6 @@
 - name: Scoop Package - [PackageName]
   type: MyResources/MyScoopPackage
   properties:
-    - PackageName: dotnet-sdk
-    - PackageName: dotnet3-sdk
-    - PackageName: dotnet5-sdk
     - PackageName: dotnet6-sdk
     - PackageName: dotnet8-sdk
     - PackageName: temurin-lts-jdk
@@ -47,7 +44,6 @@
   type: MyResources/MyChocolateyPackage
   properties:
     - PackageName: 7zip
-    - PackageName: adobereader
     - PackageName: bulkrenameutility
     - PackageName: notepadplusplus
     - PackageName: urlrewrite
@@ -59,20 +55,9 @@
   properties:
     - Id: Fork.Fork
     - Id: Microsoft.PowerShell
-    - Id: Microsoft.PowerToys
-    - Id: Microsoft.PowerAutomateDesktop
-    - Id: Microsoft.PowerBI
     - Id: Microsoft.VisualStudioCode
     - Id: Google.Chrome
     - Id: HP.ImageAssistant
-
-- name: VSComponents
-  type: Microsoft.VisualStudio.DSC
-  properties:
-      productId: Microsoft.VisualStudio.Product.Enterprise
-      channelId: VisualStudio.17.Release
-      vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
-      includeRecommended: true
 
 - name: MyCertificate - [resourceName]
   type: MyResources/MyCertificate

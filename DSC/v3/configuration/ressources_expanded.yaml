@@ -17,18 +17,6 @@ resources:
 - name: MyScoop
   type: MyResources/MyScoop
   properties: {}
-- name: Scoop Package - dotnet-sdk
-  type: MyResources/MyScoopPackage
-  properties:
-    PackageName: dotnet-sdk
-- name: Scoop Package - dotnet3-sdk
-  type: MyResources/MyScoopPackage
-  properties:
-    PackageName: dotnet3-sdk
-- name: Scoop Package - dotnet5-sdk
-  type: MyResources/MyScoopPackage
-  properties:
-    PackageName: dotnet5-sdk
 - name: Scoop Package - dotnet6-sdk
   type: MyResources/MyScoopPackage
   properties:
@@ -108,10 +96,6 @@ resources:
   type: MyResources/MyChocolateyPackage
   properties:
     PackageName: 7zip
-- name: MyChocolateyPackage - adobereader
-  type: MyResources/MyChocolateyPackage
-  properties:
-    PackageName: adobereader
 - name: MyChocolateyPackage - bulkrenameutility
   type: MyResources/MyChocolateyPackage
   properties:
@@ -140,18 +124,6 @@ resources:
   type: Microsoft.WinGet.DSC
   properties:
     Id: Microsoft.PowerShell
-- name: WinGetPackage - Microsoft.PowerToys
-  type: Microsoft.WinGet.DSC
-  properties:
-    Id: Microsoft.PowerToys
-- name: WinGetPackage - Microsoft.PowerAutomateDesktop
-  type: Microsoft.WinGet.DSC
-  properties:
-    Id: Microsoft.PowerAutomateDesktop
-- name: WinGetPackage - Microsoft.PowerBI
-  type: Microsoft.WinGet.DSC
-  properties:
-    Id: Microsoft.PowerBI
 - name: WinGetPackage - Microsoft.VisualStudioCode
   type: Microsoft.WinGet.DSC
   properties:
@@ -164,13 +136,6 @@ resources:
   type: Microsoft.WinGet.DSC
   properties:
     Id: HP.ImageAssistant
-- name: VSComponents
-  type: Microsoft.VisualStudio.DSC
-  properties:
-    vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
-    channelId: VisualStudio.17.Release
-    productId: Microsoft.VisualStudio.Product.Enterprise
-    includeRecommended: true
 - name: MyCertificate - CR-PACA
   type: MyResources/MyCertificate
   properties:
@@ -206,6 +171,6 @@ resources:
 - name: MyHosts - PACA
   type: MyResources/MyHosts
   properties:
-    Name: PACA
     Path: C:\WaC\resources\hosts
+    Name: PACA
 
