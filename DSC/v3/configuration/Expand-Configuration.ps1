@@ -1,5 +1,4 @@
 ﻿# .\Expand-Configuration.ps1 -InputFilePath ".\configuration.dsc.yaml" -OutputFilePath ".\expanded-configuration.dsc.yaml"
-
 param(
     [Parameter(Mandatory = $true)]
     [string] $InputFilePath,
@@ -18,12 +17,12 @@ function Get-PropertySets {
         return @(@{})
     }
     
-    # objet unique
-    if (-not ($Properties -is [System.Collections.IEnumerable]) -or $Properties -is [string]) {
+    # liste
+    if ($Properties -is [System.Collections.IEnumerable] -and $Properties -isnot [string]) {
         return @($Properties)
     }
     
-    # liste
+    # objet unique
     return @($Properties)
 }
 
