@@ -19,7 +19,7 @@ function Get-PropertySets {
     
     # liste
     if ($Properties -is [System.Collections.IEnumerable] -and $Properties -isnot [string]) {
-        return @($Properties)
+        return $Properties
     }
     
     # objet unique
