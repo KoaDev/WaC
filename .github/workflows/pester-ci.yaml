@@ -1,0 +1,30 @@
+﻿name: Pester Tests CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run Pester Tests
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install required PowerShell modules
+        shell: pwsh
+        run: Install-Module -Name Functional -Force -Scope CurrentUser -SkipPublisherCheck
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+            irm get.scoop.sh | iex
+            scoop install nvm
+
+            $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
+            $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
+
+            $config = New-PesterConfiguration
+            $config.Run.ExcludePath = @("*/v2/*")
+            $config.Output.Verbosity = 'Detailed'
+            Invoke-Pester -Configuration $config
