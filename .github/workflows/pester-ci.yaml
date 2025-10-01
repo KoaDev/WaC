@@ -1,0 +1,32 @@
+﻿name: Pester Tests CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run Pester Tests
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+            $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
+            $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
+    
+            Write-Host "PSModulePath configuré: $env:PSModulePath" -ForegroundColor Cyan
+            Write-Host "Modules disponibles:" -ForegroundColor Cyan
+            Get-ChildItem $customModulesPath -Directory | Select-Object Name
+    
+            $result = Invoke-Pester -PassThru
+    
+            Write-Host "`n═══════════════════════════════════════" -ForegroundColor Cyan
+            Write-Host "  Tests : $($result.TotalCount)" -ForegroundColor White
+            Write-Host "  OK  : $($result.PassedCount)" -ForegroundColor Green
+            Write-Host "  KO  : $($result.FailedCount)" -ForegroundColor $(if($result.FailedCount -gt 0){'Red'}else{'Green'})
+            Write-Host "═══════════════════════════════════════`n" -ForegroundColor Cyan
+    
+            if ($result.FailedCount -gt 0) { exit 1 }
