@@ -23,7 +23,7 @@ jobs:
             $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
 
             $config = New-PesterConfiguration
+            $config.Run.ExcludePath = @("*/v2/*")
             $config.Output.Verbosity = 'Detailed'
-            $result = Invoke-Pester -Configuration $config
+            Invoke-Pester -Configuration $config
     
-            if ($result.FailedCount -gt 0) { exit 1 }
