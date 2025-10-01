@@ -7,6 +7,8 @@ https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/ab
 
 https://www.red-gate.com/simple-talk/sysadmin/powershell/powershell-time-saver-automatic-defaults/
 
+https://medium.com/@justinricedev/creating-a-nuget-build-pipeline-for-powershell-modules-within-vsts-cb75e06161e0
+
 // Check for PS modules updates
 
 ```powershell

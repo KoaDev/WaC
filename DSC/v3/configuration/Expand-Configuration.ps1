@@ -1,33 +1,30 @@
-﻿function Expand-ResourceName {
+﻿function Expand-ResourceName
+{
     param(
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Name,
         [object]$Properties
     )
     
-    if ($null -eq $Properties) {
-        $Properties = @{}
-    }
-    
-    if (-not $Name) {
-        return $Name
-    }
+    $Properties = $Properties ?? @{}
     
     $pattern = '\[([^\]]+)\]'
-    $expanded = [regex]::Replace($Name, $pattern, {
-        param($m)
-        $key = $m.Groups[1].Value
-        if ($Properties.ContainsKey($key)) {
-            return [string]$Properties[$key]
-        } else {
-            return $m.Value
-        }
-    })
-    
-    return $expanded
+    return [regex]::Replace($Name, $pattern, {
+            param($match)
+            $key = $match.Groups[1].Value
+        
+            if ($Properties.ContainsKey($key))
+            {
+                return [string]$Properties[$key]
+            }
+
+            return $match.Value
+        })
 }
 
-function Expand-Configuration {
+function Expand-Configuration
+{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -43,10 +40,12 @@ function Expand-Configuration {
     $compressedResources = Get-Content -Raw -Path $InputFilePath | ConvertFrom-Yaml
     
     $expandedResources = @()
-    foreach ($resource in $compressedResources) {
+    foreach ($resource in $compressedResources)
+    {
         $propSets = @($resource.properties ?? @{}) 
         
-        foreach ($propSet in $propSets) {
+        foreach ($propSet in $propSets)
+        {
 
             $expandedName = Expand-ResourceName -Name $resource.name -Properties $propSet
             $propSet.Remove('resourceName')
