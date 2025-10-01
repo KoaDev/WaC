@@ -16,13 +16,7 @@ function Get-PropertySets {
     if ($null -eq $Properties) {
         return @(@{})
     }
-    
-    # liste
-    if ($Properties -is [System.Collections.IEnumerable] -and $Properties -isnot [string]) {
-        return $Properties
-    }
-    
-    # objet unique
+
     return @($Properties)
 }
 
