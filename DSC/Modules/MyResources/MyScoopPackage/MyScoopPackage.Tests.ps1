@@ -23,7 +23,7 @@ Describe 'MyScoopPackage' {
     Context 'Get-RawScoopStatus' {
         It 'Should return scoop status output' {
             # Act
-            & scoop install git@2.50.1
+            & scoop install gh@2.74.1
             $scoopStatus = Get-RawScoopStatus
 
             # Assert
