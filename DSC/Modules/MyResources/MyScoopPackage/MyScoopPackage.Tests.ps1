@@ -3,6 +3,9 @@ Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
     . $PSScriptRoot\MyScoopPackage.ps1
+
+    & scoop install 7zip
+    & scoop install git
 }
 
 Describe 'MyScoopPackage' {
