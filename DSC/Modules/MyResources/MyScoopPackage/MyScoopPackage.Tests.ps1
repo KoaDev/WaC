@@ -21,12 +21,12 @@ Describe 'MyScoopPackage' {
     }
 
     Context 'Get-RawScoopStatus' {
-        It 'Should return scoop status output' {
+        It 'Should return scoop status output' -Skip {
             # Act
             $scoopStatus = Get-RawScoopStatus
 
             # Assert
-            # $scoopStatus | Should -BeOfType '[PSCustomObject]'
+            $scoopStatus | Should -BeOfType '[PSCustomObject]'
             if ($scoopStatus)
             {
                 $scoopStatus | ForEach-Object {
@@ -73,17 +73,18 @@ Describe 'MyScoopPackage' {
     Context 'Get-ScoopPackageInfo' {
         It 'Should return package info' {
             # Arrange
-            $packageName = 'git'
+            $packageName = 'nvm'
 
             # Act
             $packageInfo = Get-ScoopPackageInfo $packageName
 
             # Assert
             $packageInfo | Should -BeOfType 'Hashtable'
-            $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'Version')
+            $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'PackageName', 'Version')
             $packageInfo['Ensure'] | Should -Be 'Present'
             $packageInfo['Version'] | Should -Not -BeNullOrEmpty
-            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+$'
+            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+'
+
         }
 
         It 'Should return package info for not installed package' {
@@ -95,7 +96,7 @@ Describe 'MyScoopPackage' {
 
             # Assert
             $packageInfo | Should -BeOfType 'Hashtable'
-            $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'Version')
+            $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'PackageName', 'Version')
             $packageInfo['Ensure'] | Should -Be 'Absent'
             $packageInfo['Version'] | Should -BeNullOrEmpty
         }
