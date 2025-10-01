@@ -11,6 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install required PowerShell modules
+        shell: pwsh
+        run: |
+            Write-Host "Installing Functional module..."
+            Install-Module -Name Functional -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck
+            Write-Host "Functional module installed successfully"
+
       - name: Run Pester Tests
         shell: pwsh
         run: |
