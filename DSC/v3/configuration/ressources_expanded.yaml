@@ -3,20 +3,17 @@ resources:
 - name: Registry - HideFileExt
   type: Microsoft.Windows/Registry
   properties:
-    valueName: HideFileExt
     keyPath: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: HideFileExt
     valueData:
       DWord: 0
 - name: Registry - DisableLoopbackCheck
   type: Microsoft.Windows/Registry
   properties:
-    valueName: DisableLoopbackCheck
     keyPath: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+    valueName: DisableLoopbackCheck
     valueData:
       DWord: 1
-- name: MyScoop
-  type: MyResources/MyScoop
-  properties: {}
 - name: Scoop Package - dotnet-sdk
   type: MyResources/MyScoopPackage
   properties:
@@ -101,9 +98,6 @@ resources:
   type: MyResources/MyScoopPackage
   properties:
     PackageName: wiztree
-- name: MyChocolatey
-  type: MyResources/MyChocolatey
-  properties: {}
 - name: MyChocolateyPackage - 7zip
   type: MyResources/MyChocolateyPackage
   properties:
@@ -167,10 +161,10 @@ resources:
 - name: VSComponents
   type: Microsoft.VisualStudio.DSC
   properties:
+    includeRecommended: true
+    productId: Microsoft.VisualStudio.Product.Enterprise
     vsConfigFile: C:\WaC\resources\visual-studio\enterprise.vsconfig
     channelId: VisualStudio.17.Release
-    productId: Microsoft.VisualStudio.Product.Enterprise
-    includeRecommended: true
 - name: MyCertificate - CR-PACA
   type: MyResources/MyCertificate
   properties:
@@ -182,23 +176,23 @@ resources:
 - name: MyWindowsDefenderExclusion - C:\Projets
   type: MyResources/MyWindowsDefenderExclusion
   properties:
-    Type: Path
     Value: C:\Projets
+    Type: Path
 - name: MyWindowsDefenderExclusion - C:\Users\%user%\.dotnet\tools
   type: MyResources/MyWindowsDefenderExclusion
   properties:
-    Type: Path
     Value: C:\Users\%user%\.dotnet\tools
+    Type: Path
 - name: MyWindowsDefenderExclusion - C:\Users\%user%\scoop
   type: MyResources/MyWindowsDefenderExclusion
   properties:
-    Type: Path
     Value: C:\Users\%user%\scoop
+    Type: Path
 - name: MyNodeVersion - lts
   type: MyResources/MyNodeVersion
   properties:
-    Version: lts
     Ensure: Used
+    Version: lts
 - name: MyNodeVersion - 18
   type: MyResources/MyNodeVersion
   properties:

@@ -63,12 +63,12 @@ function Expand-Configuration {
         $propSets = Get-PropertySets -Properties $resource.properties
         
         foreach ($propSet in $propSets) {
-            $expandedItem = [ordered]@{
+            $expandedResource = [ordered]@{
                 name       = Expand-ResourceName -Name $resource.name -Properties $propSet
                 type       = $resource.type
                 properties = Remove-ResourceNameKey -InputObject $propSet
             }
-            $expandedResources += @($expandedItem)
+            $expandedResources += $expandedResource
         }
     }
     
