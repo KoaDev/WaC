@@ -24,6 +24,8 @@ jobs:
 
             $config = New-PesterConfiguration
             $config.Output.Verbosity = 'Detailed'
+            $config.Run.Exit = $true
+            $config.Run.PassThru = $true
+
             $result = Invoke-Pester -Configuration $config
-    
             if ($result.FailedCount -gt 0) { exit 1 }
