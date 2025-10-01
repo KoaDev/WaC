@@ -15,15 +15,12 @@ jobs:
         shell: pwsh
         run: Install-Module -Name Functional -Force -Scope CurrentUser -SkipPublisherCheck
 
-      - name: Install scoop
-        shell: pwsh
-        run: | 
-            irm get.scoop.sh | iex
-            scoop install nvm
-
       - name: Run Pester Tests
         shell: pwsh
         run: |
+            irm get.scoop.sh | iex
+            scoop install nvm
+
             $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
             $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
 
