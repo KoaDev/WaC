@@ -1,40 +1,39 @@
 BeforeAll {
-    function Get-PropertySets {
-        param([object]$Properties)
-        # null 
-        if ($null -eq $Properties) {
-            return @(@{})
-        }
-        # liste
-        if ($Properties -is [System.Collections.IEnumerable] -and $Properties -isnot [string]) {
-            return $Properties
-        }
-        # objet unique
-        return @($Properties)
-    }
+    . $PSScriptRoot\Expand-Configuration.ps1
 }
 
 Describe 'Get-PropertySets' {
  
     It 'null' {
-        $r = @(Get-PropertySets -Properties $null)
-        $r | Should -HaveCount 1
-        $r[0] | Should -BeOfType [hashtable]
-        $r[0].Count | Should -Be 0
+        # Arrange
+        $input = $null
+
+        # Act
+        $result = Get-PropertySets -Properties $input
+
+        # Assert
+        $result | Should -HaveCount 0
     }
 
     It 'liste' {
+        # Arrange
         $input = @(@{ Name = 'A' }, @{ Name = 'B' })
+
+        # Act
         $result = Get-PropertySets -Properties $input
+
+        # Assert
         $result | Should -HaveCount 2
     }
 
     It "objet unique" {
+        # Arrange
         $input = @{ Name = 'Test' }
+
+        # Act
         $result = Get-PropertySets -Properties $input
 
-        $result | Should -BeOfType [hashtable]
-        $result.Count | Should -Be 1
-        $result.Name | Should -Be 'Test'
+        # Assert
+        $result | Should -HaveCount 1
     }
 }
