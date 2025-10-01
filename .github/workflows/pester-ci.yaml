@@ -13,8 +13,15 @@ jobs:
 
       - name: Install required PowerShell modules
         shell: pwsh
-        run: |
-            Install-Module -Name Functional -Force -Scope CurrentUser -SkipPublisherCheck
+        run: Install-Module -Name Functional -Force -Scope CurrentUser -SkipPublisherCheck
+
+      - name: Install scoop
+        shell: pwsh
+        run: irm get.scoop.sh | iex
+
+      - name: Install nvm
+        shell: pwsh
+        run: scoop install nvm
 
       - name: Run Pester Tests
         shell: pwsh
