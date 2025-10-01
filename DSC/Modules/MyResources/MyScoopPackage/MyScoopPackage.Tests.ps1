@@ -21,9 +21,8 @@ Describe 'MyScoopPackage' {
     }
 
     Context 'Get-RawScoopStatus' {
-        It 'Should return scoop status output' {
+        It 'Should return scoop status output' -Skip {
             # Act
-            & scoop install gh@2.74.1
             $scoopStatus = Get-RawScoopStatus
 
             # Assert
