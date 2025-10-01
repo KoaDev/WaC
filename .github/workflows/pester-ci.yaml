@@ -14,22 +14,15 @@ jobs:
       - name: Install required PowerShell modules
         shell: pwsh
         run: |
-            Write-Host "Installing Functional module..."
             Install-Module -Name Functional -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck
-            Write-Host "Functional module installed successfully"
 
-      - name: Run Pester Tests
+      - name: Import custom modules
         shell: pwsh
         run: |
             $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
             $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
-    
-            $result = Invoke-Pester -PassThru
-    
-            Write-Host "`n═══════════════════════════════════════" -ForegroundColor Cyan
-            Write-Host "  Tests : $($result.TotalCount)" -ForegroundColor White
-            Write-Host "  OK  : $($result.PassedCount)" -ForegroundColor Green
-            Write-Host "  KO  : $($result.FailedCount)" -ForegroundColor $(if($result.FailedCount -gt 0){'Red'}else{'Green'})
-            Write-Host "═══════════════════════════════════════`n" -ForegroundColor Cyan
-    
-            if ($result.FailedCount -gt 0) { exit 1 }
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+            Invoke-Pester -CI
