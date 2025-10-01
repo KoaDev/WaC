@@ -16,13 +16,14 @@ jobs:
         run: |
             Install-Module -Name Functional -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck
 
-      - name: Import custom modules
+      - name: Run Pester Tests
         shell: pwsh
         run: |
             $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
             $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
 
-      - name: Run Pester Tests
-        shell: pwsh
-        run: |
-            Invoke-Pester -CI
+            $config = New-PesterConfiguration
+            $config.Output.Verbosity = 'Detailed'
+            $result = Invoke-Pester -Configuration $config
+    
+            if ($result.FailedCount -gt 0) { exit 1 }
