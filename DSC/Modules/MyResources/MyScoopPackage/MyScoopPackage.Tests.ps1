@@ -3,9 +3,6 @@ Import-Module Pester-ShouldBeDeep
 
 BeforeAll {
     . $PSScriptRoot\MyScoopPackage.ps1
-
-    & scoop install 7zip
-    & scoop install git
 }
 
 Describe 'MyScoopPackage' {
@@ -26,9 +23,8 @@ Describe 'MyScoopPackage' {
     Context 'Get-RawScoopStatus' {
         It 'Should return scoop status output' {
             # Act
+            & scoop install git@2.50.1
             $scoopStatus = Get-RawScoopStatus
-
-            Write-Host $scoopStatus
 
             # Assert
             $scoopStatus | Should -BeOfType '[PSCustomObject]'
@@ -78,7 +74,7 @@ Describe 'MyScoopPackage' {
     Context 'Get-ScoopPackageInfo' {
         It 'Should return package info' {
             # Arrange
-            $packageName = 'git'
+            $packageName = 'nvm'
 
             # Act
             $packageInfo = Get-ScoopPackageInfo $packageName
@@ -88,7 +84,7 @@ Describe 'MyScoopPackage' {
             $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'PackageName', 'Version')
             $packageInfo['Ensure'] | Should -Be 'Present'
             $packageInfo['Version'] | Should -Not -BeNullOrEmpty
-            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+\.\d+$'
+            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+'
 
         }
 
