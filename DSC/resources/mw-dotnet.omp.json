@@ -1,110 +1,136 @@
 {
-    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-    "version": 2,
-    "blocks": [
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
         {
-            "type": "prompt",
-            "alignment": "left",
-            "segments": [
-                {
-                    "type": "root",
-                    "style": "powerline",
-                    "powerline_symbol": "\ue0b0",
-                    "foreground": "#FF0000",
-                    "background": "#FFFFFF",
-                    "template": " \udb85\udc0b"
-                },
-                {
-                    "type": "session",
-                    "style": "powerline",
-                    "powerline_symbol": "\ue0b0",
-                    "foreground": "transparent",
-                    "background": "#FFFFFF",
-                    "template": " {{ if .SSHSession }}\ueba9 {{ end }}{{ .UserName }} "
-                },
-                {
-                    "type": "path",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#FFFFFF",
-                    "background": "#0097D7",
-                    "template": " {{ .Path }} ",
-                    "properties": {
-                        "folder_separator_icon": " \ue0b1 ",
-                        "style": "full"
-                    }
-                },
-                {
-                    "type": "angular",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#FFFFFF",
-                    "background": "#DD0031",
-                    "template": " \ue753 "
-                },
-                {
-                    "type": "dotnet",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#FFFFFF",
-                    "background": "#7455DD",
-                    "template": " \ue77f {{ .Major }}.{{ .Minor }} "
-                },
-                {
-                    "type": "nx",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#09365A",
-                    "background": "#FFFFFF",
-                    "template": " \ue753 "
-                },
-                {
-                    "type": "terraform",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#FFFFFF",
-                    "background": "#6449EA",
-                    "template": " \ue69a {{.Version}} ",
-                    "properties": {
-                        "fetch_version": true
-                    }
-                },
-                {
-                    "type": "git",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#FFFFFF",
-                    "background": "#F1502F"
-                },
-                {
-                    "type": "status",
-                    "style": "diamond",
-                    "leading_diamond": "<transparent,background>\ue0b0</>",
-                    "trailing_diamond": "\ue0b0",
-                    "foreground": "#ED4337",
-                    "background": "#FFFFFF",
-                    "template": " \ue20f "
-                }
-            ]
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": " \udb85\udc0b",
+          "foreground": "#FF0000",
+          "powerline_symbol": "\ue0b0",
+          "background": "#FFFFFF",
+          "type": "root",
+          "style": "powerline"
         },
         {
-            "type": "prompt",
-            "alignment": "left",
-            "newline": true,
-            "segments": [
-                {
-                    "type": "text",
-                    "style": "plain",
-                    "foreground": "#0097D7",
-                    "template": "\u276f "
-                }
-            ]
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": " {{ if .SSHSession }}\ueba9 {{ end }}{{ .UserName }} ",
+          "foreground": "transparent",
+          "powerline_symbol": "\ue0b0",
+          "background": "#FFFFFF",
+          "type": "session",
+          "style": "powerline"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "folder_separator_icon": " \ue0b1 ",
+            "style": "full"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " {{ .Path }} ",
+          "foreground": "#FFFFFF",
+          "background": "#0097D7",
+          "type": "path",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " \ue753 ",
+          "foreground": "#FFFFFF",
+          "background": "#DD0031",
+          "type": "angular",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " \ue77f {{ .Major }}.{{ .Minor }} ",
+          "foreground": "#FFFFFF",
+          "background": "#7455DD",
+          "type": "dotnet",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " \ue753 ",
+          "foreground": "#09365A",
+          "background": "#FFFFFF",
+          "type": "nx",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "fetch_version": true
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " \ue69a {{.Version}} ",
+          "foreground": "#FFFFFF",
+          "background": "#6449EA",
+          "type": "terraform",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "foreground": "#FFFFFF",
+          "background": "#F1502F",
+          "type": "git",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "<transparent,background>\ue0b0</>",
+          "trailing_diamond": "\ue0b0",
+          "template": " \ue20f ",
+          "foreground": "#ED4337",
+          "background": "#FFFFFF",
+          "type": "status",
+          "style": "diamond"
         }
-    ]
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "❯ ",
+          "foreground": "#0097D7",
+          "type": "text",
+          "style": "plain"
+        }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 3
 }
