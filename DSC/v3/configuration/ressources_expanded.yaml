@@ -14,6 +14,9 @@ resources:
     valueName: DisableLoopbackCheck
     valueData:
       DWord: 1
+- name: MyScoop
+  type: MyResources/MyScoop
+  properties: {}
 - name: Scoop Package - dotnet-sdk
   type: MyResources/MyScoopPackage
   properties:
@@ -98,6 +101,9 @@ resources:
   type: MyResources/MyScoopPackage
   properties:
     PackageName: wiztree
+- name: MyChocolatey
+  type: MyResources/MyChocolatey
+  properties: {}
 - name: MyChocolateyPackage - 7zip
   type: MyResources/MyChocolateyPackage
   properties:

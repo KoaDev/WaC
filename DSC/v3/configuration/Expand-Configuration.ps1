@@ -1,13 +1,4 @@
-﻿function Get-PropertySets {
-    param([object]$Properties)
-    
-    if ($null -eq $Properties) {
-        return @()
-    }
-    return @($Properties)
-}
-
-function Expand-ResourceName {
+﻿function Expand-ResourceName {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Name,
@@ -36,13 +27,6 @@ function Expand-ResourceName {
     return $expanded
 }
 
-function Remove-ResourceNameKey {
-    param([object]$InputObject)
-    
-    $InputObject.Remove('resourceName')
-    return $InputObject
-}
-
 function Expand-Configuration {
     [CmdletBinding()]
     param(
@@ -60,14 +44,19 @@ function Expand-Configuration {
     
     $expandedResources = @()
     foreach ($resource in $compressedResources) {
-        $propSets = Get-PropertySets -Properties $resource.properties
+        $propSets = @($resource.properties ?? @{}) 
         
         foreach ($propSet in $propSets) {
+
+            $expandedName = Expand-ResourceName -Name $resource.name -Properties $propSet
+            $propSet.Remove('resourceName')
+
             $expandedResource = [ordered]@{
-                name       = Expand-ResourceName -Name $resource.name -Properties $propSet
+                name       = $expandedName
                 type       = $resource.type
-                properties = Remove-ResourceNameKey -InputObject $propSet
+                properties = $propSet
             }
+
             $expandedResources += $expandedResource
         }
     }
