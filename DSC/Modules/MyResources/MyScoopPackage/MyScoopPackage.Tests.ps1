@@ -28,6 +28,8 @@ Describe 'MyScoopPackage' {
             # Act
             $scoopStatus = Get-RawScoopStatus
 
+            Write-Host $scoopStatus
+
             # Assert
             $scoopStatus | Should -BeOfType '[PSCustomObject]'
             if ($scoopStatus)
@@ -86,7 +88,8 @@ Describe 'MyScoopPackage' {
             $packageInfo.Keys | Sort-Object | Should -Be @('Ensure', 'PackageName', 'Version')
             $packageInfo['Ensure'] | Should -Be 'Present'
             $packageInfo['Version'] | Should -Not -BeNullOrEmpty
-            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+$'
+            $packageInfo['Version'] | Should -Match '^\d+\.\d+\.\d+\.\d+$'
+
         }
 
         It 'Should return package info for not installed package' {
