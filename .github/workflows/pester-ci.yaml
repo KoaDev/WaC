@@ -24,10 +24,6 @@ jobs:
             $customModulesPath = Join-Path $env:GITHUB_WORKSPACE "DSC\Modules"
             $env:PSModulePath = "$customModulesPath;$env:PSModulePath"
     
-            Write-Host "PSModulePath configuré: $env:PSModulePath" -ForegroundColor Cyan
-            Write-Host "Modules disponibles:" -ForegroundColor Cyan
-            Get-ChildItem $customModulesPath -Directory | Select-Object Name
-    
             $result = Invoke-Pester -PassThru
     
             Write-Host "`n═══════════════════════════════════════" -ForegroundColor Cyan
