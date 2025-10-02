@@ -65,38 +65,52 @@ function Get-NodeLatestVersions
 {
     if (-not $script:nodeLatestVersionsCache -or (Get-Date) -gt $script:LastNodeLatestVersionsRefreshed.AddMinutes($script:CacheDurationMinutes))
     {
-        # Get the HTML content of the Node.js downloads page
-        $url = 'https://nodejs.org/en/download/releases/'
-        $pageContent = Invoke-WebRequest -Uri $url
-    
-        # Find all matches for the version numbers
-        $regexPattern = '<td data-label="Version">v<!-- -->(.*?)<\/td><td data-label="LTS">(.*?)<\/td>'
-        $versionMatches = [regex]::Matches($pageContent, $regexPattern)
+        try {
+            $url = 'https://nodejs.org/dist/index.json'
 
-        $versionsHashTable = @{}
-        $ltsVersion = 0
-        $latestVersion = 0
-        foreach ($match in $versionMatches)
-        {
-            $fullVersion = $match.Groups[1].Value
-            $majorVersion = [int]($fullVersion -split '\.')[0]
-            $isLTS = $match.Groups[2].Value -ne '-'
-            if ($isLTS -and $majorVersion -gt $ltsVersion)
-            {
-                $ltsVersion = $majorVersion
+            $resp = Invoke-WebRequest -Uri $url -UseBasicParsing
+            $nodeVersions = $resp.Content | ConvertFrom-Json
+
+            $versionsHashTable = @{}
+            $latestVersion = $null
+            $latestLts = $null
+
+            foreach ($item in $nodeVersions) {
+                if ($item.version -match '^v(.+)$') {
+
+                    $versionString = $Matches[1]
+                    $version = [version]$versionString
+                    $majorVersion = $version.Major
+
+                    if ($null -eq $latestVersion -or
+			            $version -gt [version]$latestVersion) {
+                        $latestVersion = $versionString
+                    }
+
+                    if ($item.lts -and
+			            ($null -eq $latestLts -or
+			            $version -gt [version]$latestLts)) {
+                        $latestLts = $versionString
+                    }
+
+                    if (-not $versionsHashTable.ContainsKey($majorVersion) -or
+			            $version -gt [version]$versionsHashTable[$majorVersion]) {
+                        $versionsHashTable[$majorVersion] = $versionString
+                    }
+                }
             }
-            if ($majorVersion -gt $latestVersion)
-            {
-                $latestVersion = $majorVersion
-            }
-            $versionsHashTable[$majorVersion] = $fullVersion
+ 
+            $versionsHashTable['latest'] = $latestVersion
+            $versionsHashTable['lts'] = $latestLts
+
+            $script:nodeLatestVersionsCache = $versionsHashTable
+            $script:LastNodeLatestVersionsRefreshed = Get-Date
         }
-        $versionsHashTable['lts'] = $versionsHashTable[$ltsVersion]
-        $versionsHashTable['latest'] = $versionsHashTable[$latestVersion]
-
-        # Update the cache variable and set the expiry time
-        $script:nodeLatestVersionsCache = $versionsHashTable
-        $script:LastNodeLatestVersionsRefreshed = Get-Date
+        catch
+        {
+            Write-Error "Failed to retrieve Node.js versions. Details: $_"
+            return $null
+        }
     }
 
     # Return the cached result
