@@ -69,44 +69,36 @@ function Get-NodeLatestVersions
             $url = 'https://nodejs.org/dist/index.json'
 
             $resp = Invoke-WebRequest -Uri $url -UseBasicParsing
-            $versions = $resp.Content | ConvertFrom-Json
+            $nodeVersions = $resp.Content | ConvertFrom-Json
 
-            # Construire la table UNIQUEMENT avec lts et latest
             $versionsHashTable = @{}
+            $latestVersion = $null
+            $latestLts = $null
 
-            # LTS
-            $ltsVersion = $versions |
-                Where-Object { $PSItem.lts } |
-                Sort-Object { $PSItem.version -replace '^v' -as [version] } |
-                Select-Object -Last 1
-
-            # Latest
-            $latestVersion = $versions |
-                Sort-Object { $PSItem.version -replace '^v' -as [version] } |
-                Select-Object -Last 1
-
-            # Ajouter SEULEMENT lts et latest
-            if ($ltsVersion)
-            {
-                $versionsHashTable['lts'] = ($ltsVersion.version   -replace '^v')
-            }
-            if ($latestVersion)
-            {
-                $versionsHashTable['latest'] = ($latestVersion.version -replace '^v')
-            }
-
-            # Ajouter des combo clef valeur : {majorVersion = latestVersion}
-            $versions | ForEach-Object {
-                $versionString = $_.version -replace '^v'
-                $majorVersion = [int]($versionString -split '\.')[0]
-    
-                $current = $versionsHashTable[$majorVersion]
-                if (-not $current -or [version]$versionString -gt [version]$current)
-                {
-                    $versionsHashTable[$majorVersion] = $versionString
+            foreach ($item in $nodeVersions) {
+                if ($item.version -match '^v(.+)$') {
+                    $versionString = $Matches[1]
+                    $version = [version]$versionString
+                    $majorVersion = $version.Major
+                    if ($null -eq $latestVersion -or
+			            $version -gt [version]$latestVersion) {
+                        $latestVersion = $versionString
+                    }
+                    if ($item.lts -and
+			            ($null -eq $latestLts -or
+			            $version -gt [version]$latestLts)) {
+                        $latestLts = $versionString
+                    }
+                    if (-not $versionsHashTable.ContainsKey($majorVersion) -or
+			            $version -gt [version]$versionsHashTable[$majorVersion]) {
+                        $versionsHashTable[$majorVersion] = $versionString
+                    }
                 }
             }
-            
+ 
+            $versionsHashTable['latest'] = $latestVersion
+            $versionsHashTable['lts'] = $latestLts
+
             $script:nodeLatestVersionsCache = $versionsHashTable
             $script:LastNodeLatestVersionsRefreshed = Get-Date
         }
