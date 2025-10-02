@@ -77,18 +77,22 @@ function Get-NodeLatestVersions
 
             foreach ($item in $nodeVersions) {
                 if ($item.version -match '^v(.+)$') {
+
                     $versionString = $Matches[1]
                     $version = [version]$versionString
                     $majorVersion = $version.Major
+
                     if ($null -eq $latestVersion -or
 			            $version -gt [version]$latestVersion) {
                         $latestVersion = $versionString
                     }
+
                     if ($item.lts -and
 			            ($null -eq $latestLts -or
 			            $version -gt [version]$latestLts)) {
                         $latestLts = $versionString
                     }
+
                     if (-not $versionsHashTable.ContainsKey($majorVersion) -or
 			            $version -gt [version]$versionsHashTable[$majorVersion]) {
                         $versionsHashTable[$majorVersion] = $versionString
